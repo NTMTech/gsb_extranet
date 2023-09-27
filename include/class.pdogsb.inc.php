@@ -141,6 +141,11 @@ public function creeMedecin($email, $mdp)
     
 }
 
+public function creeValidateur()
+{
+
+}
+
 
 function testMail($email){
     $pdo = PdoGsb::$monPdo;
