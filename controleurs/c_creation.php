@@ -21,6 +21,8 @@ switch($action){
 
 		$leLogin = htmlspecialchars($_POST['login']);
                 $lePassword = htmlspecialchars($_POST['mdp']);
+                $leNom = ($_POST['']);
+                $lePrenom = ($_POST['']);
 
 
         if ($leLogin == $_POST['login'])
