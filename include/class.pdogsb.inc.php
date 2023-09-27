@@ -20,7 +20,7 @@ class PdoGsb{
       	private static $serveur='mysql:host=localhost';
       	private static $bdd='dbname=gsbextranet';   		
       	private static $user='gsbextranet' ;    		
-      	private static $mdp='ThoughtPolice2019' ;	
+      	private static $mdp='password' ;	
 	private static $monPdo;
 	private static $monPdoGsb=null;
 		
@@ -128,14 +128,31 @@ $leResultat = $pdoStatement->fetch();
  * la fonction va insérer un nouvel utilisateur avec un id, un mail, un mot de passe, la date de création du compte et la date à laquelle le consentement à la politique de protection des données
  */
 
-public function creeMedecin($email, $mdp)
+public function creeMedecin($email, $mdp, $nom, $prenom)
 {
    
-    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO medecin(id,mail, motDePasse,dateCreation,dateConsentement) "
-            . "VALUES (null, :leMail, :leMdp, now(),now())");
+    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO medecin(id,nom,prenom,mail, motDePasse,dateCreation,dateConsentement) "
+            . "VALUES (null,:leNom, :lePrenom, :leMail, :leMdp, now(),now())");
     $bv1 = $pdoStatement->bindValue(':leMail', $email);
     $mdp = password_hash($mdp, PASSWORD_DEFAULT);
     $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
+    $bv3 = $pdoStatement->bindValue(':leNom', $nom);
+    $bv4 = $pdoStatement->bindValue(':lePrenom', $prenom);
+    $execution = $pdoStatement->execute();
+    return $execution;
+    
+}
+
+public function creeModerateur($email, $mdp, $nom, $prenom)
+{
+   
+    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO moderateur(id,nom,prenom,mail, motDePasse,dateCreation) "
+            . "VALUES (null, :leNom, :lePrenom, :leMail, :leMdp, now(),now())");
+    $bv1 = $pdoStatement->bindValue(':leMail', $email);
+    $mdp = password_hash($mdp, PASSWORD_DEFAULT);
+    $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
+    $bv3 = $pdoStatement->bindValue(':leNom', $nom);
+    $bv4 = $pdoStatement->bindValue(':lePrenom', $prenom);
     $execution = $pdoStatement->execute();
     return $execution;
     
