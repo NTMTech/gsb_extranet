@@ -1,7 +1,7 @@
 <?php
 
 /** 
- * Classe d'accÃ¨s aux donnÃ©es. 
+ * Classe d'acces aux donnees. 
  
  * Utilise les services de la classe PDO
  * pour l'application GSB
@@ -11,33 +11,36 @@
  * $monPdoGsb qui contiendra l'unique instance de la classe
  
  * @package default
- * @author Cheri Bibi
+ * @author Forestier Thomas
  * @version    1.0
  * @link       http://www.php.net/manual/fr/book.pdo.php
  */
 
 class PdoGsb{   		
-      	private static $serveur='mysql:host=localhost:3308';
-      	private static $bdd='dbname=gsbExtranet';   		
-      	private static $user='root' ;    		
-      	private static $mdp='' ;	
+      	private static $serveur='mysql:host=localhost';
+      	private static $bdd='dbname=gsbextranet';   		
+      	private static $user='gsbextranet' ;    		
+      	private static $mdp='ThoughtPolice2019' ;	
 	private static $monPdo;
 	private static $monPdoGsb=null;
 		
 /**
- * Constructeur privÃ©, crÃ©e l'instance de PDO qui sera sollicitÃ©e
- * pour toutes les mÃ©thodes de la classe
+ * Constructeur prive, cree l'instance de PDO qui sera sollicitee
+ * pour toutes les methodes de la classe
  */				
 	private function __construct(){
           
     	PdoGsb::$monPdo = new PDO(PdoGsb::$serveur.';'.PdoGsb::$bdd, PdoGsb::$user, PdoGsb::$mdp); 
 		PdoGsb::$monPdo->query("SET CHARACTER SET utf8");
 	}
+/**
+ * Constructeur public qui detruit l'instance de PDO
+ */
 	public function _destruct(){
 		PdoGsb::$monPdo = null;
 	}
 /**
- * Fonction statique qui crÃ©e l'unique instance de la classe
+ * Fonction statique qui cree l'unique instance de la classe
  
  * Appel : $instancePdoGsb = PdoGsb::getPdoGsb();
  
@@ -50,7 +53,7 @@ class PdoGsb{
 		return PdoGsb::$monPdoGsb;  
 	}
 /**
- * vÃ©rifie si le login et le mot de passe sont corrects
+ * verifie si le login et le mot de passe sont corrects
  * renvoie true si les 2 sont corrects
  * @param type $lePDO
  * @param type $login
@@ -67,7 +70,7 @@ function checkUser($login,$pwd):bool {
     if ($monObjPdoStatement->execute()) {
         $unUser=$monObjPdoStatement->fetch();
         if (is_array($unUser)){
-           if ($pwd==$unUser['motDePasse'])
+           if (password_verify($pwd,$unUser['motDePasse']))
                 $user=true;
         }
     }
@@ -76,9 +79,12 @@ function checkUser($login,$pwd):bool {
 return $user;   
 }
 
-
+/**
+ * fonction qui reçoit le mail en entrée et donne l'id, le nom, le prénom et le mail en sortie
+ * @param $login
+ * @throws Exception
+ */
 	
-
 function donneLeMedecinByMail($login) {
     
     $pdo = PdoGsb::$monPdo;
@@ -89,10 +95,14 @@ function donneLeMedecinByMail($login) {
        
     }
     else
-        throw new Exception("erreur dans la requÃªte");
+        throw new Exception("erreur dans la requête");
 return $unUser;   
 }
 
+/**
+ * fonction public qui donne la longueur de l'adresse mail
+ * @return $leResultat 
+ */
 
 public function tailleChampsMail(){
     
@@ -109,6 +119,14 @@ $leResultat = $pdoStatement->fetch();
        
 }
 
+/**
+ * fonction public qui crée un médecin à partir du formulaire rempli par l'utilisateur
+ * @param email
+ * @param $mdp
+ * @return $execution
+ * 
+ * la fonction va insérer un nouvel utilisateur avec un id, un mail, un mot de passe, la date de création du compte et la date à laquelle le consentement à la politique de protection des données
+ */
 
 public function creeMedecin($email, $mdp)
 {
@@ -116,7 +134,7 @@ public function creeMedecin($email, $mdp)
     $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO medecin(id,mail, motDePasse,dateCreation,dateConsentement) "
             . "VALUES (null, :leMail, :leMdp, now(),now())");
     $bv1 = $pdoStatement->bindValue(':leMail', $email);
-   
+    $mdp = password_hash($mdp, PASSWORD_DEFAULT);
     $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
     $execution = $pdoStatement->execute();
     return $execution;

@@ -13,11 +13,16 @@ switch($action){
 	}
 	case 'valideCreation':{
 		
-           
+        if(isset($_POST['ValideCheckBox']) == false){
+            $e = "impossible de créer le compte sans avoir coché la case de consentement !<br/>";
+            echo $e;
+        }
+
+
 		$leLogin = htmlspecialchars($_POST['login']);
                 $lePassword = htmlspecialchars($_POST['mdp']);
-        
-        
+
+
         if ($leLogin == $_POST['login'])
         {
              $loginOk = true;

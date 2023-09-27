@@ -1,12 +1,12 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-    <title>GSB - extranet</title>
+    <title>GSB -extranet</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- styles -->
-    <link href="css/styles.css" rel="stylesheet">
+    <link href="../css/styles.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -16,7 +16,7 @@
     <![endif]-->
   </head>
 
-  <body background="assets/img/laboratoire.jpg">
+  <body background="../assets/img/laboratoire.jpg">
 
       <!-- **********************************************************************************************************************************************************
       MAIN CONTENT
@@ -27,21 +27,16 @@
 		<div class="col-md-4 col-md-offset-4">
 			<div class="login-wrapper">
 				<div class="box">
-					<div class="content-wrap">
-						<legend>Se connecter</legend>
-							<form method="post" action="index.php?uc=connexion&action=valideConnexion">
-								<input name="login" class="form-control" type="text" placeholder="Login">
-								<input name="mdp" class="form-control" type="password" placeholder="Password">
-								</br>
-                <input type="submit" class="btn btn-primary signup" value="Se connecter">
+						
+                                    <div class="content-wrap">
+						<legend>Veuillez renseigner le code d'authentification que vous avez reçu</legend>
+							<form method="post" action="index.php?uc=creation&action=valideCreation">
+                                                            <input name="login" class="form-control" type="text" placeholder="code"/>
+                                                            <input type="submit" class="btn btn-primary signup" value="Valider"/>
 							</form>
 							</br>
-						<a href="index.php?uc=creation&action=demandeCreation">je suis médecin, je souhaite créer un compte</a>
-                                                <br/>
-                                                
-                                        </div>	
-                                     
-                                    
+						
+					</div>	
 				</div>
 			</div>
 		</div>

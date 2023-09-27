@@ -36,6 +36,10 @@
                                                             <input name="prénom" class="form-control" type="text" placeholder="prénom"/>
                                                             <input name="nom" class="form-control" type="text" placeholder="nom"/>
 								<br>
+                                                          <input type="checkbox" name ="ValideCheckBox">
+                </br>
+                                                        
+                                                          <p><strong>J'atteste avoir lu et accepté notre</strong> <a href="vues/v_politiqueprotectiondonnees.html">politique de protection des données</a><p>
                                                             <input type="submit" class="btn btn-primary signup" value="Créer"/>
 							</form>
 							</br>

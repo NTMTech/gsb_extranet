@@ -2,6 +2,7 @@
 <?php
 require_once("include/fct.inc.php");
 require_once ("include/class.pdogsb.inc.php");
+include_once('vues/v_footer.php');
 session_start();
 
 
@@ -30,7 +31,9 @@ switch($uc){
         case 'creation':{
 		include("controleurs/c_creation.php");break;
 	}
-        
+        case 'footer':{
+			include("controleurs/c_footer.php");break;
+		}
 	
 	}
 	
