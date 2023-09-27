@@ -26,7 +26,7 @@ else {
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body background="assets/img/laboratoire.jpg">
+  <body>
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -44,8 +44,7 @@ else {
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         
-        <li class="active"><a href="index.php?uc=etatFrais&action=selectionnerMois">M'inscrire à une visio</a></li> 
-        <li class="active"><a href="vues/v_consultation_produit.php">Consultation des produits</a></li> <!--Modifier la redirection-->
+        
          
       </ul>
       <ul class="nav navbar-nav navbar-right">
