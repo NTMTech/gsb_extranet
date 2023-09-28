@@ -7,6 +7,7 @@ $action = $_GET['action'];
 
 $produit = $pdo->AfficherProduit();
 $id = $produit['id'];
+echo $id;
 $nom = $produit['nom'];
 $objectif = $produit['objectif'];
 $information = $produit['information'];

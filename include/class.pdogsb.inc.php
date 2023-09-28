@@ -214,6 +214,7 @@ $information=$monObjPdoStatement->bindValue('information',':information',PDO::PA
 $effetIndesirable=$monObjPdoStatement->bindValue('effetIndesirable',':effetIndesirable',PDO::PARAM_STR);
 if ($monObjPdoStatement->execute()) {
     $requete=$monObjPdoStatement->fetchAll();
+    return $requete;
 }
 }
 

@@ -1,4 +1,5 @@
 <?php
+include("../controleurs/c_consultation_produit.php");
 if (!$_SESSION['id'])
     header('Location: ../index.php');
 else {
@@ -43,13 +44,13 @@ else {
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-      <form action="../controleurs/c_consultation_produit.php" method="get">
-        test
-        <li><?php $_GET[$id] ?></li>
-        <li><?php $_GET[$nom] ?></li>
-        <li><?php $_GET[$objectif] ?></li>
-        <li><?php $_GET[$information] ?></li>
-        <li><?php $_GET[$effetIndesirable] ?></li>
+      <form action="controleurs/c_consultation_produit.php" method="post">
+        
+        <li><?php $_GET['id'] ?></li>
+        <li><?php $_GET['nom'] ?></li>
+        <li><?php $_GET['objectif'] ?></li>
+        <li><?php $_GET['information'] ?></li>
+        <li><?php $_GET['effetIndesirable'] ?></li>
 
       </ul>
       <ul class="nav navbar-nav navbar-right">

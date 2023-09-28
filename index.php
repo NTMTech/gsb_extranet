@@ -37,6 +37,15 @@ switch($uc){
 	case 'consulteProduit':{
 		include("controleurs/c_consultation_produit.php");break;
 	}
+	case 'consulteVisio':{
+		include("controleurs/c_consultation_visio.php");break;
+	}
+	case 'inscrireVisio':{
+		include("controleurs/c_inscription_visio.php");break;
+	}
+	case 'avisVisio':{
+		include("controleurs/c_avis_visio.php");break;
+	}
 	}
 	
 
