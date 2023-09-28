@@ -74,8 +74,20 @@ function checkUser($login,$pwd):bool {
                 $user=true;
         }
     }
-    else
-        throw new Exception("erreur dans la requÃªte");
+    else{
+        $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM moderateur WHERE mail= :login AND token IS NULL");
+    $bvc2=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $unUser=$monObjPdoStatement->fetch();
+        if (is_array($unUser)){
+           if (password_verify($pwd,$unUser['motDePasse']))
+                $user=true;}
+        
+    }else{ 
+    throw new Exception("erreur dans la requÃªte");
+    }
+    
+    }
 return $user;   
 }
 
@@ -98,6 +110,21 @@ function donneLeMedecinByMail($login) {
         throw new Exception("erreur dans la requête");
 return $unUser;   
 }
+
+function donneLeModoByMail($login) {
+    
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT id, nom, prenom,mail FROM moderateur WHERE mail= :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $unUser=$monObjPdoStatement->fetch();
+       
+    }
+    else
+        throw new Exception("erreur dans la requête");
+return $unUser;   
+}
+
 
 /**
  * fonction public qui donne la longueur de l'adresse mail
@@ -131,31 +158,55 @@ $leResultat = $pdoStatement->fetch();
 public function creeMedecin($email, $mdp, $nom, $prenom)
 {
    
-    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO medecin(id,nom,prenom,mail, motDePasse,dateCreation,dateConsentement) "
-            . "VALUES (null,:leNom, :lePrenom, :leMail, :leMdp, now(),now())");
+    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO medecin(id,mail, motDePasse,nom,prenom,dateCreation,dateConsentement) "
+            . "VALUES (null, :leMail, :leMdp, :leNom, :lePrenom,now(),now())");
     $bv1 = $pdoStatement->bindValue(':leMail', $email);
     $mdp = password_hash($mdp, PASSWORD_DEFAULT);
     $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
-    $bv3 = $pdoStatement->bindValue(':leNom', $nom);
-    $bv4 = $pdoStatement->bindValue(':lePrenom', $prenom);
+    $bv3 = $pdoStatement->bindValue(':leNom',$nom);
+    $bv4 = $pdoStatement->bindValue(':lePrenom',$prenom);
+
     $execution = $pdoStatement->execute();
     return $execution;
+    
+}
+
+public function creeValidateur($email,$mdp)
+{
+    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO validateur(idValidateur,mailValidateur, motDePasseValidateur) "
+            . "VALUES (null, :leMail, :leMdp, now(),now())");
+    $bv1 = $pdoStatement->bindValue(':leMail',$email);
+    $mdp = password_hash($mdp, PASSWORD_DEFAULT);
+    $bv2 = $pdoStatement->bindValue('leMdp', $mdp);
+
     
 }
 
 public function creeModerateur($email, $mdp, $nom, $prenom)
 {
    
-    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO moderateur(id,nom,prenom,mail, motDePasse,dateCreation) "
+    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO moderateur(id,nom,prenom,mail, motDePasse,dateCreation,dateConsentement) "
             . "VALUES (null, :leNom, :lePrenom, :leMail, :leMdp, now(),now())");
     $bv1 = $pdoStatement->bindValue(':leMail', $email);
     $mdp = password_hash($mdp, PASSWORD_DEFAULT);
     $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
     $bv3 = $pdoStatement->bindValue(':leNom', $nom);
     $bv4 = $pdoStatement->bindValue(':lePrenom', $prenom);
+
     $execution = $pdoStatement->execute();
     return $execution;
-    
+}
+
+public function creeAdmin($email, $mdp, $nom, $prenom)
+{
+   
+    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO admin(id,nom,prenom,mail, motDePasse,dateCreation) "
+            . "VALUES (null, :leNom, :lePrenom, :leMail, :leMdp, now(),now())");
+    $bv1 = $pdoStatement->bindValue(':leMail', $email);
+    $mdp = password_hash($mdp, PASSWORD_DEFAULT);
+    $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
+    $bv3 = $pdoStatement->bindValue(':leNom', $nom);
+    $bv4 = $pdoStatement->bindValue(':lePrenom', $prenom);
 }
 
 
