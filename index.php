@@ -34,7 +34,9 @@ switch($uc){
         case 'footer':{
 			include("controleurs/c_footer.php");break;
 		}
-	
+	case 'consulteProduit':{
+		include("controleurs/c_consultation_produit.php");break;
+	}
 	}
 	
 
