@@ -125,7 +125,7 @@ $leResultat = $pdoStatement->fetch();
  * @param $mdp
  * @return $execution
  * 
- * la fonction va insérer un nouvel utilisateur avec un id, un mail, un mot de passe, la date de création du compte et la date à laquelle le consentement à la politique de protection des données
+ * la fonction va insérer un nouvel utilisateur avec un id, un mail, un mot de passe, la date de création du compte et la date à laquelle le consentement à la politique de pro<tection des données
  */
 
 public function creeMedecin($email, $mdp, $nom, $prenom)

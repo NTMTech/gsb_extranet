@@ -26,6 +26,7 @@ switch($action){
 			$nom =  $infosMedecin['nom'];
 			$prenom = $infosMedecin['prenom'];
 			connecter($id,$nom,$prenom);
+			$pdo -> connexionInitiale($login);
                        
 			include("vues/v_sommaire.php");
 			}
