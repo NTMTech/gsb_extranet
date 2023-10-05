@@ -1,4 +1,5 @@
 <?php
+include("../controleurs/c_consultation_produit.php");
 if (!$_SESSION['id'])
     header('Location: ../index.php');
 else {
@@ -26,7 +27,7 @@ else {
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body background="assets/img/laboratoire.jpg">
+  <body>
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -43,11 +44,14 @@ else {
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
+      <form action="controleurs/c_consultation_produit.php" method="post">
         
-        <li class="active"><a href="index.php?uc=consulteProduit">Consultation des produits</a></li> <!--Modifier la redirection-->
-        <li class="active"><a href="index.php?uc=consulteVisio">consultations des visioconférences proposées et des avis</a></li> <!--Modifier la redirection-->
-        <li class="active"><a href="index.php?uc=inscrireVisio">Inscription à des visioconférences à venir</a></li> 
-        <li class="active"><a href="index.php?uc=avisVisio">avis sur les visioconférences où vous êtes inscrit</a></li> <!--Modifier la redirection-->
+        <li><?php $_GET['id'] ?></li>
+        <li><?php $_GET['nom'] ?></li>
+        <li><?php $_GET['objectif'] ?></li>
+        <li><?php $_GET['information'] ?></li>
+        <li><?php $_GET['effetIndesirable'] ?></li>
+
       </ul>
       <ul class="nav navbar-nav navbar-right">
 		  <li><a><?php echo $_SESSION['prenom']."  ".$_SESSION['nom']?></a></li>

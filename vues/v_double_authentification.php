@@ -31,7 +31,7 @@
                                     <div class="content-wrap">
 						<legend>Veuillez renseigner le code d'authentification que vous avez reçu</legend>
 							<form method="post" action="index.php?uc=creation&action=valideCreation">
-                                                            <input name="login" class="form-control" type="text" placeholder="code"/>
+                                                            <input name="code" class="form-control" type="text" placeholder="code"/>
                                                             <input type="submit" class="btn btn-primary signup" value="Valider"/>
 							</form>
 							</br>

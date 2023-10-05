@@ -20,7 +20,7 @@ class PdoGsb{
       	private static $serveur='mysql:host=localhost';
       	private static $bdd='dbname=gsbextranet';   		
       	private static $user='gsbextranet' ;    		
-      	private static $mdp='ThoughtPolice2019' ;	
+      	private static $mdp='password' ;	
 	private static $monPdo;
 	private static $monPdoGsb=null;
 		
@@ -203,7 +203,20 @@ function donneinfosmedecin($id){
            
     
 }
-
+function AfficherProduit()
+{
+    $pdo = PdoGsb::$monPdo;
+$monObjPdoStatement=$pdo->prepare("SELECT id,nom,objectif,information,effetIndesirable FROM produit ;");
+$id=$monObjPdoStatement->bindValue('id',':id',PDO::PARAM_STR);
+$nom=$monObjPdoStatement->bindValue('nom',':nom',PDO::PARAM_STR);
+$objectif=$monObjPdoStatement->bindValue('objectif',':objectif',PDO::PARAM_STR);
+$information=$monObjPdoStatement->bindValue('information',':information',PDO::PARAM_STR);
+$effetIndesirable=$monObjPdoStatement->bindValue('effetIndesirable',':effetIndesirable',PDO::PARAM_STR);
+if ($monObjPdoStatement->execute()) {
+    $requete=$monObjPdoStatement->fetchAll();
+    return $requete;
+}
+}
 
 }
 ?>
