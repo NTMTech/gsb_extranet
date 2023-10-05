@@ -109,6 +109,16 @@ switch($action){
                     {
                         $actif = true;
                     }
+                echo 'tout est ok, nous allons pouvoir créer votre compte...<br/>';
+                $executionOK = $pdo->creeMedecin($leLogin,$lePassword,$leNom,$lePrenom);    
+               
+                if ($executionOK==true){
+                    echo "c'est bon, votre compte a bien été créé ;-)";
+                    $pdo->connexionInitiale($leLogin);
+                }   
+                else
+                     echo "ce login existe déjà, veuillez en choisir un autre";
+            }
 
                     if ($actif == true)
                     {*/

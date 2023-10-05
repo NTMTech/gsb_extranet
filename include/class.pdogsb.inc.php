@@ -61,7 +61,7 @@ class PdoGsb{
  * @return bool
  * @throws Exception
  */
-function checkUser($login,$pwd):bool {
+function checkUserMedecin($login,$pwd):bool {
     //AJOUTER TEST SUR TOKEN POUR ACTIVATION DU COMPTE
     $user=false;
     $pdo = PdoGsb::$monPdo;
@@ -72,12 +72,53 @@ function checkUser($login,$pwd):bool {
         if (is_array($unUser)){
            if (password_verify($pwd,$unUser['motDePasse']))
                 $user=true;
-        }
+               
+         
+    
     }
-    else
-        throw new Exception("erreur dans la requÃªte");
+}
 return $user;   
 }
+function checkUserModo($login,$pwd):bool {
+    //AJOUTER TEST SUR TOKEN POUR ACTIVATION DU COMPTE
+    $user=false;
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM moderateur WHERE mail= :login AND token IS NULL");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $unUser=$monObjPdoStatement->fetch();
+        if (is_array($unUser)){
+           if (password_verify($pwd,$unUser['motDePasse']))
+                $user=true;
+               
+         
+    
+    }
+}
+return $user;   
+}
+
+function checkUserAdmin($login,$pwd):bool {
+    //AJOUTER TEST SUR TOKEN POUR ACTIVATION DU COMPTE
+    $user=false;
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM administarteur WHERE mail= :login AND token IS NULL");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $unUser=$monObjPdoStatement->fetch();
+        if (is_array($unUser)){
+           if (password_verify($pwd,$unUser['motDePasse']))
+                $user=true;
+               
+         
+    
+    }
+}
+return $user;   
+}
+
+
+
 
 /**
  * fonction qui reçoit le mail en entrée et donne l'id, le nom, le prénom et le mail en sortie
@@ -98,6 +139,35 @@ function donneLeMedecinByMail($login) {
         throw new Exception("erreur dans la requête");
 return $unUser;   
 }
+
+function donneLeModoByMail($login) {
+    
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT id, nom, prenom,mail FROM moderateur WHERE mail= :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $unUser=$monObjPdoStatement->fetch();
+       
+    }
+    else
+        throw new Exception("erreur dans la requête");
+return $unUser;   
+}
+
+function donneAdminByMail($login) {
+    
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT id, nom, prenom,mail FROM administarteur WHERE mail= :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $unUser=$monObjPdoStatement->fetch();
+       
+    }
+    else
+        throw new Exception("erreur dans la requête");
+return $unUser;   
+}
+
 
 /**
  * fonction public qui donne la longueur de l'adresse mail
@@ -125,7 +195,7 @@ $leResultat = $pdoStatement->fetch();
  * @param $mdp
  * @return $execution
  * 
- * la fonction va insérer un nouvel utilisateur avec un id, un mail, un mot de passe, la date de création du compte et la date à laquelle le consentement à la politique de protection des données
+ * la fonction va insérer un nouvel utilisateur avec un id, un mail, un mot de passe, la date de création du compte et la date à laquelle le consentement à la politique de pro<tection des données
  */
 
 public function creeMedecin($email, $mdp, $nom, $prenom)
@@ -155,6 +225,36 @@ public function creeValidateur($email,$mdp)
     
 }
 
+public function creeModerateur($email, $mdp, $nom, $prenom)
+{
+   
+    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO moderateur(id,nom,prenom,mail, motDePasse,dateCreation,dateConsentement) "
+            . "VALUES (null, :leNom, :lePrenom, :leMail, :leMdp, now(),now())");
+    $bv1 = $pdoStatement->bindValue(':leMail', $email);
+    $mdp = password_hash($mdp, PASSWORD_DEFAULT);
+    $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
+    $bv3 = $pdoStatement->bindValue(':leNom', $nom);
+    $bv4 = $pdoStatement->bindValue(':lePrenom', $prenom);
+
+    $execution = $pdoStatement->execute();
+    return $execution;
+}
+
+public function creeAdmin($email, $mdp, $nom, $prenom)
+{
+   
+    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO administarteur(id,nom,prenom,mail, motDePasse,dateCreation,dateConsentement) "
+            . "VALUES (null, :leNom, :lePrenom, :leMail, :leMdp, now(),now())");
+    $bv1 = $pdoStatement->bindValue(':leMail', $email);
+    $mdp = password_hash($mdp, PASSWORD_DEFAULT);
+    $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
+    $bv3 = $pdoStatement->bindValue(':leNom', $nom);
+    $bv4 = $pdoStatement->bindValue(':lePrenom', $prenom);
+
+    $execution = $pdoStatement->execute();
+    return $execution;
+}
+
 
 function testMail($email){
     $pdo = PdoGsb::$monPdo;
@@ -181,14 +281,31 @@ function connexionInitiale($mail){
     
 }
 
+function connexionInitialeModo($mail){
+    $pdo = PdoGsb::$monPdo;
+   $modo= $this->donneLeModoByMail($mail);
+   $id = $modo['id'];
+   $this->ajouteConnexionInitiale($id);
+   
+}
+
+function connexionInitialeAdmin($mail){
+    $pdo = PdoGsb::$monPdo;
+   $admin= $this->donneAdminByMail($mail);
+   $id = $admin['id'];
+   $this->ajouteConnexionInitiale($id);
+   
+}
+
 function ajouteConnexionInitiale($id){
     $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO historiqueconnexion "
-            . "VALUES (:leMedecin, now(), now())");
-    $bv1 = $pdoStatement->bindValue(':leMedecin', $id);
+            . "VALUES (:leUser, now(), now())");
+    $bv1 = $pdoStatement->bindValue(':leUser', $id);
     $execution = $pdoStatement->execute();
     return $execution;
     
 }
+
 function donneinfosmedecin($id){
   
        $pdo = PdoGsb::$monPdo;
@@ -207,18 +324,11 @@ function AfficherProduit()
 {
     $pdo = PdoGsb::$monPdo;
 $monObjPdoStatement=$pdo->prepare("SELECT id,nom,objectif,information,effetIndesirable FROM produit ;");
-/*
-$id=$monObjPdoStatement->bindValue('id',':id',PDO::PARAM_STR);
-$nom=$monObjPdoStatement->bindValue('nom',':nom',PDO::PARAM_STR);
-$objectif=$monObjPdoStatement->bindValue('objectif',':objectif',PDO::PARAM_STR);
-$information=$monObjPdoStatement->bindValue('information',':information',PDO::PARAM_STR);
-$effetIndesirable=$monObjPdoStatement->bindValue('effetIndesirable',':effetIndesirable',PDO::PARAM_STR);*/
 if ($monObjPdoStatement->execute()) {
   $donnees = $monObjPdoStatement->fetchAll();
     
         return $donnees;
     }
-    //$requete->bind_result($id,$nom,$objectif,$information,$effetIndesirable);
 
 }
 
@@ -234,7 +344,7 @@ function creerCodeVerif($login)
 throw new Exception("erreur"); 
 }
 
-function VerifCode($login,$codeFromForm)
+/*function VerifCode($login,$codeFromForm)
 {
     $pdo = PdoGsb::$monPdo;
     $monObjPdoStatement=$pdo->prepare("SELECT cle FROM medecin WHERE mail= :login");
@@ -252,8 +362,63 @@ function VerifCode($login,$codeFromForm)
     {
         return false;
     }
+}*/
+function donneinfosmodo($id){
+  
+    $pdo = PdoGsb::$monPdo;
+        $monObjPdoStatement=$pdo->prepare("SELECT id,nom,prenom FROM moderateur WHERE id= :lId");
+ $bvc1=$monObjPdoStatement->bindValue(':lId',$id,PDO::PARAM_INT);
+ if ($monObjPdoStatement->execute()) {
+     $unUser=$monObjPdoStatement->fetch();
+
+ }
+ else
+     throw new Exception("erreur");
+        
+ 
 }
 
+function donneinfosadmin($id){
+  
+    $pdo = PdoGsb::$monPdo;
+        $monObjPdoStatement=$pdo->prepare("SELECT id,nom,prenom FROM administarteur WHERE id= :lId");
+ $bvc1=$monObjPdoStatement->bindValue(':lId',$id,PDO::PARAM_INT);
+ if ($monObjPdoStatement->execute()) {
+     $unUser=$monObjPdoStatement->fetch();
+
+ }
+ else
+     throw new Exception("erreur");
+        
+ 
+}
+
+function InfoPortabilitéJSON()
+{
+  $pdo = PdoGsb::$monPdo;
+  $monObjPdoStatement=$pdo->prepare("SELECT id,nom,prenom,telephone,mail,dateNaissance,motDePasse,dateCreation,rpps,token,dateDiplome,dateConsentement FROM medecin WHERE id= :lId");
+    $bvc1=$monObjPdoStatement->bindValue(':lId',$id,PDO::PARAM_INT);
+    if ($monObjPdoStatement->execute()) {
+        $unUser=$monObjPdoStatement->fetch();
+        $json = json_encode($unUser);
+        
+   
+    }
+    else
+        throw new Exception("erreur");
+}
+
+function getVisioProposee()
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT * FROM visioconference ;");
+    if ($monObjPdoStatement->execute()) {
+    $donnees = $monObjPdoStatement->fetchAll();
+    
+          return $donnees;
+      }
+
+}
 /*function sendVerifMail($destinataire,$sujet,$message,$expediteur)
 {
 
