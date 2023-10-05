@@ -1,7 +1,6 @@
 <?php
-include("../controleurs/c_consultation_produit.php");
 if (!$_SESSION['id'])
-    header('Location: ../index.php');
+header('Location: ../index.php');
 else {
 ?>
 ﻿<!DOCTYPE html>
@@ -28,6 +27,7 @@ else {
     <![endif]-->
   </head>
   <body>
+  <form action="../controleurs/c_consultation_produit.php" method="post">
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -44,13 +44,11 @@ else {
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-      <form action="controleurs/c_consultation_produit.php" method="post">
-        
-        <li><?php $_GET['id'] ?></li>
-        <li><?php $_GET['nom'] ?></li>
-        <li><?php $_GET['objectif'] ?></li>
-        <li><?php $_GET['information'] ?></li>
-        <li><?php $_GET['effetIndesirable'] ?></li>
+       
+      <li class="active"><a href="index.php?uc=consulteProduit">Consultation des produits</a></li> <!--Modifier la redirection-->
+        <li class="active"><a href="index.php?uc=consulteVisio">consultations des visioconférences proposées et des avis</a></li> <!--Modifier la redirection-->
+        <li class="active"><a href="index.php?uc=inscrireVisio">Inscription à des visioconférences à venir</a></li> 
+        <li class="active"><a href="index.php?uc=avisVisio">avis sur les visioconférences où vous êtes inscrit</a></li> <!--Modifier la redirection-->
 
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -67,5 +65,29 @@ else {
 	
 	<div class="page-content">
     	<div class="row">
+      <?php $lesProduits = $pdo->AfficherProduit();
+     
+     echo '<div>';
+     echo '<table>';
+     echo '<tr>';
+     echo '<th>Id</th>';
+     echo '<th>Nom</th>';
+     echo '<th>Objectif</th>';
+     echo '<th>Information</th>';
+     echo '<th>Effet indesirable</th>';
+     echo '</tr>';
+   foreach($lesProduits as $unProduit){
+     echo '<tr>';
+     echo '<th>'.$unProduit['id'].'</th>';
+     echo '<th>'.$unProduit['nom'].'</th>';
+     echo '<th>'.$unProduit['objectif'].'</th>';
+     echo '<th width=30%>'.$unProduit['information'].'</th>';
+     echo '<th width=30%>'.$unProduit['effetIndesirable'].'</th>';
+     echo '</tr>';
+   
+   }
+   echo '</table>';
+   echo '</div>';
+   ?>
 
 <?php };?>

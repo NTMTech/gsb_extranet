@@ -12,17 +12,16 @@ switch($action){
 		break;
 	}
 	case 'valideCreation':{
-		
         if(isset($_POST['ValideCheckBox']) == false){
             $e = "impossible de créer le compte sans avoir coché la case de consentement !<br/>";
             echo $e;
         }
-
+        $_SESSION['login'] = $_POST['login'];
 
 		$leLogin = htmlspecialchars($_POST['login']);
                 $lePassword = htmlspecialchars($_POST['mdp']);
-                $leNom = ($_POST['']);
-                $lePrenom = ($_POST['']);
+                $leNom = ($_POST['nom']);
+                $lePrenom = ($_POST['prénom']);
 
 
         if ($leLogin == $_POST['login'])
@@ -82,27 +81,48 @@ switch($action){
                 . ' une minuscule et un caractère spécial<br/>';
                 $passwordOk=false;
             }
-            
-            
                  
         }
         }
         if($rempli && $loginOk && $passwordOk){
-                echo 'tout est ok, nous allons pouvoir créer votre compte...<br/>';
-                $executionOK = $pdo->creeMedecin($leLogin,$lePassword);       
-               
-                if ($executionOK==true){
-                    echo "c'est bon, votre compte a bien été créé ;-)";
-                    $pdo->connexionInitiale($leLogin);
-                }   
-                else
-                     echo "ce login existe déjà, veuillez en choisir un autre";
-            }
+                /*include("vues/v_double_authentification.php");
+                $code = $pdo->creerCodeVerif($leLogin);
+                $destinataire = $leLogin;
+                $expediteur = 'login4264@s5-4264.nuage-peda@localhost';
+                $sujet = 'Code verification';
+                $message = "Votre code de connexion à 2 facteurs : $code";
+                $headers = "From: $expediteur\r\n";
+                $headers .= "Reply-To: $expediteur\r\n";
+                $pdo->sendVerifMail($destinataire,$sujet,$message,$headers);
+                break;}}
+                case 'recupCode':{
+                $leLogin = $_SESSION['login'];
+                $codeFromForm = $_POST['code'];
+                $codeTrue = $pdo->VerifCode($leLogin,$codeFromForm);
+                if ($codeTrue == true)
+                {
+                    $actif = $pdo->compteActif($leLogin);
+                    if ($actif != 1)
+                    {
+                        $actif = false;
+                    }else
+                    {
+                        $actif = true;
+                    }
 
-			
-        
-        break;	
-}
+                    if ($actif == true)
+                    {*/
+                        echo 'tout est ok, nous allons pouvoir créer votre compte...<br/>';
+                        $executionOK = $pdo->creeMedecin($leLogin,$lePassword,$leNom,$lePrenom);
+                        if ($executionOK==true){
+                            echo "c'est bon, votre compte a bien été créé ;-)";
+                            $pdo->connexionInitiale($leLogin);
+                        }   
+                        else
+                             echo "ce login existe déjà, veuillez en choisir un autre";
+                    }
+                    
+                    break;}
 	default :{
 		include("vues/v_connexion.php");
 		break;

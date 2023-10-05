@@ -132,7 +132,7 @@ public function creeMedecin($email, $mdp, $nom, $prenom)
 {
    
     $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO medecin(id,mail, motDePasse,nom,prenom,dateCreation,dateConsentement) "
-            . "VALUES (null, :leMail, :leMdp, :leNmo, :lePrenom,now(),now())");
+            . "VALUES (null, :leMail, :leMdp, :leNom, :lePrenom,now(),now())");
     $bv1 = $pdoStatement->bindValue(':leMail', $email);
     $mdp = password_hash($mdp, PASSWORD_DEFAULT);
     $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
@@ -207,16 +207,63 @@ function AfficherProduit()
 {
     $pdo = PdoGsb::$monPdo;
 $monObjPdoStatement=$pdo->prepare("SELECT id,nom,objectif,information,effetIndesirable FROM produit ;");
+/*
 $id=$monObjPdoStatement->bindValue('id',':id',PDO::PARAM_STR);
 $nom=$monObjPdoStatement->bindValue('nom',':nom',PDO::PARAM_STR);
 $objectif=$monObjPdoStatement->bindValue('objectif',':objectif',PDO::PARAM_STR);
 $information=$monObjPdoStatement->bindValue('information',':information',PDO::PARAM_STR);
-$effetIndesirable=$monObjPdoStatement->bindValue('effetIndesirable',':effetIndesirable',PDO::PARAM_STR);
+$effetIndesirable=$monObjPdoStatement->bindValue('effetIndesirable',':effetIndesirable',PDO::PARAM_STR);*/
 if ($monObjPdoStatement->execute()) {
-    $requete=$monObjPdoStatement->fetchAll();
-    return $requete;
-}
+  $donnees = $monObjPdoStatement->fetchAll();
+    
+        return $donnees;
+    }
+    //$requete->bind_result($id,$nom,$objectif,$information,$effetIndesirable);
+
 }
 
+function creerCodeVerif($login)
+{
+    $code = rand(100000,999999);
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET cle = $code WHERE mail= :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        return true;  
+}else
+throw new Exception("erreur"); 
+}
+
+function VerifCode($login,$codeFromForm)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT cle FROM medecin WHERE mail= :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $codeReal=$monObjPdoStatement->fetch();
+    }
+    if ($codeReal == $codeFromForm)
+    {
+        $pdo = PdoGsb::$monPdo;
+        $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET actif = 1 WHERE mail= :login");
+        echo "Code Valide";
+        return true;
+    }else
+    {
+        return false;
+    }
+}
+
+/*function sendVerifMail($destinataire,$sujet,$message,$expediteur)
+{
+
+        if(mail($destinataire,$sujet,$message,$expediteur))
+        {
+            echo "mail envoye";
+        }else 
+        {
+            echo "Marche pas";
+        }
+}*/
 }
 ?>
