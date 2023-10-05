@@ -20,7 +20,7 @@ class PdoGsb{
       	private static $serveur='mysql:host=localhost';
       	private static $bdd='dbname=gsbextranet';   		
       	private static $user='gsbextranet' ;    		
-      	private static $mdp='password' ;	
+      	private static $mdp='ThoughtPolice2019' ;	
 	private static $monPdo;
 	private static $monPdoGsb=null;
 		
@@ -61,7 +61,7 @@ class PdoGsb{
  * @return bool
  * @throws Exception
  */
-function checkUser($login,$pwd):bool {
+function checkUserMedecin($login,$pwd):bool {
     //AJOUTER TEST SUR TOKEN POUR ACTIVATION DU COMPTE
     $user=false;
     $pdo = PdoGsb::$monPdo;
@@ -72,12 +72,34 @@ function checkUser($login,$pwd):bool {
         if (is_array($unUser)){
            if (password_verify($pwd,$unUser['motDePasse']))
                 $user=true;
-        }
+               
+         
+    
     }
-    else
-        throw new Exception("erreur dans la requÃªte");
+}
 return $user;   
 }
+function checkUserModo($login,$pwd):bool {
+    //AJOUTER TEST SUR TOKEN POUR ACTIVATION DU COMPTE
+    $user=false;
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM moderateur WHERE mail= :login AND token IS NULL");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $unUser=$monObjPdoStatement->fetch();
+        if (is_array($unUser)){
+           if (password_verify($pwd,$unUser['motDePasse']))
+                $user=true;
+               
+         
+    
+    }
+}
+return $user;   
+}
+
+
+
 
 /**
  * fonction qui reçoit le mail en entrée et donne l'id, le nom, le prénom et le mail en sortie
@@ -98,6 +120,21 @@ function donneLeMedecinByMail($login) {
         throw new Exception("erreur dans la requête");
 return $unUser;   
 }
+
+function donneLeModoByMail($login) {
+    
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT id, nom, prenom,mail FROM moderateur WHERE mail= :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $unUser=$monObjPdoStatement->fetch();
+       
+    }
+    else
+        throw new Exception("erreur dans la requête");
+return $unUser;   
+}
+
 
 /**
  * fonction public qui donne la longueur de l'adresse mail
@@ -132,7 +169,7 @@ public function creeMedecin($email, $mdp, $nom, $prenom)
 {
    
     $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO medecin(id,mail, motDePasse,nom,prenom,dateCreation,dateConsentement) "
-            . "VALUES (null, :leMail, :leMdp, :leNmo, :lePrenom,now(),now())");
+            . "VALUES (null, :leMail, :leMdp, :leNom, :lePrenom,now(),now())");
     $bv1 = $pdoStatement->bindValue(':leMail', $email);
     $mdp = password_hash($mdp, PASSWORD_DEFAULT);
     $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
@@ -153,6 +190,33 @@ public function creeValidateur($email,$mdp)
     $bv2 = $pdoStatement->bindValue('leMdp', $mdp);
 
     
+}
+
+public function creeModerateur($email, $mdp, $nom, $prenom)
+{
+   
+    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO moderateur(id,nom,prenom,mail, motDePasse,dateCreation,dateConsentement) "
+            . "VALUES (null, :leNom, :lePrenom, :leMail, :leMdp, now(),now())");
+    $bv1 = $pdoStatement->bindValue(':leMail', $email);
+    $mdp = password_hash($mdp, PASSWORD_DEFAULT);
+    $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
+    $bv3 = $pdoStatement->bindValue(':leNom', $nom);
+    $bv4 = $pdoStatement->bindValue(':lePrenom', $prenom);
+
+    $execution = $pdoStatement->execute();
+    return $execution;
+}
+
+public function creeAdmin($email, $mdp, $nom, $prenom)
+{
+   
+    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO admin(id,nom,prenom,mail, motDePasse,dateCreation) "
+            . "VALUES (null, :leNom, :lePrenom, :leMail, :leMdp, now(),now())");
+    $bv1 = $pdoStatement->bindValue(':leMail', $email);
+    $mdp = password_hash($mdp, PASSWORD_DEFAULT);
+    $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
+    $bv3 = $pdoStatement->bindValue(':leNom', $nom);
+    $bv4 = $pdoStatement->bindValue(':lePrenom', $prenom);
 }
 
 
@@ -217,6 +281,5 @@ if ($monObjPdoStatement->execute()) {
     return $requete;
 }
 }
-
 }
 ?>
