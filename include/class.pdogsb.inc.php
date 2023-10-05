@@ -135,6 +135,20 @@ function donneLeModoByMail($login) {
 return $unUser;   
 }
 
+function donneAdminByMail($login) {
+    
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT id, nom, prenom,mail FROM admin WHERE mail= :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $unUser=$monObjPdoStatement->fetch();
+       
+    }
+    else
+        throw new Exception("erreur dans la requête");
+return $unUser;   
+}
+
 
 /**
  * fonction public qui donne la longueur de l'adresse mail
@@ -245,14 +259,31 @@ function connexionInitiale($mail){
     
 }
 
+function connexionInitialeModo($mail){
+    $pdo = PdoGsb::$monPdo;
+   $modo= $this->donneLeModoByMail($mail);
+   $id = $modo['id'];
+   $this->ajouteConnexionInitiale($id);
+   
+}
+
+function connexionInitialeAdmin($mail){
+    $pdo = PdoGsb::$monPdo;
+   $admin= $this->donneAdminByMail($mail);
+   $id = $admin['id'];
+   $this->ajouteConnexionInitiale($id);
+   
+}
+
 function ajouteConnexionInitiale($id){
     $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO historiqueconnexion "
-            . "VALUES (:leMedecin, now(), now())");
-    $bv1 = $pdoStatement->bindValue(':leMedecin', $id);
+            . "VALUES (:leUser, now(), now())");
+    $bv1 = $pdoStatement->bindValue(':leUser', $id);
     $execution = $pdoStatement->execute();
     return $execution;
     
 }
+
 function donneinfosmedecin($id){
   
        $pdo = PdoGsb::$monPdo;
@@ -266,6 +297,36 @@ function donneinfosmedecin($id){
         throw new Exception("erreur");
            
     
+}
+
+function donneinfosmodo($id){
+  
+    $pdo = PdoGsb::$monPdo;
+        $monObjPdoStatement=$pdo->prepare("SELECT id,nom,prenom FROM moderateur WHERE id= :lId");
+ $bvc1=$monObjPdoStatement->bindValue(':lId',$id,PDO::PARAM_INT);
+ if ($monObjPdoStatement->execute()) {
+     $unUser=$monObjPdoStatement->fetch();
+
+ }
+ else
+     throw new Exception("erreur");
+        
+ 
+}
+
+function donneinfosadmin($id){
+  
+    $pdo = PdoGsb::$monPdo;
+        $monObjPdoStatement=$pdo->prepare("SELECT id,nom,prenom FROM admin WHERE id= :lId");
+ $bvc1=$monObjPdoStatement->bindValue(':lId',$id,PDO::PARAM_INT);
+ if ($monObjPdoStatement->execute()) {
+     $unUser=$monObjPdoStatement->fetch();
+
+ }
+ else
+     throw new Exception("erreur");
+        
+ 
 }
 
 function InfoPortabilitéJSON()

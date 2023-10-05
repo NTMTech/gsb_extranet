@@ -26,12 +26,12 @@ switch($action){
 		}
 		    else { 
 
-			    $infosMedecin = $pdo->donneLeMedecinByMail($login);
+			    $infosMedecin = $pdo->donneLeModoByMail($login);
                 $id = $infosMedecin['id'];
                 $nom =  $infosMedecin['nom'];
                 $prenom = $infosMedecin['prenom'];
                 connecter($id,$nom,$prenom);
-                $pdo->connexionInitiale($login);
+                $pdo->connexionInitialeModo($login);
 		   
 include("vues/v_sommaire.php");
 }
