@@ -61,7 +61,7 @@ class PdoGsb{
  * @return bool
  * @throws Exception
  */
-function checkUser($login,$pwd):bool {
+function checkUserMedecin($login,$pwd):bool {
     //AJOUTER TEST SUR TOKEN POUR ACTIVATION DU COMPTE
     $user=false;
     $pdo = PdoGsb::$monPdo;
@@ -72,24 +72,34 @@ function checkUser($login,$pwd):bool {
         if (is_array($unUser)){
            if (password_verify($pwd,$unUser['motDePasse']))
                 $user=true;
-        }
+               
+         
+    
     }
-    else{
-        $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM moderateur WHERE mail= :login AND token IS NULL");
-    $bvc2=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+}
+return $user;   
+}
+function checkUserModo($login,$pwd):bool {
+    //AJOUTER TEST SUR TOKEN POUR ACTIVATION DU COMPTE
+    $user=false;
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM moderateur WHERE mail= :login AND token IS NULL");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
         $unUser=$monObjPdoStatement->fetch();
         if (is_array($unUser)){
            if (password_verify($pwd,$unUser['motDePasse']))
-                $user=true;}
-        
-    }else{ 
-    throw new Exception("erreur dans la requÃªte");
-    }
+                $user=true;
+               
+         
     
     }
+}
 return $user;   
 }
+
+
+
 
 /**
  * fonction qui reçoit le mail en entrée et donne l'id, le nom, le prénom et le mail en sortie
@@ -256,6 +266,21 @@ function donneinfosmedecin($id){
         throw new Exception("erreur");
            
     
+}
+
+function InfoPortabilitéJSON()
+{
+  $pdo = PdoGsb::$monPdo;
+  $monObjPdoStatement=$pdo->prepare("SELECT id,nom,prenom,telephone,mail,dateNaissance,motDePasse,dateCreation,rpps,token,dateDiplome,dateConsentement FROM medecin WHERE id= :lId");
+    $bvc1=$monObjPdoStatement->bindValue(':lId',$id,PDO::PARAM_INT);
+    if ($monObjPdoStatement->execute()) {
+        $unUser=$monObjPdoStatement->fetch();
+        $json = json_encode($unUser);
+        
+   
+    }
+    else
+        throw new Exception("erreur");
 }
 
 

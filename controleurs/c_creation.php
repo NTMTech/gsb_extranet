@@ -89,7 +89,7 @@ switch($action){
         }
         if($rempli && $loginOk && $passwordOk){
                 echo 'tout est ok, nous allons pouvoir créer votre compte...<br/>';
-                $executionOK = $pdo->creeModerateur($leLogin,$lePassword,$leNom,$lePrenom);    
+                $executionOK = $pdo->creeMedecin($leLogin,$lePassword,$leNom,$lePrenom);    
                
                 if ($executionOK==true){
                     echo "c'est bon, votre compte a bien été créé ;-)";

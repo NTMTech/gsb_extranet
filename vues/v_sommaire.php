@@ -44,7 +44,8 @@ else {
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         
-        <li class="active"><a href="index.php?uc=etatFrais&action=selectionnerMois">M'inscrire à une visio</a></li> 
+        <li class="active"><a href="index.php?uc=etatFrais&action=selectionnerMois">M'inscrire à une visio</a></li>
+        <li class="active"><a href="index.php?uc=etatFrais&action=selectionnerMois">Droit à la portabilité</a></li> 
        
          
       </ul>
