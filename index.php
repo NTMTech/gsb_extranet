@@ -46,8 +46,9 @@ switch($uc){
 	case 'avisVisio':{
 		include("controleurs/c_avis_visio.php");break;
 	}
+	case 'deconnexion':{
+		include("controleurs/c_deconnexion.php");break;
 	}
-	
-
+	}
 
 ?>

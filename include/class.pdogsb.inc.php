@@ -326,7 +326,7 @@ function ajouteConnexion($id){
 function updateConnexion($id){
     $pdoStatement = PdoGsb::$monPdo->prepare("UPDATE historiqueconnexion "
             . "SET dateFinLog (now()"
-            ."WHERE :leMedecin, MAX(dateDebutLog) AND dateFinLog IS NULL");
+            ."WHERE :leMedecin=idMededin, MAX(dateDebutLog) AND dateFinLog IS NULL");
     $bv1 = $pdoStatement->bindValue(':leMedecin', $id);
     $execution = $pdoStatement->execute();
     return $execution;
@@ -418,6 +418,33 @@ function donneinfosadmin($id){
      throw new Exception("erreur");
         
  
+}
+
+function InfoPortabilitéJSON()
+{
+  $pdo = PdoGsb::$monPdo;
+  $monObjPdoStatement=$pdo->prepare("SELECT id,nom,prenom,telephone,mail,dateNaissance,motDePasse,dateCreation,rpps,token,dateDiplome,dateConsentement FROM medecin WHERE id= :lId");
+    $bvc1=$monObjPdoStatement->bindValue(':lId',$id,PDO::PARAM_INT);
+    if ($monObjPdoStatement->execute()) {
+        $unUser=$monObjPdoStatement->fetch();
+        $json = json_encode($unUser);
+        
+   
+    }
+    else
+        throw new Exception("erreur");
+}
+
+function getVisioProposee()
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT * FROM visioconference ;");
+    if ($monObjPdoStatement->execute()) {
+    $donnees = $monObjPdoStatement->fetchAll();
+    
+          return $donnees;
+      }
+
 }
 }
 ?>
