@@ -253,6 +253,34 @@ function ajouteConnexionInitiale($id){
     return $execution;
     
 }
+
+function connexion($mail){
+    $pdo = PdoGsb::$monPdo;
+   $medecin= $this->donneLeMedecinByMail($mail);
+   $id = $medecin['id'];
+   $this->ajouteConnexion($id);
+   
+}
+
+function ajouteConnexion($id){
+    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO historiqueconnexion "
+            . "VALUES (:leMedecin, now(),NULL)");
+    $bv1 = $pdoStatement->bindValue(':leMedecin', $id);
+    $execution = $pdoStatement->execute();
+    return $execution;
+    
+}
+
+function updateConnexion($id){
+    $pdoStatement = PdoGsb::$monPdo->prepare("UPDATE historiqueconnexion "
+            . "SET dateFinLog (now()"
+            ."WHERE :leMedecin, MAX(dateDebutLog) AND dateFinLog IS NULL");
+    $bv1 = $pdoStatement->bindValue(':leMedecin', $id);
+    $execution = $pdoStatement->execute();
+    return $execution;
+    
+}
+
 function donneinfosmedecin($id){
   
        $pdo = PdoGsb::$monPdo;

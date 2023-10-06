@@ -31,7 +31,7 @@ switch($action){
                 $nom =  $infosMedecin['nom'];
                 $prenom = $infosMedecin['prenom'];
                 connecter($id,$nom,$prenom);
-                $pdo->connexionInitiale($login);
+                $pdo->connexion($login);
 		   
 include("vues/v_sommaire.php");
 }
@@ -44,7 +44,7 @@ include("vues/v_sommaire.php");
 			$nom =  $infosMedecin['nom'];
 			$prenom = $infosMedecin['prenom'];
 			connecter($id,$nom,$prenom);
-			$pdo->connexionInitiale($login);
+			$pdo->connexion($login);
                        
 			include("vues/v_sommaire.php");
 			}
