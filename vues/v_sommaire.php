@@ -27,6 +27,7 @@ else {
     <![endif]-->
   </head>
   <body background="assets/img/laboratoire.jpg">
+  <button name="deconnexion" class="btn btn-default" style="margin-left:94%;" type="submit"><a href="index.php?uc=deconnexion">Déconnexion</a></button>
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -39,7 +40,6 @@ else {
       </button>
       <a class="navbar-brand" href="#">Galaxy Swiss Bourdin</a>
     </div>
-
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
@@ -48,8 +48,6 @@ else {
         <li class="active"><a href="index.php?uc=consulteVisio">consultations des visioconférences proposées et des avis</a></li> <!--Modifier la redirection-->
         <li class="active"><a href="index.php?uc=inscrireVisio">Inscription à des visioconférences à venir</a></li> 
         <li class="active"><a href="index.php?uc=avisVisio">avis sur les visioconférences où vous êtes inscrit</a></li> <!--Modifier la redirection-->
-       
-         
 
       </ul>
       <ul class="nav navbar-nav navbar-right">
