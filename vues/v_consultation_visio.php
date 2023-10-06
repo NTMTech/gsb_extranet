@@ -1,6 +1,6 @@
 <?php
 if (!$_SESSION['id'])
-    header('Location: ../index.php');
+header('Location: ../index.php');
 else {
 ?>
 <!DOCTYPE html>
@@ -26,7 +26,8 @@ else {
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body background="assets/img/laboratoire.jpg">
+  <body>
+  <form action="../controleurs/c_consultation_produit.php" method="post">
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -43,8 +44,8 @@ else {
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        
-        <li class="active"><a href="index.php?uc=consulteProduit">Consultation des produits</a></li> <!--Modifier la redirection-->
+       
+      <li class="active"><a href="index.php?uc=consulteProduit">Consultation des produits</a></li> <!--Modifier la redirection-->
         <li class="active"><a href="index.php?uc=consulteVisio">consultations des visioconférences proposées et des avis</a></li> <!--Modifier la redirection-->
         <li class="active"><a href="index.php?uc=inscrireVisio">Inscription à des visioconférences à venir</a></li> 
         <li class="active"><a href="index.php?uc=avisVisio">avis sur les visioconférences où vous êtes inscrit</a></li> <!--Modifier la redirection-->
@@ -64,5 +65,30 @@ else {
 	
 	<div class="page-content">
     	<div class="row">
-
+      <?php $lesVisios = $pdo->getVisioProposee();
+     
+     echo '<div width=100%>';
+     echo '<table>';
+     echo '<tr>';
+     echo '<th>Id</th>';
+     echo '<th>Nom</th>';
+     echo '<th>Objectif</th>';
+     echo '<th>URL</th>';
+     echo '<th>Date de la visio</th>';
+     echo '<th>Avis de la visio</th>';
+     echo '</tr>';
+   foreach($lesVisios as $uneVisio){
+     echo '<tr>';
+     echo '<th>'.$uneVisio['id'].'</th>';
+     echo '<th>'.$uneVisio['nomVisio'].'</th>';
+     echo '<th>'.$uneVisio['objectif'].'</th>';
+     echo '<th>'.$uneVisio['url'].'</th>';
+     echo '<th>'.$uneVisio['dateVisio'].'</th>';
+     echo '<th width=30%>'.$uneVisio['avisVisio'].'</th>';
+     echo '</tr>';
+   
+   }
+   echo '</table>';
+   echo '</div>';
+  ?>
 <?php };?>
