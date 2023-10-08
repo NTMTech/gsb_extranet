@@ -37,7 +37,7 @@ switch($action){
 					connecter($id,$nom,$prenom);
 					$pdo->connexionInitialeAdmin($login);
 
-					include("vues/v_sommaire.php");
+					include("vues/v_sommaireAdmin.php");
 				} 
 		}
 		    else { 
@@ -49,7 +49,7 @@ switch($action){
                 connecter($id,$nom,$prenom);
                 $pdo->connexionInitialeModo($login);
 		   
-include("vues/v_sommaire.php");
+include("vues/v_sommaireModo.php");
 }
 		
 		}

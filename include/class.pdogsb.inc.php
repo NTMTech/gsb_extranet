@@ -102,7 +102,7 @@ function checkUserAdmin($login,$pwd):bool {
     //AJOUTER TEST SUR TOKEN POUR ACTIVATION DU COMPTE
     $user=false;
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM administarteur WHERE mail= :login AND token IS NULL");
+    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM administrateur WHERE mail= :login AND token IS NULL");
     $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
         $unUser=$monObjPdoStatement->fetch();
@@ -157,7 +157,7 @@ return $unUser;
 function donneAdminByMail($login) {
     
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT id, nom, prenom,mail FROM administarteur WHERE mail= :login");
+    $monObjPdoStatement=$pdo->prepare("SELECT id, nom, prenom,mail FROM administrateur WHERE mail= :login");
     $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
         $unUser=$monObjPdoStatement->fetch();
@@ -243,7 +243,7 @@ public function creeModerateur($email, $mdp, $nom, $prenom)
 public function creeAdmin($email, $mdp, $nom, $prenom)
 {
    
-    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO administarteur(id,nom,prenom,mail, motDePasse,dateCreation,dateConsentement) "
+    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO administrateur(id,nom,prenom,mail, motDePasse,dateCreation,dateConsentement) "
             . "VALUES (null, :leNom, :lePrenom, :leMail, :leMdp, now(),now())");
     $bv1 = $pdoStatement->bindValue(':leMail', $email);
     $mdp = password_hash($mdp, PASSWORD_DEFAULT);
@@ -299,7 +299,7 @@ function connexionInitialeAdmin($mail){
 
 function ajouteConnexionInitiale($id){
     $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO historiqueconnexion "
-            . "VALUES (:leUser, now(), now())");
+            . "VALUES (:leUser, now()");
     $bv1 = $pdoStatement->bindValue(':leUser', $id);
     $execution = $pdoStatement->execute();
     return $execution;
@@ -339,7 +339,7 @@ function donneinfosmodo($id){
 function donneinfosadmin($id){
   
     $pdo = PdoGsb::$monPdo;
-        $monObjPdoStatement=$pdo->prepare("SELECT id,nom,prenom FROM administarteur WHERE id= :lId");
+        $monObjPdoStatement=$pdo->prepare("SELECT id,nom,prenom FROM administrateur WHERE id= :lId");
  $bvc1=$monObjPdoStatement->bindValue(':lId',$id,PDO::PARAM_INT);
  if ($monObjPdoStatement->execute()) {
      $unUser=$monObjPdoStatement->fetch();
