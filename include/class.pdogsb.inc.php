@@ -320,6 +320,11 @@ function donneinfosmedecin($id){
            
     
 }
+
+/**
+ * fonction qui permet d'obtenir tout les produits issue de la table produit 
+ * dans la base de donnée gsbextranet
+ */
 function AfficherProduit()
 {
     $pdo = PdoGsb::$monPdo;
@@ -332,6 +337,11 @@ if ($monObjPdoStatement->execute()) {
 
 }
 
+/**
+ * fonction qui créer un code de vérification pour la connexion en double authentification 
+ * des comptes
+ * @param $login
+ */
 function creerCodeVerif($login)
 {
     $code = rand(100000,999999);
@@ -339,30 +349,29 @@ function creerCodeVerif($login)
     $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET cle = $code WHERE mail= :login");
     $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
-        return true;  
+        return $code;  
 }else
 throw new Exception("erreur"); 
 }
 
-/*function VerifCode($login,$codeFromForm)
+/**
+ * fonction qui permet d'obtenir le code de vérification d'un compte dans la base de donnée
+ */
+function GetCode($login)
 {
     $pdo = PdoGsb::$monPdo;
     $monObjPdoStatement=$pdo->prepare("SELECT cle FROM medecin WHERE mail= :login");
     $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
-    if ($monObjPdoStatement->execute()) {
-        $codeReal=$monObjPdoStatement->fetch();
-    }
-    if ($codeReal == $codeFromForm)
+    if ($monObjPdoStatement->execute())
     {
-        $pdo = PdoGsb::$monPdo;
-        $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET actif = 1 WHERE mail= :login");
-        echo "Code Valide";
-        return true;
+        $code=$monObjPdoStatement->fetch();
+        $codeReal = $code['cle'];
+        return $codeReal;
     }else
     {
         return false;
     }
-}*/
+}
 function donneinfosmodo($id){
   
     $pdo = PdoGsb::$monPdo;
@@ -408,6 +417,9 @@ function InfoPortabilitéJSON()
         throw new Exception("erreur");
 }
 
+/**
+ * fonction qui permet d'obtenir les différentes visios conférences proposée
+ */
 function getVisioProposee()
 {
     $pdo = PdoGsb::$monPdo;
@@ -419,16 +431,29 @@ function getVisioProposee()
       }
 
 }
-/*function sendVerifMail($destinataire,$sujet,$message,$expediteur)
-{
 
-        if(mail($destinataire,$sujet,$message,$expediteur))
-        {
-            echo "mail envoye";
-        }else 
-        {
-            echo "Marche pas";
-        }
-}*/
+function inscriptionVisio($idmedecin,$idvisio)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("INSERT INTO medecinvisio VALUES ($idmedecin,$idvisio,now());");
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+
+}
+
+function getNomVisioInscrit($id)
+{
+    $pdo = PdoGsb::$monPdo;
+$monObjPdoStatement=$pdo->prepare("SELECT nomVisio FROM visioconference INNER JOIN medecinvisio ON visioconference.id = medecinvisio.idVisio WHERE idMedecin = $id;");
+if ($monObjPdoStatement->execute()) {
+  $donnees = $monObjPdoStatement->fetchAll();
+    
+        return $donnees;
+    }
+}
 }
 ?>

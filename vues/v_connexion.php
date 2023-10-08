@@ -33,7 +33,7 @@
 								<input name="login" class="form-control" type="text" placeholder="Login">
 								<input name="mdp" class="form-control" type="password" placeholder="Password">
 								</br>
-                <input type="submit" class="btn btn-primary signup" value="Se connecter">
+                <input name="send" type="submit" class="btn btn-primary signup" value="Se connecter">
 							</form>
 							</br>
 						<a href="index.php?uc=creation&action=demandeCreation">je suis médecin, je souhaite créer un compte</a>

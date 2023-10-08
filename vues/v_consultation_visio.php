@@ -27,7 +27,6 @@ else {
     <![endif]-->
   </head>
   <body>
-  <form action="../controleurs/c_consultation_produit.php" method="post">
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -62,7 +61,6 @@ else {
 
 
 
-	
 	<div class="page-content">
     	<div class="row">
       <?php $lesVisios = $pdo->getVisioProposee();
@@ -76,6 +74,7 @@ else {
      echo '<th>URL</th>';
      echo '<th>Date de la visio</th>';
      echo '<th>Avis de la visio</th>';
+     echo '<th></th>';
      echo '</tr>';
    foreach($lesVisios as $uneVisio){
      echo '<tr>';
@@ -85,6 +84,8 @@ else {
      echo '<th>'.$uneVisio['url'].'</th>';
      echo '<th>'.$uneVisio['dateVisio'].'</th>';
      echo '<th width=30%>'.$uneVisio['avisVisio'].'</th>';
+     echo '<form method="post" action="index.php?uc=inscriptionVisio">';
+     echo '<th><input type="submit" class="btn btn-primary signup" value="s`inscrire"/></th>';
      echo '</tr>';
    
    }

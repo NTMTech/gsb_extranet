@@ -30,8 +30,9 @@
 						
                                     <div class="content-wrap">
 						<legend>Veuillez renseigner le code d'authentification que vous avez reçu</legend>
-							<form method="post" action="index.php?uc=creation&action=recupCode">
+							<form method="post" action="index.php?uc=connexion&action=recupCode">
                                                             <input name="code" class="form-control" type="text" placeholder="code"/>
+                                                            <input name="login" class="form-control" type="text" placeholder="email"/>
                                                             <input type="submit" class="btn btn-primary signup" value="Valider"/>
 							</form>
 							</br>
