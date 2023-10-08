@@ -325,7 +325,7 @@ function ajouteConnexion($id){
 
 function updateConnexion($id){
     $pdoStatement = PdoGsb::$monPdo->prepare("UPDATE historiqueconnexion "
-            . "SET dateFinLog (now()"
+            . "SET dateFinLog now()"
             ."WHERE :leMedecin=idMededin, MAX(dateDebutLog) AND dateFinLog IS NULL");
     $bv1 = $pdoStatement->bindValue(':leMedecin', $id);
     $execution = $pdoStatement->execute();
