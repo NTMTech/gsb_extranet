@@ -201,8 +201,8 @@ $leResultat = $pdoStatement->fetch();
 public function creeMedecin($email, $mdp, $nom, $prenom)
 {
    
-    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO medecin(id,mail, motDePasse,nom,prenom,dateCreation,dateConsentement) "
-            . "VALUES (null, :leMail, :leMdp, :leNom, :lePrenom,now(),now())");
+    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO medecin(id,mail, motDePasse,nom,prenom,dateCreation,dateConsentement,cle,verifToken) "
+            . "VALUES (null, :leMail, :leMdp, :leNom, :lePrenom,now(),now(),0,0)");
     $bv1 = $pdoStatement->bindValue(':leMail', $email);
     $mdp = password_hash($mdp, PASSWORD_DEFAULT);
     $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
@@ -454,6 +454,60 @@ if ($monObjPdoStatement->execute()) {
     
         return $donnees;
     }
+}
+
+function addToken($login,$jeton)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET token = '$jeton' WHERE mail= :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
+function getToken($login)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT token from medecin WHERE mail= :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $tokenrecup = $monObjPdoStatement->fetch();
+        return $tokenrecup['token'];
+      }else
+      {
+        return false;
+      }
+}
+
+function getVerifToken($login)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT verifToken from medecin WHERE mail= :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $tokenrecup = $monObjPdoStatement->fetch();
+        return $tokenrecup['verifToken'];
+      }else
+      {
+        return false;
+      }
+}
+
+function updateToken($login)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET verifToken = '1' WHERE mail= :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
 }
 }
 ?>

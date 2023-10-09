@@ -1,5 +1,10 @@
 ﻿<?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
+require 'phpmailer/src/Exception.php';
+require 'phpmailer/src/PHPMailer.php';
+require 'phpmailer/src/SMTP.php';
 
 if(!isset($_GET['action'])){
 	$_GET['action'] = 'demandeCreation';
@@ -89,53 +94,54 @@ switch($action){
         }
         }
         if($rempli && $loginOk && $passwordOk){
-                /*include("vues/v_double_authentification.php");
-                $code = $pdo->creerCodeVerif($leLogin);
-                $destinataire = $leLogin;
-                $expediteur = 'login4264@s5-4264.nuage-peda@localhost';
-                $sujet = 'Code verification';
-                $message = "Votre code de connexion à 2 facteurs : $code";
-                $headers = "From: $expediteur\r\n";
-                $headers .= "Reply-To: $expediteur\r\n";
-                $pdo->sendVerifMail($destinataire,$sujet,$message,$headers);
-                break;}}
-                case 'recupCode':{
-                $leLogin = $_SESSION['login'];
-                $codeFromForm = $_POST['code'];
-                $codeTrue = $pdo->VerifCode($leLogin,$codeFromForm);
-                if ($codeTrue == true)
-                {
-                    $actif = $pdo->compteActif($leLogin);
-                    if ($actif != 1)
-                    {
-                        $actif = false;
-                    }else
-                    {
-                        $actif = true;
-                    }
-                echo 'tout est ok, nous allons pouvoir créer votre compte...<br/>';
-                $executionOK = $pdo->creeMedecin($leLogin,$lePassword,$leNom,$lePrenom);    
-               
-                if ($executionOK==true){
-                    echo "c'est bon, votre compte a bien été créé ;-)";
-                    $pdo->connexionInitiale($leLogin);
-                }   
-                else
-                     echo "ce login existe déjà, veuillez en choisir un autre";
-            }
+            $token = substr(md5(uniqid()),0 ,8);
+				$mail = new PHPMailer(true);
 
-                    if ($actif == true)
-                    {*/
-                        echo 'tout est ok, nous allons pouvoir créer votre compte...<br/>';
+try {
+	
+    //Server settings                      //Enable verbose debug output
+    $mail->isSMTP();                                            //Send using SMTP
+    $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+    $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+    $mail->Username   = 'noahthomasmathis@gmail.com';                     //SMTP username
+    $mail->Password   = 'tosa vxay dgbt ghkz';                               //SMTP password
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+    $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+	$mail->setFrom('noahthomasmathis@gmail.com');
+    $mail->addAddress($leLogin);
+	$mail->isHTML(true);                                  //Set email format to HTML
+    $mail->Subject = 'Code de verification';
+    $mail->Body    = '<span style="text-align:center; font-weight: bold;">'."<a href=\"https://s5-4264.nuage-peda.fr/projet/gsbextranet_projet_equipe/index.php?uc=creation&action=tokenpage&id=$leLogin&token=$token\">Activation du compte </a> </span>";;
+    $mail->send();
+    echo 'Vous avez reçu un lien de verification de compte sur votre adresse mail.<br/>';
+} catch (Exception $e) {
+    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+}              
+                  echo 'Neanmoins, pour acceder a votre compte, vous devez cliquer sur le lien que vous avez recu par mail';
                         $executionOK = $pdo->creeMedecin($leLogin,$lePassword,$leNom,$lePrenom);
                         if ($executionOK==true){
-                            echo "c'est bon, votre compte a bien été créé ;-)";
                             $pdo->connexionInitiale($leLogin);
+                            $pdo->addToken($leLogin,$token);
                         }   
                         else
                              echo "ce login existe déjà, veuillez en choisir un autre";
                     }
                     
+                    break;}
+                    case 'tokenpage':{
+                        //include("vues/v_tokenverif.php");
+                        $leLogin = $_SESSION['login'];
+                        $token = $_GET['token'];
+                        $tokenRecup = $pdo->getToken($leLogin);
+                        if ($tokenRecup == $token)
+                        {
+                            $pdo->updateToken($leLogin);
+                            echo "Votre compte a ete cree !!";
+                        }else 
+                        {
+                            echo "Votre compte n'a pas ete cree :(";
+                            echo $token;
+                        }
                     break;}
 	default :{
 		include("vues/v_connexion.php");

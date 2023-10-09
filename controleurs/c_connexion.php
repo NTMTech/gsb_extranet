@@ -19,7 +19,13 @@ switch($action){
 	case 'valideConnexion':{
 		$login = $_POST['login'];
 		$mdp = $_POST['mdp'];
-		$connexionOk = $pdo->checkUserMedecin($login,$mdp);
+		$verifToken = $pdo->getVerifToken($login);
+		$connexionOk = false;
+		if ($verifToken == 1)
+		{
+			$connexionOk = $pdo->checkUserMedecin($login,$mdp);
+			$connexionOk = true;
+		}
 		if(!$connexionOk){
 			$login = $_POST['login'];
 		    $mdp = $_POST['mdp'];
