@@ -31,11 +31,12 @@
                                     <div class="content-wrap">
 						<legend>je suis médecin, je souhaite créer un compte</legend>
 							<form method="post" action="index.php?uc=creation&action=valideCreation">
-                                                            <input name="login" class="form-control" type="email" placeholder="mail"/>
-							    <input name="mdp" class="form-control" type="password" placeholder="password"/>
-                                                            <input name="prénom" class="form-control" type="text" placeholder="prénom"/>
-                                                            <input name="nom" class="form-control" type="text" placeholder="nom"/>
-								<br>
+                                                            <input name="login" class="form-control" type="email" placeholder="mail" required/>
+                <br>
+							    <input name="mdp" class="form-control" type="password" placeholder="mot de passe" required/>
+                                                            <input name="prénom" class="form-control" type="text" placeholder="prénom" required/>
+                                                            <input name="nom" class="form-control" type="text" placeholder="nom" required/>
+                                                            <input name="rpps" class ="form-control" type="number" placeholder="rpps" required/>
                                                           <input type="checkbox" name ="ValideCheckBox">
                 </br>
                                                         

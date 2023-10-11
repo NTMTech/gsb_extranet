@@ -11,8 +11,8 @@
  * $monPdoGsb qui contiendra l'unique instance de la classe
  
  * @package default
- * @author Forestier Thomas
- * @version    1.0
+ * @author Forestier Thomas, Bellart Mathis, Faidherbe Noah
+ * @version    1.5
  * @link       http://www.php.net/manual/fr/book.pdo.php
  */
 
@@ -62,10 +62,10 @@ class PdoGsb{
  * @throws Exception
  */
 function checkUserMedecin($login,$pwd):bool {
-    //AJOUTER TEST SUR TOKEN POUR ACTIVATION DU COMPTE
+
     $user=false;
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM medecin WHERE mail= :login AND token IS NULL");
+    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM medecin WHERE mail= :login");
     $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
         $unUser=$monObjPdoStatement->fetch();
@@ -80,10 +80,10 @@ function checkUserMedecin($login,$pwd):bool {
 return $user;   
 }
 function checkUserModo($login,$pwd):bool {
-    //AJOUTER TEST SUR TOKEN POUR ACTIVATION DU COMPTE
+
     $user=false;
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM moderateur WHERE mail= :login AND token IS NULL");
+    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM moderateur WHERE mail= :login");
     $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
         $unUser=$monObjPdoStatement->fetch();
@@ -99,10 +99,10 @@ return $user;
 }
 
 function checkUserAdmin($login,$pwd):bool {
-    //AJOUTER TEST SUR TOKEN POUR ACTIVATION DU COMPTE
+
     $user=false;
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM administarteur WHERE mail= :login AND token IS NULL");
+    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM administrateur WHERE mail= :login AND token IS NULL");
     $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
         $unUser=$monObjPdoStatement->fetch();
@@ -198,30 +198,20 @@ $leResultat = $pdoStatement->fetch();
  * la fonction va insérer un nouvel utilisateur avec un id, un mail, un mot de passe, la date de création du compte et la date à laquelle le consentement à la politique de pro<tection des données
  */
 
-public function creeMedecin($email, $mdp, $nom, $prenom)
+public function creeMedecin($email, $mdp, $nom, $prenom,$rpps)
 {
    
-    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO medecin(id,mail, motDePasse,nom,prenom,dateCreation,dateConsentement) "
-            . "VALUES (null, :leMail, :leMdp, :leNom, :lePrenom,now(),now())");
+    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO medecin(id,mail, motDePasse,nom,prenom,dateCreation,dateConsentement,rpps) "
+            . "VALUES (null, :leMail, :leMdp, :leNom, :lePrenom,now(),now(),:leRpps)");
     $bv1 = $pdoStatement->bindValue(':leMail', $email);
     $mdp = password_hash($mdp, PASSWORD_DEFAULT);
     $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
     $bv3 = $pdoStatement->bindValue(':leNom',$nom);
     $bv4 = $pdoStatement->bindValue(':lePrenom',$prenom);
+    $bv5 = $pdoStatement->bindValue(':leRpps',$rpps);
 
     $execution = $pdoStatement->execute();
     return $execution;
-    
-}
-
-public function creeValidateur($email,$mdp)
-{
-    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO validateur(idValidateur,mailValidateur, motDePasseValidateur) "
-            . "VALUES (null, :leMail, :leMdp, now(),now())");
-    $bv1 = $pdoStatement->bindValue(':leMail',$email);
-    $mdp = password_hash($mdp, PASSWORD_DEFAULT);
-    $bv2 = $pdoStatement->bindValue('leMdp', $mdp);
-
     
 }
 
@@ -281,22 +271,6 @@ function connexionInitiale($mail){
     
 }
 
-function connexionInitialeModo($mail){
-    $pdo = PdoGsb::$monPdo;
-   $modo= $this->donneLeModoByMail($mail);
-   $id = $modo['id'];
-   $this->ajouteConnexionInitiale($id);
-   
-}
-
-function connexionInitialeAdmin($mail){
-    $pdo = PdoGsb::$monPdo;
-   $admin= $this->donneAdminByMail($mail);
-   $id = $admin['id'];
-   $this->ajouteConnexionInitiale($id);
-   
-}
-
 function ajouteConnexionInitiale($id){
     $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO historiqueconnexion "
             . "VALUES (:leUser, now(), now())");
@@ -323,13 +297,13 @@ function ajouteConnexion($id){
     
 }
 
-function updateConnexion($id){
+/*function updateConnexion($id){
     $pdoStatement = PdoGsb::$monPdo->prepare("UPDATE historiqueconnexion "
-            . "SET dateFinLog (now()"
-            ."WHERE :leMedecin=idMededin, MAX(dateDebutLog) AND dateFinLog IS NULL");
+            . "SET dateFinLog = now()"
+            ."WHERE (SELECT idMedecin=:leMedecin , MAX(dateDebutLog), dateFinLog IS NULL FROM historiqueconnexion GROUP BY idMedecin, dateDebutLog, dateFinLog");
     $bv1 = $pdoStatement->bindValue(':leMedecin', $id);
     $execution = $pdoStatement->execute();
-    return $execution;
+    return $execution;*/
     
 }
 
@@ -446,5 +420,5 @@ function getVisioProposee()
       }
 
 }
-}
+
 ?>

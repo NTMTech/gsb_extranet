@@ -22,6 +22,7 @@ switch($action){
                 $lePassword = htmlspecialchars($_POST['mdp']);
                 $leNom = ($_POST['nom']);
                 $lePrenom = ($_POST['prénom']);
+                $leRpps =($_POST['rpps']);
 
 
         if ($leLogin == $_POST['login'])
@@ -38,7 +39,7 @@ switch($action){
         //echo $leLogin.' '.$lePassword;
         $rempli=false;
         if ($loginOk && $passwordOk){
-        //obliger l'utilisateur à saisir login/mdp
+        //obliger l'utilisateur à saisir login/mdp/nom/prenom/rpps
         $rempli=true; 
         if (empty($leLogin)==true) {
             echo 'Le login n\'a pas été saisi<br/>';
@@ -46,6 +47,22 @@ switch($action){
         }
         if (empty($lePassword)==true){
             echo 'Le mot de passe n\'a pas été saisi<br/>';
+            $rempli=false; 
+        }
+        if (empty($lePassword)==true){
+            echo 'Le mot de passe n\'a pas été saisi<br/>';
+            $rempli=false; 
+        }
+        if (empty($leNom)==true){
+            echo 'Votre nom n\'a pas été saisi<br/>';
+            $rempli=false; 
+        }
+        if (empty($lePrenom)==true){
+            echo 'Votre prénom n\'a pas été saisi<br/>';
+            $rempli=false; 
+        }
+        if (empty($leRpps)==true){
+            echo 'Votre rpps n\'a pas été saisi<br/>';
             $rempli=false; 
         }
         
@@ -56,6 +73,7 @@ switch($action){
             //supprimer les espaces avant/après saisie
             $leLogin = trim($leLogin);
             $lePassword = trim($lePassword);
+            $leRpps= trim($leRpps);
 
             
 
@@ -85,10 +103,25 @@ switch($action){
                 . ' une minuscule et un caractère spécial<br/>';
                 $passwordOk=false;
             }
-                 
+            $rppsOk = false;
+            $patternRpps='#(\d{11})#';
+            $tailleMaxRppsOk=false;
+            if(max($leRpps,99999999999)==99999999999){
+                $tailleMaxRppsOk=true;
+            }
+            else{
+                echo 'Votre rpps correspond au format attendu !<br/>';
+            }
+            if (preg_match($patternRpps, $leRpps)==false){
+                echo 'Votre rpps ne correspond pas au format attendu !<br/>';
+                $rppsOk=false;
+            }
+            if (preg_match($patternRpps, $leRpps)==true && $tailleMaxRppsOk==true ){
+                $rppsOk=true;
+            }    
         }
         }
-        if($rempli && $loginOk && $passwordOk){
+        if($rempli && $loginOk && $passwordOk && $rppsOk == true){
                 /*include("vues/v_double_authentification.php");
                 $code = $pdo->creerCodeVerif($leLogin);
                 $destinataire = $leLogin;
@@ -127,7 +160,7 @@ switch($action){
                     if ($actif == true)
                     {*/
                         echo 'tout est ok, nous allons pouvoir créer votre compte...<br/>';
-                        $executionOK = $pdo->creeMedecin($leLogin,$lePassword,$leNom,$lePrenom);
+                        $executionOK = $pdo->creeMedecin($leLogin,$lePassword,$leNom,$lePrenom,$leRpps);
                         if ($executionOK==true){
                             echo "c'est bon, votre compte a bien été créé ;-)";
                             $pdo->connexionInitiale($leLogin);
