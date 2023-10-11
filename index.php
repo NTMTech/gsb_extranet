@@ -49,6 +49,9 @@ switch($uc){
 	case 'deconnexion':{
 		include("controleurs/c_deconnexion.php");break;
 	}
+	case 'inscriptionVisio':{
+		include("controleurs/c_inscription_visio.php");break;
+	}
 	}
 
 ?>

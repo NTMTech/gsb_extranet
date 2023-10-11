@@ -201,8 +201,8 @@ $leResultat = $pdoStatement->fetch();
 public function creeMedecin($email, $mdp, $nom, $prenom,$rpps)
 {
    
-    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO medecin(id,mail, motDePasse,nom,prenom,dateCreation,dateConsentement,rpps) "
-            . "VALUES (null, :leMail, :leMdp, :leNom, :lePrenom,now(),now(),:leRpps)");
+    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO medecin(id,mail, motDePasse,nom,prenom,dateCreation,dateConsentement,cle,verifToken,rpps) "
+            . "VALUES (null, :leMail, :leMdp, :leNom, :lePrenom,now(),now(),0,0,:leRpps)");
     $bv1 = $pdoStatement->bindValue(':leMail', $email);
     $mdp = password_hash($mdp, PASSWORD_DEFAULT);
     $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
@@ -303,9 +303,9 @@ function ajouteConnexion($id){
             ."WHERE :leMedecin=idMededin, MAX(dateDebutLog) AND dateFinLog IS NULL");
     $bv1 = $pdoStatement->bindValue(':leMedecin', $id);
     $execution = $pdoStatement->execute();
-    return $execution;*/
+    return $execution;
     
-}
+}*/
 
 function donneinfosmedecin($id){
   
@@ -321,6 +321,11 @@ function donneinfosmedecin($id){
            
     
 }
+
+/**
+ * fonction qui permet d'obtenir tout les produits issue de la table produit 
+ * dans la base de donnée gsbextranet
+ */
 function AfficherProduit()
 {
     $pdo = PdoGsb::$monPdo;
@@ -333,6 +338,11 @@ if ($monObjPdoStatement->execute()) {
 
 }
 
+/**
+ * fonction qui créer un code de vérification pour la connexion en double authentification 
+ * des comptes
+ * @param $login
+ */
 function creerCodeVerif($login)
 {
     $code = rand(100000,999999);
@@ -340,30 +350,29 @@ function creerCodeVerif($login)
     $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET cle = $code WHERE mail= :login");
     $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
-        return true;  
+        return $code;  
 }else
 throw new Exception("erreur"); 
 }
 
-/*function VerifCode($login,$codeFromForm)
+/**
+ * fonction qui permet d'obtenir le code de vérification d'un compte dans la base de donnée
+ */
+function GetCode($login)
 {
     $pdo = PdoGsb::$monPdo;
     $monObjPdoStatement=$pdo->prepare("SELECT cle FROM medecin WHERE mail= :login");
     $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
-    if ($monObjPdoStatement->execute()) {
-        $codeReal=$monObjPdoStatement->fetch();
-    }
-    if ($codeReal == $codeFromForm)
+    if ($monObjPdoStatement->execute())
     {
-        $pdo = PdoGsb::$monPdo;
-        $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET actif = 1 WHERE mail= :login");
-        echo "Code Valide";
-        return true;
+        $code=$monObjPdoStatement->fetch();
+        $codeReal = $code['cle'];
+        return $codeReal;
     }else
     {
         return false;
     }
-}*/
+}
 function donneinfosmodo($id){
   
     $pdo = PdoGsb::$monPdo;
@@ -409,6 +418,9 @@ function InfoPortabilitéJSON()
         throw new Exception("erreur");
 }
 
+/**
+ * fonction qui permet d'obtenir les différentes visios conférences proposée
+ */
 function getVisioProposee()
 {
     $pdo = PdoGsb::$monPdo;
@@ -421,4 +433,82 @@ function getVisioProposee()
 
 }
 
+function inscriptionVisio($idmedecin,$idvisio)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("INSERT INTO medecinvisio VALUES ($idmedecin,$idvisio,now());");
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+
+}
+
+function getNomVisioInscrit($id)
+{
+    $pdo = PdoGsb::$monPdo;
+$monObjPdoStatement=$pdo->prepare("SELECT nomVisio FROM visioconference INNER JOIN medecinvisio ON visioconference.id = medecinvisio.idVisio WHERE idMedecin = $id;");
+if ($monObjPdoStatement->execute()) {
+  $donnees = $monObjPdoStatement->fetchAll();
+    
+        return $donnees;
+    }
+}
+
+function addToken($login,$jeton)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET token = '$jeton' WHERE mail= :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
+function getToken($login)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT token from medecin WHERE mail= :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $tokenrecup = $monObjPdoStatement->fetch();
+        return $tokenrecup['token'];
+      }else
+      {
+        return false;
+      }
+}
+
+function getVerifToken($login)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT verifToken from medecin WHERE mail= :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $tokenrecup = $monObjPdoStatement->fetch();
+        return $tokenrecup['verifToken'];
+      }else
+      {
+        return false;
+      }
+}
+
+function updateToken($login)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET verifToken = '1' WHERE mail= :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+}
 ?>
