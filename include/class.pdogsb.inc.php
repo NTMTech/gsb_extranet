@@ -20,7 +20,7 @@ class PdoGsb{
       	private static $serveur='mysql:host=localhost';
       	private static $bdd='dbname=gsbextranet';   		
       	private static $user='gsbextranet' ;    		
-      	private static $mdp='password' ;	
+      	private static $mdp='ThoughtPolice2019' ;	
 	private static $monPdo;
 	private static $monPdoGsb=null;
 		
@@ -306,6 +306,33 @@ function ajouteConnexionInitiale($id){
     
 }
 
+function connexion($mail){
+    $pdo = PdoGsb::$monPdo;
+   $medecin= $this->donneLeMedecinByMail($mail);
+   $id = $medecin['id'];
+   $this->ajouteConnexion($id);
+   
+}
+
+function ajouteConnexion($id){
+    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO historiqueconnexion "
+            . "VALUES (:leMedecin, now(),NULL)");
+    $bv1 = $pdoStatement->bindValue(':leMedecin', $id);
+    $execution = $pdoStatement->execute();
+    return $execution;
+    
+}
+
+function updateConnexion($id){
+    $pdoStatement = PdoGsb::$monPdo->prepare("UPDATE historiqueconnexion "
+            . "SET dateFinLog (now()"
+            ."WHERE :leMedecin=idMededin, MAX(dateDebutLog) AND dateFinLog IS NULL");
+    $bv1 = $pdoStatement->bindValue(':leMedecin', $id);
+    $execution = $pdoStatement->execute();
+    return $execution;
+    
+}
+
 function donneinfosmedecin($id){
   
        $pdo = PdoGsb::$monPdo;
@@ -320,7 +347,49 @@ function donneinfosmedecin($id){
            
     
 }
+function AfficherProduit()
+{
+    $pdo = PdoGsb::$monPdo;
+$monObjPdoStatement=$pdo->prepare("SELECT id,nom,objectif,information,effetIndesirable FROM produit ;");
+if ($monObjPdoStatement->execute()) {
+  $donnees = $monObjPdoStatement->fetchAll();
+    
+        return $donnees;
+    }
 
+}
+
+function creerCodeVerif($login)
+{
+    $code = rand(100000,999999);
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET cle = $code WHERE mail= :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        return true;  
+}else
+throw new Exception("erreur"); 
+}
+
+/*function VerifCode($login,$codeFromForm)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT cle FROM medecin WHERE mail= :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $codeReal=$monObjPdoStatement->fetch();
+    }
+    if ($codeReal == $codeFromForm)
+    {
+        $pdo = PdoGsb::$monPdo;
+        $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET actif = 1 WHERE mail= :login");
+        echo "Code Valide";
+        return true;
+    }else
+    {
+        return false;
+    }
+}*/
 function donneinfosmodo($id){
   
     $pdo = PdoGsb::$monPdo;
@@ -366,6 +435,16 @@ function InfoPortabilitéJSON()
         throw new Exception("erreur");
 }
 
+function getVisioProposee()
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT * FROM visioconference ;");
+    if ($monObjPdoStatement->execute()) {
+    $donnees = $monObjPdoStatement->fetchAll();
+    
+          return $donnees;
+      }
 
+}
 }
 ?>
