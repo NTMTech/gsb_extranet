@@ -20,7 +20,7 @@ class PdoGsb{
       	private static $serveur='mysql:host=localhost';
       	private static $bdd='dbname=gsbextranet';   		
       	private static $user='gsbextranet' ;    		
-      	private static $mdp='ThoughtPolice2019' ;	
+      	private static $mdp='password' ;	
 	private static $monPdo;
 	private static $monPdoGsb=null;
 		
@@ -281,25 +281,10 @@ function connexionInitiale($mail){
     
 }
 
-function connexionInitialeModo($mail){
-    $pdo = PdoGsb::$monPdo;
-   $modo= $this->donneLeModoByMail($mail);
-   $id = $modo['id'];
-   $this->ajouteConnexionInitiale($id);
-   
-}
-
-function connexionInitialeAdmin($mail){
-    $pdo = PdoGsb::$monPdo;
-   $admin= $this->donneAdminByMail($mail);
-   $id = $admin['id'];
-   $this->ajouteConnexionInitiale($id);
-   
-}
 
 function ajouteConnexionInitiale($id){
     $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO historiqueconnexion "
-            . "VALUES (:leUser, now()");
+            . "VALUES (:leUser, now(),NULL");
     $bv1 = $pdoStatement->bindValue(':leUser', $id);
     $execution = $pdoStatement->execute();
     return $execution;
@@ -428,7 +413,7 @@ function InfoPortabilitéJSON()
     if ($monObjPdoStatement->execute()) {
         $unUser=$monObjPdoStatement->fetch();
         $json = json_encode($unUser);
-        
+        $bytes = file_put_contents("portabilite/".$id."json", $json);
    
     }
     else

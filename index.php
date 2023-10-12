@@ -52,5 +52,5 @@ switch($uc){
 	}
 	
 
-
+	include_once('vues/v_footer.php');
 ?>
