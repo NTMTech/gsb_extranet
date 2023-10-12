@@ -1,4 +1,7 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 
 /** 
  * Classe d'acces aux donnees. 
@@ -139,36 +142,6 @@ function donneLeMedecinByMail($login) {
         throw new Exception("erreur dans la requête");
 return $unUser;   
 }
-
-function donneLeModoByMail($login) {
-    
-    $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT id, nom, prenom,mail FROM moderateur WHERE mail= :login");
-    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
-    if ($monObjPdoStatement->execute()) {
-        $unUser=$monObjPdoStatement->fetch();
-       
-    }
-    else
-        throw new Exception("erreur dans la requête");
-return $unUser;   
-}
-
-function donneAdminByMail($login) {
-    
-    $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT id, nom, prenom,mail FROM administarteur WHERE mail= :login");
-    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
-    if ($monObjPdoStatement->execute()) {
-        $unUser=$monObjPdoStatement->fetch();
-       
-    }
-    else
-        throw new Exception("erreur dans la requête");
-return $unUser;   
-}
-
-
 /**
  * fonction public qui donne la longueur de l'adresse mail
  * @return $leResultat 
@@ -225,37 +198,6 @@ public function creeValidateur($email,$mdp)
     
 }
 
-public function creeModerateur($email, $mdp, $nom, $prenom)
-{
-   
-    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO moderateur(id,nom,prenom,mail, motDePasse,dateCreation,dateConsentement) "
-            . "VALUES (null, :leNom, :lePrenom, :leMail, :leMdp, now(),now())");
-    $bv1 = $pdoStatement->bindValue(':leMail', $email);
-    $mdp = password_hash($mdp, PASSWORD_DEFAULT);
-    $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
-    $bv3 = $pdoStatement->bindValue(':leNom', $nom);
-    $bv4 = $pdoStatement->bindValue(':lePrenom', $prenom);
-
-    $execution = $pdoStatement->execute();
-    return $execution;
-}
-
-public function creeAdmin($email, $mdp, $nom, $prenom)
-{
-   
-    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO administarteur(id,nom,prenom,mail, motDePasse,dateCreation,dateConsentement) "
-            . "VALUES (null, :leNom, :lePrenom, :leMail, :leMdp, now(),now())");
-    $bv1 = $pdoStatement->bindValue(':leMail', $email);
-    $mdp = password_hash($mdp, PASSWORD_DEFAULT);
-    $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
-    $bv3 = $pdoStatement->bindValue(':leNom', $nom);
-    $bv4 = $pdoStatement->bindValue(':lePrenom', $prenom);
-
-    $execution = $pdoStatement->execute();
-    return $execution;
-}
-
-
 function testMail($email){
     $pdo = PdoGsb::$monPdo;
     $pdoStatement = $pdo->prepare("SELECT count(*) as nbMail FROM medecin WHERE mail = :leMail");
@@ -279,22 +221,6 @@ function connexionInitiale($mail){
     $id = $medecin['id'];
     $this->ajouteConnexionInitiale($id);
     
-}
-
-function connexionInitialeModo($mail){
-    $pdo = PdoGsb::$monPdo;
-   $modo= $this->donneLeModoByMail($mail);
-   $id = $modo['id'];
-   $this->ajouteConnexionInitiale($id);
-   
-}
-
-function connexionInitialeAdmin($mail){
-    $pdo = PdoGsb::$monPdo;
-   $admin= $this->donneAdminByMail($mail);
-   $id = $admin['id'];
-   $this->ajouteConnexionInitiale($id);
-   
 }
 
 function ajouteConnexionInitiale($id){
@@ -365,8 +291,7 @@ function GetCode($login)
     if ($monObjPdoStatement->execute())
     {
         $code=$monObjPdoStatement->fetch();
-        $codeReal = $code['cle'];
-        return $codeReal;
+        return $code['cle'];
     }else
     {
         return false;
@@ -498,10 +423,10 @@ function updateToken($login)
 function getMaintenance()
 {
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT FIRST_VALUE(Maintenance) OVER (ORDER BY Maintenance ASC) from medecin;");
+    $monObjPdoStatement=$pdo->prepare("SELECT maintenance FROM maintenance WHERE idmaintenance = '1';");
     if ($monObjPdoStatement->execute()) {
         $maintenance = $monObjPdoStatement->fetch();
-        return $maintenance;
+        return $maintenance['maintenance'];
       }else
       {
         return false;
@@ -526,7 +451,7 @@ function infoPersoJSON($id)
 function maintenanceON()
 {
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET Maintenance = '1' WHERE Maintenance = '0'");
+    $monObjPdoStatement=$pdo->prepare("UPDATE maintenance SET maintenance = '1' WHERE idmaintenance = '1'");
     $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
         return true;
@@ -539,7 +464,7 @@ function maintenanceON()
 function maintenanceOFF()
 {
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET Maintenance = '0' WHERE Maintenance = '1'");
+    $monObjPdoStatement=$pdo->prepare("UPDATE maintenance SET maintenance = '0' WHERE idmaintenance = '1'");
     $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
         return true;
@@ -547,6 +472,45 @@ function maintenanceOFF()
       {
         return false;
       }
+}
+
+function checkRoleAccount($login)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT role FROM medecin WHERE mail = :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $role = $monObjPdoStatement->fetch();
+        return $role['role'];
+      }else
+      {
+        return false;
+      }
+}
+
+function envoiMail($code,$login){
+    try {
+
+        //Server settings    
+        $mail = new PHPMailer(true);                  //Enable verbose debug output
+        $mail->isSMTP();                                            //Send using SMTP
+        $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+        $mail->Username   = 'noahthomasmathis@gmail.com';                     //SMTP username
+        $mail->Password   = 'tosa vxay dgbt ghkz';                               //SMTP password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+        $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+        $mail->setFrom('noahthomasmathis@gmail.com');
+        $mail->addAddress($login);
+        $mail->isHTML(true);                                  //Set email format to HTML
+        $mail->Subject = 'Code double authentification';
+        $mail->Body    = "Veuillez saisir le code suivant afin de vous connecter : $code";
+    
+        $mail->send();
+        echo 'Message has been sent';
+    } catch (Exception $e) {
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    }
 }
 }
 ?>

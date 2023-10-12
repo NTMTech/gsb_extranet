@@ -16,122 +16,138 @@ switch($action){
 		include("vues/v_connexion.php");
 		break;
 	}
-	case 'valideConnexion':{
+	case 'valideConnexion':{ 
 		$login = $_POST['login'];
 		$mdp = $_POST['mdp'];
-		$connexionOk = $pdo->checkUserMedecin($login,$mdp);
-		if(!$connexionOk){
-			$login = $_POST['login'];
-		    $mdp = $_POST['mdp'];
-			$connexionOk = $pdo->checkUserModo($login,$mdp);
-			if(!$connexionOk){
-				$login = $_POST['login'];
-		        $mdp = $_POST['mdp'];
-			    $connexionOk = $pdo->checkUserAdmin($login,$mdp);
-				if(!$connexionOk){
-			        ajouterErreur("Login ou mot de passe incorrect");
-			        include("vues/v_erreurs.php");
-			        include("vues/v_connexion.php");
-			    }
-				else { 
-					$maintenanceVerif = $pdo->getMaintenance();
-					if ($maintenanceVerif == 0)
+		$checkAccount = $pdo->checkRoleAccount($login);
+		//var_dump($checkAccount);
+		switch ($checkAccount)
+		{
+			case '1':{
+				$maintenanceVerif = $pdo->getMaintenance();
+				
+				
+				if ($maintenanceVerif == 0)	{
+					
+					$code = $pdo->creerCodeVerif($login);
+					$pdo->envoiMail($code,$login);
+					include("vues/v_double_authentification.php");
+					
+				}
+				else{
+					include("vues/v_maintenance.php");
+					}
+				break;
+				}
+				/*
+				case 'recupCode':{
+					$login = $_POST['login'];
+					$codeFromForm = intval($_POST['code']);
+					$codeReal = $pdo->GetCode($login);
+					echo "1";
+					$verifToken = $pdo->getVerifToken($login);
+					if ($codeFromForm == $codeReal && $verifToken == 1)
 					{
-						$infosMedecin = $pdo->donneAdminByMail($login);
+							$id = $infosMedecin['id'];
+							$nom =  $infosMedecin['nom'];
+							$prenom = $infosMedecin['prenom'];
+							connecter($id,$nom,$prenom);
+							$pdo->connexionInitiale($login);
+							$createJSONfile = $pdo->infoPersoJSON($id);           
+							include("vues/v_sommaire.php");
+							}else 
+							{
+								echo "Code invalide, veuillez reessayer";
+							}
+							break;
+								
+					}*/
+			case '2':{
+				$maintenanceVerif = $pdo->getMaintenance();
+				if ($maintenanceVerif == 0)	{
 					$id = $infosMedecin['id'];
 					$nom =  $infosMedecin['nom'];
 					$prenom = $infosMedecin['prenom'];
 					connecter($id,$nom,$prenom);
-					$pdo->connexionInitialeAdmin($login);
-					include("vues/v_sommaire.php");
-					}else
-					{
-						include("vues/v_maintenance.php");
-					}
-				} 
-		}
-		    else {
+					$pdo->connexionInitiale($login);
+				}
+				else{
+					include("vues/v_maintenance.php");
+				}
+				break;
+			}
+			
+			case '3':{
+					$id = $infosMedecin['id'];
+					$nom =  $infosMedecin['nom'];
+					$prenom = $infosMedecin['prenom'];
+					connecter($id,$nom,$prenom);
+					$pdo->connexionInitiale($login);
+					include("vues/admin/v_sommaire.php");
+					break;
+			}
+
+			case '4':{
+				$maintenanceVerif = $pdo->getMaintenance();
+				if ($maintenanceVerif == 0)	{
+					$id = $infosMedecin['id'];
+					$nom =  $infosMedecin['nom'];
+					$prenom = $infosMedecin['prenom'];
+					connecter($id,$nom,$prenom);
+					$pdo->connexionInitiale($login);
+					include("vues/validateur/v_sommaire.php");
+				}
+				else{
+					include("vues/v_maintenance.php");
+				}
+				break;
+			}
+
+			case '5':{
 				$maintenanceVerif = $pdo->getMaintenance();
 				if ($maintenanceVerif == 0)
 				{
-					$infosMedecin = $pdo->donneLeModoByMail($login);
-                $id = $infosMedecin['id'];
-                $nom =  $infosMedecin['nom'];
-                $prenom = $infosMedecin['prenom'];
-                connecter($id,$nom,$prenom);
-                $pdo->connexionInitialeModo($login);}
-			else
-		{
-			include("vues/v_maintenance.php");
-		}
-	}
+					$id = $infosMedecin['id'];
+					$nom =  $infosMedecin['nom'];
+					$prenom = $infosMedecin['prenom'];
+					connecter($id,$nom,$prenom);
+					$pdo->connexionInitiale($login);
+					include("vues/chefProduit/v_sommaire.php");
 				}
-
+				else {
+					include("vues/v_maintenance.php");
+				}
+				break;}
 			
-
-		else { 
-			$maintenanceVerif = $pdo->getMaintenance();
-			if ($maintenanceVerif == 0)
-			{
-
+			default :{
+				ajouterErreur("Login ou mot de passe incorrect");
+			        include("vues/v_erreurs.php");
+			        include("vues/v_connexion.php");
+			break;}
 			
-			include("vues/v_double_authentification.php");
-			$code = $pdo->creerCodeVerif($login);
-				$mail = new PHPMailer(true);
+		}break;}
 
-try {
-	
-    //Server settings                      //Enable verbose debug output
-    $mail->isSMTP();                                            //Send using SMTP
-    $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-    $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-    $mail->Username   = 'noahthomasmathis@gmail.com';                     //SMTP username
-    $mail->Password   = 'tosa vxay dgbt ghkz';                               //SMTP password
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-    $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-	$mail->setFrom('noahthomasmathis@gmail.com');
-    $mail->addAddress($login);
-	$mail->isHTML(true);                                  //Set email format to HTML
-    $mail->Subject = 'Code double authentification';
-    $mail->Body    = "Veuillez saisir le code suivant afin de vous connecter : $code";
-
-    $mail->send();
-    echo 'Message has been sent';
-} catch (Exception $e) {
-    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-}
-		}else
-	{
-		include("vues/v_maintenance.php");
-	}}break;}
-case 'recupCode':{
-	$login = $_POST['login'];
-	$codeFromForm = intval($_POST['code']);
-	$codeReal = $pdo->GetCode($login);
-	$verifToken = $pdo->getVerifToken($login);
-	if ($codeFromForm == $codeReal && $verifToken == 1)
-	{
-		$infosMedecin = $pdo->donneLeMedecinByMail($login);
-			$id = $infosMedecin['id'];
-			$nom =  $infosMedecin['nom'];
-			$prenom = $infosMedecin['prenom'];
-			connecter($id,$nom,$prenom);
-			$pdo->connexionInitiale($login);
-            $createJSONfile = $pdo->infoPersoJSON($id);           
-			include("vues/v_sommaire.php");
-			}else 
+		case 'recupCode':{
+			$login = $_POST['login'];
+			$codeFromForm = intval($_POST['code']);
+			$codeReal = $pdo->GetCode($login);
+			$verifToken = $pdo->getVerifToken($login);
+			if ($codeFromForm == $codeReal && $verifToken == 1)
 			{
-				echo "Code invalide, veuillez reessayer";
+				$infosMedecin = $pdo->donneLeMedecinByMail($login);
+					$id = $infosMedecin['id'];
+					$nom =  $infosMedecin['nom'];
+					$prenom = $infosMedecin['prenom'];
+					connecter($id,$nom,$prenom);
+					$pdo->connexionInitiale($login);
+					$createJSONfile = $pdo->infoPersoJSON($id);           
+					include("vues/v_sommaire.php");
+					}else 
+					{
+						echo "Code invalide, veuillez reessayer";
+					}
+					break;
+						
 			}
-			
-			break;	
-	}
-		
-       
-        
-	default :{
-		include("vues/v_connexion.php");
-		break;
-	}
-}
-?>
+		}
+		?>

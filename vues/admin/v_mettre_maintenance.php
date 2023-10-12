@@ -1,8 +1,4 @@
-<?php
-if (!$_SESSION['id'])
-    header('Location: ../index.php');
-else {
-?>
+
 ﻿<!DOCTYPE html>
 <html lang="fr">
   <head>
@@ -59,4 +55,4 @@ else {
 
         <button name="maintenance ON" class="btn btn-default" style="margin-left:94%;" type="submit"><a href="index.php?uc=maintenanceON">Maintenance ON</a></button>
         <button name="maintenance OFF" class="btn btn-default" style="margin-left:94%;" type="submit"><a href="index.php?uc=maintenanceOFF">Maintenance OFF</a></button>
-<?php };?>
+ 
