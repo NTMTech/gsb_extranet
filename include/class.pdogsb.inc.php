@@ -273,7 +273,7 @@ function connexionInitiale($mail){
 
 function ajouteConnexionInitiale($id){
     $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO historiqueconnexion "
-            . "VALUES (:leUser, now(), now())");
+            . "VALUES (:leUser, now(), NULL)");
     $bv1 = $pdoStatement->bindValue(':leUser', $id);
     $execution = $pdoStatement->execute();
     return $execution;

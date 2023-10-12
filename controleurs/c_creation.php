@@ -115,7 +115,7 @@ switch($action){
                 $tailleMaxRppsOk=true;
             }
             else{
-                echo 'Votre rpps correspond au format attendu !<br/>';
+                echo 'Votre rpps ne correspond pas au format attendu !<br/>';
             }
             if (preg_match($patternRpps, $leRpps)==false){
                 echo 'Votre rpps ne correspond pas au format attendu !<br/>';
@@ -126,7 +126,7 @@ switch($action){
             }    
         }
         }
-        if($rempli && $loginOk && $passwordOk){
+        if($rempli && $loginOk && $passwordOk && $rppsOk == true && $tailleMaxRppsOk==true){
             $token = substr(md5(uniqid()),0 ,8);
 				$mail = new PHPMailer(true);
 
@@ -144,14 +144,14 @@ try {
     $mail->addAddress($leLogin);
 	$mail->isHTML(true);                                  //Set email format to HTML
     $mail->Subject = 'Code de verification';
-    $mail->Body    = '<span style="text-align:center; font-weight: bold;">'."<a href=\"https://s5-4264.nuage-peda.fr/projet/gsbextranet_projet_equipe/index.php?uc=creation&action=tokenpage&id=$leLogin&token=$token\">Activation du compte </a> </span>";;
+    $mail->Body    = '<span style="text-align:center; font-weight: bold;">'."<a href=\"https://s5-4300.nuage-peda.fr/projet/bsgextranetB3/index.php?uc=creation&action=tokenpage&id=$leLogin&token=$token\">Activation du compte </a> </span>";;
     $mail->send();
     echo 'Vous avez reçu un lien de verification de compte sur votre adresse mail.<br/>';
 } catch (Exception $e) {
     echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
 }              
                   echo 'Neanmoins, pour acceder a votre compte, vous devez cliquer sur le lien que vous avez recu par mail';
-                        $executionOK = $pdo->creeMedecin($leLogin,$lePassword,$leNom,$lePrenom);
+                        $executionOK = $pdo->creeMedecin($leLogin,$lePassword,$leNom,$lePrenom,$leRpps);
                         if ($executionOK==true){
                             $pdo->connexionInitiale($leLogin);
                             $pdo->addToken($leLogin,$token);
