@@ -29,12 +29,12 @@
 				<div class="box">
 					<div class="content-wrap">
 						<legend>Se connecter</legend>
-							<form method="post" action="index.php?uc=connexion&action=valideConnexion">
+            <form method="post" action="index.php?uc=connexion&action=valideConnexion">
 								<input name="login" class="form-control" type="text" placeholder="Login">
 								<input name="mdp" class="form-control" type="password" placeholder="Password">
 								</br>
                 <input name="send" type="submit" class="btn btn-primary signup" value="Se connecter">
-							</form>
+    </form>
 							</br>
 						<a href="index.php?uc=creation&action=demandeCreation">je suis médecin, je souhaite créer un compte</a>
                                                 <br/>

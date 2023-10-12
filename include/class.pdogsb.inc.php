@@ -65,7 +65,7 @@ function checkUserMedecin($login,$pwd):bool {
     //AJOUTER TEST SUR TOKEN POUR ACTIVATION DU COMPTE
     $user=false;
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM medecin WHERE mail= :login AND token IS NULL");
+    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM medecin WHERE mail= :login");
     $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
         $unUser=$monObjPdoStatement->fetch();
@@ -102,7 +102,7 @@ function checkUserAdmin($login,$pwd):bool {
     //AJOUTER TEST SUR TOKEN POUR ACTIVATION DU COMPTE
     $user=false;
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM administrateur WHERE mail= :login AND token IS NULL");
+    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM administrateur WHERE mail= :login");
     $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
         $unUser=$monObjPdoStatement->fetch();
@@ -414,21 +414,6 @@ function donneinfosadmin($id){
  
 }
 
-function InfoPortabilitéJSON()
-{
-  $pdo = PdoGsb::$monPdo;
-  $monObjPdoStatement=$pdo->prepare("SELECT id,nom,prenom,telephone,mail,dateNaissance,motDePasse,dateCreation,rpps,token,dateDiplome,dateConsentement FROM medecin WHERE id= :lId");
-    $bvc1=$monObjPdoStatement->bindValue(':lId',$id,PDO::PARAM_INT);
-    if ($monObjPdoStatement->execute()) {
-        $unUser=$monObjPdoStatement->fetch();
-        $json = json_encode($unUser);
-        $bytes = file_put_contents("portabilite/".$id."json", $json);
-   
-    }
-    else
-        throw new Exception("erreur");
-}
-
 /**
  * fonction qui permet d'obtenir les différentes visios conférences proposée
  */
@@ -513,6 +498,60 @@ function updateToken($login)
 {
     $pdo = PdoGsb::$monPdo;
     $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET verifToken = '1' WHERE mail= :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
+function getMaintenance()
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT FIRST_VALUE(Maintenance) OVER (ORDER BY Maintenance ASC) from medecin;");
+    if ($monObjPdoStatement->execute()) {
+        $maintenance = $monObjPdoStatement->fetch();
+        return $maintenance;
+      }else
+      {
+        return false;
+      }
+}
+
+function infoPersoJSON($id)
+{
+    $pdo = PdoGsb::$monPdo;
+       $monObjPdoStatement=$pdo->prepare("SELECT nom,prenom,telephone,mail,dateCreation,rpps,dateDiplome,dateConsentement FROM medecin WHERE id= :lId");
+    $bvc1=$monObjPdoStatement->bindValue(':lId',$id,PDO::PARAM_INT);
+    if ($monObjPdoStatement->execute()) {
+        $unUser=$monObjPdoStatement->fetch();
+        $json = json_encode($unUser);
+        $bytes = file_put_contents("portabilite/".$id.".json", $json);
+    }
+    else
+        throw new Exception("erreur");
+           
+}
+
+function maintenanceON()
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET Maintenance = '1' WHERE Maintenance = '0'");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
+function maintenanceOFF()
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET Maintenance = '0' WHERE Maintenance = '1'");
     $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
         return true;

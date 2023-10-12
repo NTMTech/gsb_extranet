@@ -3,7 +3,7 @@ if (!$_SESSION['id'])
     header('Location: ../index.php');
 else {
 ?>
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
   <head>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -42,14 +42,6 @@ else {
     </div>
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        
-        <li class="active"><a href="index.php?uc=consulteProduit">Consultation des produits</a></li> <!--Modifier la redirection-->
-        <li class="active"><a href="index.php?uc=consulteVisio">consultations des visioconférences proposées et des avis</a></li> <!--Modifier la redirection-->
-        <li class="active"><a href="index.php?uc=inscrireVisio">Inscription à des visioconférences à venir</a></li> 
-        <li class="active"><a href="index.php?uc=avisVisio">avis sur les visioconférences où vous êtes inscrit</a></li> <!--Modifier la redirection-->
-
-      </ul>
       <ul class="nav navbar-nav navbar-right">
 		  <li><a><?php echo $_SESSION['prenom']."  ".$_SESSION['nom']?></a></li>
 		  <li><a>Médecin</a></li>
@@ -64,5 +56,7 @@ else {
 	
 	<div class="page-content">
     	<div class="row">
-      <a href="index.php?uc=personnalData">Récupérer mes données</a>
+
+        <button name="maintenance ON" class="btn btn-default" style="margin-left:94%;" type="submit"><a href="index.php?uc=maintenanceON">Maintenance ON</a></button>
+        <button name="maintenance OFF" class="btn btn-default" style="margin-left:94%;" type="submit"><a href="index.php?uc=maintenanceOFF">Maintenance OFF</a></button>
 <?php };?>
