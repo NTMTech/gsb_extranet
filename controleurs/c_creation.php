@@ -129,7 +129,6 @@ try {
                     
                     break;}
                     case 'tokenpage':{
-                        //include("vues/v_tokenverif.php");
                         $leLogin = $_SESSION['login'];
                         $token = $_GET['token'];
                         $tokenRecup = $pdo->getToken($leLogin);

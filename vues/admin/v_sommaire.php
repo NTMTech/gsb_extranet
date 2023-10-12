@@ -43,12 +43,8 @@ else {
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        
-        <li class="active"><a href="index.php?uc=consulteProduit">Consultation des produits</a></li> <!--Modifier la redirection-->
-        <li class="active"><a href="index.php?uc=consulteVisio">consultations des visioconférences proposées et des avis</a></li> <!--Modifier la redirection-->
-        <li class="active"><a href="index.php?uc=inscrireVisio">Inscription à des visioconférences à venir</a></li> 
-        <li class="active"><a href="index.php?uc=avisVisio">avis sur les visioconférences où vous êtes inscrit</a></li> <!--Modifier la redirection-->
-
+        <li class="active"><a href="index.php?uc=maintenance">Mettre site en maintenance</a></li> <!--Modifier la redirection-->
+        <li class="active"><a href="index.php?uc=consulteOperation">consulter opérations</a></li> <!--Modifier la redirection-->
       </ul>
       <ul class="nav navbar-nav navbar-right">
 		  <li><a><?php echo $_SESSION['prenom']."  ".$_SESSION['nom']?></a></li>
@@ -64,5 +60,5 @@ else {
 	
 	<div class="page-content">
     	<div class="row">
-      <a href="index.php?uc=personnalData">Récupérer mes données</a>
+
 <?php };?>
