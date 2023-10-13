@@ -1,7 +1,6 @@
 ﻿<?php
 //on insère le fichier qui contient les fonctions
 
-
  /**
  * Teste si un quelconque visiteur est connecté
  * @return vrai ou faux 
@@ -97,6 +96,9 @@ function input_data($data){
 	  return $hex;
         
     }
+
+	
+
     
     
     
