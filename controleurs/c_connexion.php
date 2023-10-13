@@ -69,13 +69,21 @@ switch($action){
 					$nom =  $infosMedecin['nom'];
 					$prenom = $infosMedecin['prenom'];
 					connecter($id,$nom,$prenom);
-					$pdo->connexionInitiale($login);
-				}
-				else{
-					include("vues/v_maintenance.php");
-				}
-				break;
-			}
+					$pdo->connexionInitialeAdmin($login);
+					include("vues/v_sommaire.php");
+				} 
+		}
+		    else {
+				include("vues/v_double_authentification.php");
+				
+				
+				$infosMedecin = $pdo->donneLeModoByMail($login);
+                $id = $infosMedecin['id'];
+                $nom =  $infosMedecin['nom'];
+                $prenom = $infosMedecin['prenom'];
+                connecter($id,$nom,$prenom);
+                $pdo->connexionInitialeModo($login);}}
+
 			
 			case '3':{
 					$id = $infosMedecin['id'];
@@ -87,21 +95,26 @@ switch($action){
 					break;
 			}
 
-			case '4':{
-				$maintenanceVerif = $pdo->getMaintenance();
-				if ($maintenanceVerif == 0)	{
-					$id = $infosMedecin['id'];
-					$nom =  $infosMedecin['nom'];
-					$prenom = $infosMedecin['prenom'];
-					connecter($id,$nom,$prenom);
-					$pdo->connexionInitiale($login);
-					include("vues/validateur/v_sommaire.php");
-				}
-				else{
-					include("vues/v_maintenance.php");
-				}
-				break;
-			}
+		else { 
+			include("vues/v_double_authentification.php");
+			$code = $pdo->creerCodeVerif($login);
+				$mail = new PHPMailer(true);
+
+try {
+	
+    //Server settings                      //Enable verbose debug output
+    $mail->isSMTP();                                            //Send using SMTP
+    $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+    $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+    $mail->Username   = 'noahthomasmathis@gmail.com';                     //SMTP username
+    $mail->Password   = 'tosa vxay dgbt ghkz';                               //SMTP password
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+    $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+	$mail->setFrom('noahthomasmathis@gmail.com');
+    $mail->addAddress($login);
+	$mail->isHTML(true);                                  //Set email format to HTML
+    $mail->Subject = 'Code double authentification';
+    $mail->Body    = "Veuillez saisir le code suivant afin de vous connecter : $code";
 
 			case '5':{
 				$maintenanceVerif = $pdo->getMaintenance();
