@@ -111,7 +111,7 @@ switch($action){
             $rppsOk = false;
             $patternRpps='#(\d{11})#';
             $tailleMaxRppsOk=false;
-            if(max($leRpps,99999999999)==99999999999){
+            if(max($leRpps,99999999999)==99999999999 && ($leRpps > 0)){
                 $tailleMaxRppsOk=true;
             }
             else{

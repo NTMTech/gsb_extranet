@@ -21,8 +21,7 @@ switch($action){
 		$mdp = $_POST['mdp'];
 		$verifToken = $pdo->getVerifToken($login);
 		$connexionOk = false;
-		if ($verifToken == 1)
-		{
+		if ($verifToken == 1){
 			$connexionOk = $pdo->checkUserMedecin($login,$mdp);
 			$connexionOk = true;
 		}

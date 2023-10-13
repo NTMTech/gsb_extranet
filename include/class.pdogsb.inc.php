@@ -79,46 +79,6 @@ function checkUserMedecin($login,$pwd):bool {
 }
 return $user;   
 }
-function checkUserModo($login,$pwd):bool {
-
-    $user=false;
-    $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM moderateur WHERE mail= :login");
-    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
-    if ($monObjPdoStatement->execute()) {
-        $unUser=$monObjPdoStatement->fetch();
-        if (is_array($unUser)){
-           if (password_verify($pwd,$unUser['motDePasse']))
-                $user=true;
-               
-         
-    
-    }
-}
-return $user;   
-}
-
-function checkUserAdmin($login,$pwd):bool {
-
-    $user=false;
-    $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM administrateur WHERE mail= :login AND token IS NULL");
-    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
-    if ($monObjPdoStatement->execute()) {
-        $unUser=$monObjPdoStatement->fetch();
-        if (is_array($unUser)){
-           if (password_verify($pwd,$unUser['motDePasse']))
-                $user=true;
-               
-         
-    
-    }
-}
-return $user;   
-}
-
-
-
 
 /**
  * fonction qui reçoit le mail en entrée et donne l'id, le nom, le prénom et le mail en sortie
@@ -215,35 +175,7 @@ public function creeMedecin($email, $mdp, $nom, $prenom,$rpps)
     
 }
 
-public function creeModerateur($email, $mdp, $nom, $prenom)
-{
-   
-    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO moderateur(id,nom,prenom,mail, motDePasse,dateCreation,dateConsentement) "
-            . "VALUES (null, :leNom, :lePrenom, :leMail, :leMdp, now(),now())");
-    $bv1 = $pdoStatement->bindValue(':leMail', $email);
-    $mdp = password_hash($mdp, PASSWORD_DEFAULT);
-    $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
-    $bv3 = $pdoStatement->bindValue(':leNom', $nom);
-    $bv4 = $pdoStatement->bindValue(':lePrenom', $prenom);
 
-    $execution = $pdoStatement->execute();
-    return $execution;
-}
-
-public function creeAdmin($email, $mdp, $nom, $prenom)
-{
-   
-    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO administarteur(id,nom,prenom,mail, motDePasse,dateCreation,dateConsentement) "
-            . "VALUES (null, :leNom, :lePrenom, :leMail, :leMdp, now(),now())");
-    $bv1 = $pdoStatement->bindValue(':leMail', $email);
-    $mdp = password_hash($mdp, PASSWORD_DEFAULT);
-    $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
-    $bv3 = $pdoStatement->bindValue(':leNom', $nom);
-    $bv4 = $pdoStatement->bindValue(':lePrenom', $prenom);
-
-    $execution = $pdoStatement->execute();
-    return $execution;
-}
 
 
 function testMail($email){
@@ -403,21 +335,6 @@ function donneinfosadmin($id){
  
 }
 
-function InfoPortabilitéJSON()
-{
-  $pdo = PdoGsb::$monPdo;
-  $monObjPdoStatement=$pdo->prepare("SELECT id,nom,prenom,telephone,mail,dateNaissance,motDePasse,dateCreation,rpps,token,dateDiplome,dateConsentement FROM medecin WHERE id= :lId");
-    $bvc1=$monObjPdoStatement->bindValue(':lId',$id,PDO::PARAM_INT);
-    if ($monObjPdoStatement->execute()) {
-        $unUser=$monObjPdoStatement->fetch();
-        $json = json_encode($unUser);
-        
-   
-    }
-    else
-        throw new Exception("erreur");
-}
-
 /**
  * fonction qui permet d'obtenir les différentes visios conférences proposée
  */
@@ -510,5 +427,17 @@ function updateToken($login)
         return false;
       }
 }
+
+function verificationDuMedecin(){
+	$pdo = PdoGsb::$monPdo;
+    $tableauVerif = array();
+    foreach($element as $tableauVerif){
+        $monObjPdoStatement=$pdo->prepare("SELECT nom,prenom,rpps FROM medecin WHERE verificationDuMedecin = 0");
+         
+    }
+    $monObjPdoStatement->execute();   
+}
+    
+
 }
 ?>
