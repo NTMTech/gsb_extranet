@@ -39,29 +39,6 @@ switch($action){
 					}
 				break;
 				}
-				/*
-				case 'recupCode':{
-					$login = $_POST['login'];
-					$codeFromForm = intval($_POST['code']);
-					$codeReal = $pdo->GetCode($login);
-					echo "1";
-					$verifToken = $pdo->getVerifToken($login);
-					if ($codeFromForm == $codeReal && $verifToken == 1)
-					{
-							$id = $infosMedecin['id'];
-							$nom =  $infosMedecin['nom'];
-							$prenom = $infosMedecin['prenom'];
-							connecter($id,$nom,$prenom);
-							$pdo->connexionInitiale($login);
-							$createJSONfile = $pdo->infoPersoJSON($id);           
-							include("vues/v_sommaire.php");
-							}else 
-							{
-								echo "Code invalide, veuillez reessayer";
-							}
-							break;
-								
-					}*/
 			case '2':{
 				$maintenanceVerif = $pdo->getMaintenance();
 				if ($maintenanceVerif == 0)	{
