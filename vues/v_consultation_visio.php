@@ -76,6 +76,7 @@ else {
      echo '<th>Avis de la visio</th>';
      echo '<th></th>';
      echo '</tr>';
+     $visioId = 0;
    foreach($lesVisios as $uneVisio){
      echo '<tr>';
      echo '<th>'.$uneVisio['id'].'</th>';
@@ -84,8 +85,10 @@ else {
      echo '<th>'.$uneVisio['url'].'</th>';
      echo '<th>'.$uneVisio['dateVisio'].'</th>';
      echo '<th width=30%>'.$uneVisio['avisVisio'].'</th>';
-     echo '<form method="post" action="index.php?uc=inscriptionVisio">';
+     $visioId = $visioId + 1;
+     echo '<form method="post" action="index.php?uc=inscriptionVisio&uneVisio='.$visioId.'">';
      echo '<th><input type="submit" class="btn btn-primary signup" value="s`inscrire"/></th>';
+     echo '</form>';
      echo '</tr>';
    
    }

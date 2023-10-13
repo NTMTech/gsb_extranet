@@ -42,6 +42,7 @@ switch($action){
 			case '2':{
 				$maintenanceVerif = $pdo->getMaintenance();
 				if ($maintenanceVerif == 0)	{
+					$infosMedecin = $pdo->donneLeMedecinByMail($login);
 					$id = $infosMedecin['id'];
 					$nom =  $infosMedecin['nom'];
 					$prenom = $infosMedecin['prenom'];
@@ -55,6 +56,7 @@ switch($action){
 			}
 			
 			case '3':{
+				$infosMedecin = $pdo->donneLeMedecinByMail($login);
 					$id = $infosMedecin['id'];
 					$nom =  $infosMedecin['nom'];
 					$prenom = $infosMedecin['prenom'];
@@ -67,6 +69,7 @@ switch($action){
 			case '4':{
 				$maintenanceVerif = $pdo->getMaintenance();
 				if ($maintenanceVerif == 0)	{
+					$infosMedecin = $pdo->donneLeMedecinByMail($login);
 					$id = $infosMedecin['id'];
 					$nom =  $infosMedecin['nom'];
 					$prenom = $infosMedecin['prenom'];
@@ -84,6 +87,7 @@ switch($action){
 				$maintenanceVerif = $pdo->getMaintenance();
 				if ($maintenanceVerif == 0)
 				{
+					$infosMedecin = $pdo->donneLeMedecinByMail($login);
 					$id = $infosMedecin['id'];
 					$nom =  $infosMedecin['nom'];
 					$prenom = $infosMedecin['prenom'];

@@ -53,16 +53,16 @@ switch($uc){
 		include("controleurs/c_inscription_visio.php");break;
 	}
 	case 'maintenance':{
-		include("controleurs/c_maintenance.php");break;
+		include("controleurs/admin/c_mettre_maintenance.php");break;
 	}
 	case 'consulteOperation':{
-		include("controleurs/c_consulteOperation");break;
+		include("controleurs/admin/c_consulteOperation.php");break;
 	}
 	case 'maintenanceON':{
-		include("controleurs/c_maintenanceON");break;
+		include("controleurs/admin/c_maintenanceON.php");break;
 	}
 	case 'maintenanceOFF':{
-		include("controleurs/c_maintenanceOFF");break;
+		include("controleurs/admin/c_maintenanceOFF.php");break;
 	}
 	case 'personnalData' :{
 		include("controleurs/c_personnalData.php");break;

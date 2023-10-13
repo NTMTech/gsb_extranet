@@ -72,10 +72,15 @@ else {
       echo '<th>Nom de la visio</th>';
       echo '<th>Avis sur la visio</th>';
       echo '</tr>';
+      $avisId = 0;
     foreach($avis as $unAvis){
       echo '<tr>';
       echo '<th>'.$unAvis['nomVisio'].'</th>';
-      echo '<th><input width=10% name="avis" class="form-control" type="text" placeholder="Donnez votre avis"/></th>';
+      echo '<th width=90%><input name="avis" class="form-control" type="text" placeholder="Donnez votre avis"/></th>';
+      $avisId = $avisId + 1;
+     echo '<form method="post" action="index.php?uc=donnerAvis&unAvis='.$avisId.'">';
+     echo '<th><input type="submit" class="btn btn-primary signup" value="Envoyer votre avis"/></th>';
+     echo '</form>';
       echo '</tr>';
     
     }

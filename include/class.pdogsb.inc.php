@@ -23,7 +23,7 @@ class PdoGsb{
       	private static $serveur='mysql:host=localhost';
       	private static $bdd='dbname=gsbextranet';   		
       	private static $user='gsbextranet' ;    		
-      	private static $mdp='ThoughtPolice2019' ;	
+      	private static $mdp='password' ;	
 	private static $monPdo;
 	private static $monPdoGsb=null;
 		
@@ -480,7 +480,6 @@ function maintenanceON()
 {
     $pdo = PdoGsb::$monPdo;
     $monObjPdoStatement=$pdo->prepare("UPDATE maintenance SET maintenance = '1' WHERE idmaintenance = '1'");
-    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
         return true;
       }else
@@ -493,7 +492,6 @@ function maintenanceOFF()
 {
     $pdo = PdoGsb::$monPdo;
     $monObjPdoStatement=$pdo->prepare("UPDATE maintenance SET maintenance = '0' WHERE idmaintenance = '1'");
-    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
         return true;
       }else
@@ -539,6 +537,11 @@ function envoiMail($code,$login){
     } catch (Exception $e) {
         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }
+}
+
+function donnerAvis($idmedecin,$avis)
+{
+    
 }
 }
 ?>
