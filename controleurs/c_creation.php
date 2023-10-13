@@ -27,6 +27,7 @@ switch($action){
                 $lePassword = htmlspecialchars($_POST['mdp']);
                 $leNom = ($_POST['nom']);
                 $lePrenom = ($_POST['prénom']);
+                $leRpps =($_POST['rpps']);
 
 
         if ($leLogin == $_POST['login'])
@@ -43,7 +44,7 @@ switch($action){
         //echo $leLogin.' '.$lePassword;
         $rempli=false;
         if ($loginOk && $passwordOk){
-        //obliger l'utilisateur à saisir login/mdp
+        //obliger l'utilisateur à saisir login/mdp/nom/prenom/rpps
         $rempli=true; 
         if (empty($leLogin)==true) {
             echo 'Le login n\'a pas été saisi<br/>';
@@ -51,6 +52,22 @@ switch($action){
         }
         if (empty($lePassword)==true){
             echo 'Le mot de passe n\'a pas été saisi<br/>';
+            $rempli=false; 
+        }
+        if (empty($lePassword)==true){
+            echo 'Le mot de passe n\'a pas été saisi<br/>';
+            $rempli=false; 
+        }
+        if (empty($leNom)==true){
+            echo 'Votre nom n\'a pas été saisi<br/>';
+            $rempli=false; 
+        }
+        if (empty($lePrenom)==true){
+            echo 'Votre prénom n\'a pas été saisi<br/>';
+            $rempli=false; 
+        }
+        if (empty($leRpps)==true){
+            echo 'Votre rpps n\'a pas été saisi<br/>';
             $rempli=false; 
         }
         
@@ -61,6 +78,7 @@ switch($action){
             //supprimer les espaces avant/après saisie
             $leLogin = trim($leLogin);
             $lePassword = trim($lePassword);
+            $leRpps= trim($leRpps);
 
             
 
@@ -90,10 +108,25 @@ switch($action){
                 . ' une minuscule et un caractère spécial<br/>';
                 $passwordOk=false;
             }
-                 
+            $rppsOk = false;
+            $patternRpps='#(\d{11})#';
+            $tailleMaxRppsOk=false;
+            if(max($leRpps,99999999999)==99999999999){
+                $tailleMaxRppsOk=true;
+            }
+            else{
+                echo 'Votre rpps ne correspond pas au format attendu !<br/>';
+            }
+            if (preg_match($patternRpps, $leRpps)==false){
+                echo 'Votre rpps ne correspond pas au format attendu !<br/>';
+                $rppsOk=false;
+            }
+            if (preg_match($patternRpps, $leRpps)==true && $tailleMaxRppsOk==true ){
+                $rppsOk=true;
+            }    
         }
         }
-        if($rempli && $loginOk && $passwordOk){
+        if($rempli && $loginOk && $passwordOk && $rppsOk == true && $tailleMaxRppsOk==true){
             $token = substr(md5(uniqid()),0 ,8);
 				$mail = new PHPMailer(true);
 
@@ -111,14 +144,14 @@ try {
     $mail->addAddress($leLogin);
 	$mail->isHTML(true);                                  //Set email format to HTML
     $mail->Subject = 'Code de verification';
-    $mail->Body    = '<span style="text-align:center; font-weight: bold;">'."<a href=\"https://s5-4264.nuage-peda.fr/projet/gsbextranet_projet_equipe/index.php?uc=creation&action=tokenpage&id=$leLogin&token=$token\">Activation du compte </a> </span>";;
+    $mail->Body    = '<span style="text-align:center; font-weight: bold;">'."<a href=\"https://s5-4300.nuage-peda.fr/projet/bsgextranetB3/index.php?uc=creation&action=tokenpage&id=$leLogin&token=$token\">Activation du compte </a> </span>";;
     $mail->send();
     echo 'Vous avez reçu un lien de verification de compte sur votre adresse mail.<br/>';
 } catch (Exception $e) {
     echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
 }              
                   echo 'Neanmoins, pour acceder a votre compte, vous devez cliquer sur le lien que vous avez recu par mail';
-                        $executionOK = $pdo->creeMedecin($leLogin,$lePassword,$leNom,$lePrenom);
+                        $executionOK = $pdo->creeMedecin($leLogin,$lePassword,$leNom,$lePrenom,$leRpps);
                         if ($executionOK==true){
                             $pdo->connexionInitiale($leLogin);
                             $pdo->addToken($leLogin,$token);

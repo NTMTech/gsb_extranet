@@ -68,14 +68,5 @@ switch($uc){
 		include("controleurs/c_personnalData.php");break;
 	}
 	}
-	
-
 
 ?>
-
-
-
-
-
-
-

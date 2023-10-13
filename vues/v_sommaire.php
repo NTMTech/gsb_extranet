@@ -3,7 +3,7 @@ if (!$_SESSION['id'])
     header('Location: ../index.php');
 else {
 ?>
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
   <head>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -44,10 +44,10 @@ else {
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         
-        <li class="active"><a href="index.php?uc=consulteProduit">Consultation des produits</a></li> <!--Modifier la redirection-->
-        <li class="active"><a href="index.php?uc=consulteVisio">consultations des visioconférences proposées et des avis</a></li> <!--Modifier la redirection-->
-        <li class="active"><a href="index.php?uc=inscrireVisio">Inscription à des visioconférences à venir</a></li> 
-        <li class="active"><a href="index.php?uc=avisVisio">avis sur les visioconférences où vous êtes inscrit</a></li> <!--Modifier la redirection-->
+      <li class="active"><a href="index.php?uc=consulteProduit">Consultation des produits</a></li> <!--Modifier la redirection-->
+        <li class="active"><a href="index.php?uc=consulteVisio">Consultations des visioconférences et avis</a></li> <!--Modifier la redirection-->
+        <li class="active"><a href="index.php?uc=inscrireVisio">Inscription à des visioconférences</a></li> 
+        <li class="active"><a href="index.php?uc=avisVisio">Avis sur les visioconférences</a></li> <!--Modifier la redirection-->
 
       </ul>
       <ul class="nav navbar-nav navbar-right">

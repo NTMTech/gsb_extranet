@@ -14,8 +14,8 @@ use PHPMailer\PHPMailer\Exception;
  * $monPdoGsb qui contiendra l'unique instance de la classe
  
  * @package default
- * @author Forestier Thomas
- * @version    1.0
+ * @author Forestier Thomas, Bellart Mathis, Faidherbe Noah
+ * @version    1.5
  * @link       http://www.php.net/manual/fr/book.pdo.php
  */
 
@@ -23,7 +23,7 @@ class PdoGsb{
       	private static $serveur='mysql:host=localhost';
       	private static $bdd='dbname=gsbextranet';   		
       	private static $user='gsbextranet' ;    		
-      	private static $mdp='password' ;	
+      	private static $mdp='ThoughtPolice2019' ;	
 	private static $monPdo;
 	private static $monPdoGsb=null;
 		
@@ -65,7 +65,7 @@ class PdoGsb{
  * @throws Exception
  */
 function checkUserMedecin($login,$pwd):bool {
-    //AJOUTER TEST SUR TOKEN POUR ACTIVATION DU COMPTE
+
     $user=false;
     $pdo = PdoGsb::$monPdo;
     $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM medecin WHERE mail= :login");
@@ -83,10 +83,10 @@ function checkUserMedecin($login,$pwd):bool {
 return $user;   
 }
 function checkUserModo($login,$pwd):bool {
-    //AJOUTER TEST SUR TOKEN POUR ACTIVATION DU COMPTE
+
     $user=false;
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM moderateur WHERE mail= :login AND token IS NULL");
+    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM moderateur WHERE mail= :login");
     $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
         $unUser=$monObjPdoStatement->fetch();
@@ -102,7 +102,7 @@ return $user;
 }
 
 function checkUserAdmin($login,$pwd):bool {
-    //AJOUTER TEST SUR TOKEN POUR ACTIVATION DU COMPTE
+
     $user=false;
     $pdo = PdoGsb::$monPdo;
     $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM administrateur WHERE mail= :login");
@@ -171,16 +171,17 @@ $leResultat = $pdoStatement->fetch();
  * la fonction va insérer un nouvel utilisateur avec un id, un mail, un mot de passe, la date de création du compte et la date à laquelle le consentement à la politique de pro<tection des données
  */
 
-public function creeMedecin($email, $mdp, $nom, $prenom)
+public function creeMedecin($email, $mdp, $nom, $prenom,$rpps)
 {
    
-    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO medecin(id,mail, motDePasse,nom,prenom,dateCreation,dateConsentement,cle,verifToken) "
-            . "VALUES (null, :leMail, :leMdp, :leNom, :lePrenom,now(),now(),0,0)");
+    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO medecin(id,mail, motDePasse,nom,prenom,dateCreation,dateConsentement,cle,verifToken,rpps) "
+            . "VALUES (null, :leMail, :leMdp, :leNom, :lePrenom,now(),now(),0,0,:leRpps)");
     $bv1 = $pdoStatement->bindValue(':leMail', $email);
     $mdp = password_hash($mdp, PASSWORD_DEFAULT);
     $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
     $bv3 = $pdoStatement->bindValue(':leNom',$nom);
     $bv4 = $pdoStatement->bindValue(':lePrenom',$prenom);
+    $bv5 = $pdoStatement->bindValue(':leRpps',$rpps);
 
     $execution = $pdoStatement->execute();
     return $execution;
@@ -225,8 +226,35 @@ function connexionInitiale($mail){
 
 function ajouteConnexionInitiale($id){
     $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO historiqueconnexion "
-            . "VALUES (:leUser, now(), now())");
+            . "VALUES (:leUser, now(), NULL)");
     $bv1 = $pdoStatement->bindValue(':leUser', $id);
+    $execution = $pdoStatement->execute();
+    return $execution;
+    
+}
+
+function connexion($mail){
+    $pdo = PdoGsb::$monPdo;
+   $medecin= $this->donneLeMedecinByMail($mail);
+   $id = $medecin['id'];
+   $this->ajouteConnexion($id);
+   
+}
+
+function ajouteConnexion($id){
+    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO historiqueconnexion "
+            . "VALUES (:leMedecin, now(),NULL)");
+    $bv1 = $pdoStatement->bindValue(':leMedecin', $id);
+    $execution = $pdoStatement->execute();
+    return $execution;
+    
+}
+
+function updateConnexion($id){
+    $pdoStatement = PdoGsb::$monPdo->prepare("UPDATE historiqueconnexion "
+            . "SET dateFinLog = now()"
+            ."WHERE idMedecin = :leMedecin AND dateFinLog IS NULL");
+    $bv1 = $pdoStatement->bindValue(':leMedecin', $id);
     $execution = $pdoStatement->execute();
     return $execution;
     
