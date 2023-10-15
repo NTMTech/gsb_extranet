@@ -64,5 +64,5 @@ else {
 	
 	<div class="page-content">
     	<div class="row">
-
+      <a href="index.php?uc=personnalData">Récupérer mes données</a>
 <?php };?>

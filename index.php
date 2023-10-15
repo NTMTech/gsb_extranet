@@ -52,6 +52,21 @@ switch($uc){
 	case 'inscriptionVisio':{
 		include("controleurs/c_inscription_visio.php");break;
 	}
+	case 'maintenance':{
+		include("controleurs/c_maintenance.php");break;
+	}
+	case 'consulteOperation':{
+		include("controleurs/c_consulteOperation");break;
+	}
+	case 'maintenanceON':{
+		include("controleurs/c_maintenanceON");break;
+	}
+	case 'maintenanceOFF':{
+		include("controleurs/c_maintenanceOFF");break;
+	}
+	case 'personnalData' :{
+		include("controleurs/c_personnalData.php");break;
+	}
 	}
 
 ?>
