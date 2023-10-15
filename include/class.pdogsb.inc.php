@@ -447,5 +447,155 @@ function updateToken($login)
         return false;
       }
 }
+
+function getMaintenance()
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT maintenance FROM maintenance WHERE idmaintenance = '1';");
+    if ($monObjPdoStatement->execute()) {
+        $maintenance = $monObjPdoStatement->fetch();
+        return $maintenance['maintenance'];
+      }else
+      {
+        return false;
+      }
+}
+
+function infoPersoJSON($id)
+{
+    $pdo = PdoGsb::$monPdo;
+       $monObjPdoStatement=$pdo->prepare("SELECT nom,prenom,telephone,mail,dateCreation,rpps,dateDiplome,dateConsentement FROM medecin WHERE id= :lId");
+    $bvc1=$monObjPdoStatement->bindValue(':lId',$id,PDO::PARAM_INT);
+    if ($monObjPdoStatement->execute()) {
+        $unUser=$monObjPdoStatement->fetch();
+        $json = json_encode($unUser);
+        $bytes = file_put_contents("portabilite/".$id.".json", $json);
+    }
+    else
+        throw new Exception("erreur");
+           
+}
+
+function maintenanceON()
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("UPDATE maintenance SET maintenance = '1' WHERE idmaintenance = '1'");
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
+function maintenanceOFF()
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("UPDATE maintenance SET maintenance = '0' WHERE idmaintenance = '1'");
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
+function checkRoleAccount($login)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT role FROM medecin WHERE mail = :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $role = $monObjPdoStatement->fetch();
+        return $role['role'];
+      }else
+      {
+        return false;
+      }
+}
+
+function envoiMail($code,$login){
+    try {
+
+        //Server settings    
+        $mail = new PHPMailer(true);                  //Enable verbose debug output
+        $mail->isSMTP();                                            //Send using SMTP
+        $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+        $mail->Username   = 'noahthomasmathis@gmail.com';                     //SMTP username
+        $mail->Password   = 'tosa vxay dgbt ghkz';                               //SMTP password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+        $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+        $mail->setFrom('noahthomasmathis@gmail.com');
+        $mail->addAddress($login);
+        $mail->isHTML(true);                                  //Set email format to HTML
+        $mail->Subject = 'Code double authentification';
+        $mail->Body    = "Veuillez saisir le code suivant afin de vous connecter : $code";
+    
+        $mail->send();
+        echo 'Message has been sent';
+    } catch (Exception $e) {
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    }
+}
+
+//function donnerAvis($idmedecin,$avis)
+//{
+    
+//}
+
+function voirMedecinNonValide()
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT * FROM medecin WHERE verifValidateur = '0'");
+    if ($monObjPdoStatement->execute()) {
+        $nonValide = $monObjPdoStatement->fetchAll();
+        return $nonValide;
+      }else
+      {
+        return false;
+      }
+}
+
+function getValidationCompte($login)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT verifValidateur FROM medecin WHERE mail = :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $validation = $monObjPdoStatement->fetch();
+        return $validation['verifValidateur'];
+      }else
+      {
+        return false;
+      }
+}
+
+function giveValidationToMedecin($id)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET verifValidateur = '1' WHERE id = :id");
+    $bvc1=$monObjPdoStatement->bindValue(':id',$id,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
+function sendInfoCreationCompteToValidateur()
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT verifValidateur FROM medecin WHERE mail = :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $validation = $monObjPdoStatement->fetch();
+        return $validation['verifValidateur'];
+      }else
+      {
+        return false;
+      }
+}
 }
 ?>
