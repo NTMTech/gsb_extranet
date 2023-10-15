@@ -105,7 +105,7 @@ function checkUserAdmin($login,$pwd):bool {
 
     $user=false;
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM administrateur WHERE mail= :login AND token IS NULL");
+    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM administrateur WHERE mail= :login");
     $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
         $unUser=$monObjPdoStatement->fetch();
@@ -188,36 +188,16 @@ public function creeMedecin($email, $mdp, $nom, $prenom,$rpps)
     
 }
 
-public function creeModerateur($email, $mdp, $nom, $prenom)
+public function creeValidateur($email,$mdp)
 {
-   
-    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO moderateur(id,nom,prenom,mail, motDePasse,dateCreation,dateConsentement) "
-            . "VALUES (null, :leNom, :lePrenom, :leMail, :leMdp, now(),now())");
-    $bv1 = $pdoStatement->bindValue(':leMail', $email);
+    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO validateur(idValidateur,mailValidateur, motDePasseValidateur) "
+            . "VALUES (null, :leMail, :leMdp, now(),now())");
+    $bv1 = $pdoStatement->bindValue(':leMail',$email);
     $mdp = password_hash($mdp, PASSWORD_DEFAULT);
-    $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
-    $bv3 = $pdoStatement->bindValue(':leNom', $nom);
-    $bv4 = $pdoStatement->bindValue(':lePrenom', $prenom);
+    $bv2 = $pdoStatement->bindValue('leMdp', $mdp);
 
-    $execution = $pdoStatement->execute();
-    return $execution;
+    
 }
-
-public function creeAdmin($email, $mdp, $nom, $prenom)
-{
-   
-    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO administarteur(id,nom,prenom,mail, motDePasse,dateCreation,dateConsentement) "
-            . "VALUES (null, :leNom, :lePrenom, :leMail, :leMdp, now(),now())");
-    $bv1 = $pdoStatement->bindValue(':leMail', $email);
-    $mdp = password_hash($mdp, PASSWORD_DEFAULT);
-    $bv2 = $pdoStatement->bindValue(':leMdp', $mdp);
-    $bv3 = $pdoStatement->bindValue(':leNom', $nom);
-    $bv4 = $pdoStatement->bindValue(':lePrenom', $prenom);
-
-    $execution = $pdoStatement->execute();
-    return $execution;
-}
-
 
 function testMail($email){
     $pdo = PdoGsb::$monPdo;
