@@ -26,7 +26,6 @@ switch($action){
 			case '1':{
 				$maintenanceVerif = $pdo->getMaintenance();
 				
-				
 				if ($maintenanceVerif == 0)	{
 					
 					$code = $pdo->creerCodeVerif($login);
@@ -113,7 +112,8 @@ switch($action){
 			$codeFromForm = intval($_POST['code']);
 			$codeReal = $pdo->GetCode($login);
 			$verifToken = $pdo->getVerifToken($login);
-			if ($codeFromForm == $codeReal && $verifToken == 1)
+			$validation = $pdo->getValidationCompte($login);
+			if ($codeFromForm == $codeReal && $verifToken == 1 && $validation == 1)
 			{
 				$infosMedecin = $pdo->donneLeMedecinByMail($login);
 					$id = $infosMedecin['id'];

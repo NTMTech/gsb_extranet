@@ -67,6 +67,9 @@ switch($uc){
 	case 'personnalData' :{
 		include("controleurs/c_personnalData.php");break;
 	}
+	case 'valideMedecin' :{
+		include("controleurs/validateur/c_valide_medecin.php");break;
+	}
 	}
 
 ?>

@@ -539,9 +539,63 @@ function envoiMail($code,$login){
     }
 }
 
-function donnerAvis($idmedecin,$avis)
-{
+//function donnerAvis($idmedecin,$avis)
+//{
     
+//}
+
+function voirMedecinNonValide()
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT * FROM medecin WHERE verifValidateur = '0'");
+    if ($monObjPdoStatement->execute()) {
+        $nonValide = $monObjPdoStatement->fetchAll();
+        return $nonValide;
+      }else
+      {
+        return false;
+      }
+}
+
+function getValidationCompte($login)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT verifValidateur FROM medecin WHERE mail = :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $validation = $monObjPdoStatement->fetch();
+        return $validation['verifValidateur'];
+      }else
+      {
+        return false;
+      }
+}
+
+function giveValidationToMedecin($id)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET verifValidateur = '1' WHERE id = :id");
+    $bvc1=$monObjPdoStatement->bindValue(':id',$id,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
+function sendInfoCreationCompteToValidateur()
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT verifValidateur FROM medecin WHERE mail = :login");
+    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $validation = $monObjPdoStatement->fetch();
+        return $validation['verifValidateur'];
+      }else
+      {
+        return false;
+      }
 }
 }
 ?>
