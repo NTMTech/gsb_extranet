@@ -1,5 +1,5 @@
 <footer>
-    <p id="footer" class="panel-footer" style="text-align:center; background-color:#5c9dde;">
+    <p id="footer" class="panel-footer" style="text-align:center; background-color:#284E75;">
         <a href="vues/v_politiqueprotectiondonnees.html">Politique de la protection des données</a>
 </p>
 <style>

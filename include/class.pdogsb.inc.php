@@ -82,43 +82,6 @@ function checkUserMedecin($login,$pwd):bool {
 }
 return $user;   
 }
-function checkUserModo($login,$pwd):bool {
-
-    $user=false;
-    $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM moderateur WHERE mail= :login");
-    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
-    if ($monObjPdoStatement->execute()) {
-        $unUser=$monObjPdoStatement->fetch();
-        if (is_array($unUser)){
-           if (password_verify($pwd,$unUser['motDePasse']))
-                $user=true;
-               
-         
-    
-    }
-}
-return $user;   
-}
-
-function checkUserAdmin($login,$pwd):bool {
-
-    $user=false;
-    $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT motDePasse FROM administrateur WHERE mail= :login");
-    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
-    if ($monObjPdoStatement->execute()) {
-        $unUser=$monObjPdoStatement->fetch();
-        if (is_array($unUser)){
-           if (password_verify($pwd,$unUser['motDePasse']))
-                $user=true;
-               
-         
-    
-    }
-}
-return $user;   
-}
 
 
 
@@ -188,17 +151,7 @@ public function creeMedecin($email, $mdp, $nom, $prenom,$rpps)
     
 }
 
-public function creeValidateur($email,$mdp)
-{
-    $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO validateur(idValidateur,mailValidateur, motDePasseValidateur) "
-            . "VALUES (null, :leMail, :leMdp, now(),now())");
-    $bv1 = $pdoStatement->bindValue(':leMail',$email);
-    $mdp = password_hash($mdp, PASSWORD_DEFAULT);
-    $bv2 = $pdoStatement->bindValue('leMdp', $mdp);
-
-    
-}
-
+/*Permet d'eviter qu'il y'ai deux fois la même adresse mail*/
 function testMail($email){
     $pdo = PdoGsb::$monPdo;
     $pdoStatement = $pdo->prepare("SELECT count(*) as nbMail FROM medecin WHERE mail = :leMail");
@@ -215,7 +168,7 @@ function testMail($email){
 
 
 
-
+/*Ajoute la conextion dans l'historique lors de la connexion*/
 function connexionInitiale($mail){
      $pdo = PdoGsb::$monPdo;
     $medecin= $this->donneLeMedecinByMail($mail);
@@ -223,6 +176,7 @@ function connexionInitiale($mail){
     $this->ajouteConnexionInitiale($id);
     
 }
+
 
 function ajouteConnexionInitiale($id){
     $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO historiqueconnexion "
@@ -233,6 +187,7 @@ function ajouteConnexionInitiale($id){
     
 }
 
+/*Ajoute la conextion dans l'historique sans date de fin*/
 function connexion($mail){
     $pdo = PdoGsb::$monPdo;
    $medecin= $this->donneLeMedecinByMail($mail);
@@ -249,7 +204,7 @@ function ajouteConnexion($id){
     return $execution;
     
 }
-
+/*Met à jour la conextion dans l'historique*/
 function updateConnexion($id){
     $pdoStatement = PdoGsb::$monPdo->prepare("UPDATE historiqueconnexion "
             . "SET dateFinLog = now()"
@@ -260,6 +215,7 @@ function updateConnexion($id){
     
 }
 
+/*Donne les infos d'un medecin*/
 function donneinfosmedecin($id){
   
        $pdo = PdoGsb::$monPdo;
@@ -325,35 +281,6 @@ function GetCode($login)
         return false;
     }
 }
-function donneinfosmodo($id){
-  
-    $pdo = PdoGsb::$monPdo;
-        $monObjPdoStatement=$pdo->prepare("SELECT id,nom,prenom FROM moderateur WHERE id= :lId");
- $bvc1=$monObjPdoStatement->bindValue(':lId',$id,PDO::PARAM_INT);
- if ($monObjPdoStatement->execute()) {
-     $unUser=$monObjPdoStatement->fetch();
-
- }
- else
-     throw new Exception("erreur");
-        
- 
-}
-
-function donneinfosadmin($id){
-  
-    $pdo = PdoGsb::$monPdo;
-        $monObjPdoStatement=$pdo->prepare("SELECT id,nom,prenom FROM administrateur WHERE id= :lId");
- $bvc1=$monObjPdoStatement->bindValue(':lId',$id,PDO::PARAM_INT);
- if ($monObjPdoStatement->execute()) {
-     $unUser=$monObjPdoStatement->fetch();
-
- }
- else
-     throw new Exception("erreur");
-        
- 
-}
 
 /**
  * fonction qui permet d'obtenir les différentes visios conférences proposée
@@ -370,6 +297,7 @@ function getVisioProposee()
 
 }
 
+/*Permet de s'inscrire a une visio*/
 function inscriptionVisio($idmedecin,$idvisio)
 {
     $pdo = PdoGsb::$monPdo;
@@ -383,6 +311,7 @@ function inscriptionVisio($idmedecin,$idvisio)
 
 }
 
+/*Recupére le nom dans la visio lors de l'inscription*/
 function getNomVisioInscrit($id)
 {
     $pdo = PdoGsb::$monPdo;
@@ -394,6 +323,7 @@ if ($monObjPdoStatement->execute()) {
     }
 }
 
+/*Ajoute un token*/
 function addToken($login,$jeton)
 {
     $pdo = PdoGsb::$monPdo;
@@ -407,6 +337,7 @@ function addToken($login,$jeton)
       }
 }
 
+/*Récupére un token*/
 function getToken($login)
 {
     $pdo = PdoGsb::$monPdo;
@@ -421,6 +352,7 @@ function getToken($login)
       }
 }
 
+/*Verifie un token*/
 function getVerifToken($login)
 {
     $pdo = PdoGsb::$monPdo;
@@ -435,6 +367,7 @@ function getVerifToken($login)
       }
 }
 
+/*met a jour un token*/
 function updateToken($login)
 {
     $pdo = PdoGsb::$monPdo;
@@ -448,6 +381,7 @@ function updateToken($login)
       }
 }
 
+/*Verifie si le site est en maintenance*/
 function getMaintenance()
 {
     $pdo = PdoGsb::$monPdo;
@@ -461,6 +395,7 @@ function getMaintenance()
       }
 }
 
+/*Donne les infos de l'utilisateur*/
 function infoPersoJSON($id)
 {
     $pdo = PdoGsb::$monPdo;
@@ -476,6 +411,7 @@ function infoPersoJSON($id)
            
 }
 
+/*Met le site en maintenance*/
 function maintenanceON()
 {
     $pdo = PdoGsb::$monPdo;
@@ -488,6 +424,7 @@ function maintenanceON()
       }
 }
 
+/*Desactive la maintenance*/
 function maintenanceOFF()
 {
     $pdo = PdoGsb::$monPdo;
@@ -500,6 +437,7 @@ function maintenanceOFF()
       }
 }
 
+/*Verifie le role de l'utilisateur*/
 function checkRoleAccount($login)
 {
     $pdo = PdoGsb::$monPdo;
@@ -514,6 +452,7 @@ function checkRoleAccount($login)
       }
 }
 
+/*Envoie un mail à l'utilisateur pour qu'il puisse se connecter*/
 function envoiMail($code,$login){
     try {
 
@@ -544,6 +483,7 @@ function envoiMail($code,$login){
     
 //}
 
+/*affiche les medecins non validé*/
 function voirMedecinNonValide()
 {
     $pdo = PdoGsb::$monPdo;
@@ -557,6 +497,7 @@ function voirMedecinNonValide()
       }
 }
 
+/*Verifie la validation du medecin*/
 function getValidationCompte($login)
 {
     $pdo = PdoGsb::$monPdo;
@@ -571,6 +512,7 @@ function getValidationCompte($login)
       }
 }
 
+/*Valide un medecin*/
 function giveValidationToMedecin($id)
 {
     $pdo = PdoGsb::$monPdo;
@@ -584,6 +526,7 @@ function giveValidationToMedecin($id)
       }
 }
 
+/*Envoie les infos pour valider le compte au verificateur*/
 function sendInfoCreationCompteToValidateur()
 {
     $pdo = PdoGsb::$monPdo;

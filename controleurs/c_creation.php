@@ -96,7 +96,7 @@ switch($action){
                 echo 'le mail n\'a pas un format correct<br/>';
                 $loginOk=false;
             }
-
+            
             if ($pdo->testMail($leLogin)==true){
                 echo'vous ne pouvez pas utiliser un mail déjà existant !<br/>';
                 $loginOk=false;
@@ -144,7 +144,7 @@ try {
     $mail->addAddress($leLogin);
 	$mail->isHTML(true);                                  //Set email format to HTML
     $mail->Subject = 'Code de verification';
-    $mail->Body    = '<span style="text-align:center; font-weight: bold;">'."<a href=\"https://s5-4300.nuage-peda.fr/projet/bsgextranetB3/index.php?uc=creation&action=tokenpage&id=$leLogin&token=$token\">Activation du compte </a> </span>";;
+    $mail->Body    = '<span style="text-align:center; font-weight: bold;">'."<a href=\"https://s5-4263.nuage-peda.fr/projet/gsbextranet_projet_equipe/index.php?uc=creation&action=tokenpage&id=$leLogin&token=$token\">Activation du compte </a> </span>";;
     $mail->send();
     echo 'Vous avez reçu un lien de verification de compte sur votre adresse mail.<br/>';
 } catch (Exception $e) {
