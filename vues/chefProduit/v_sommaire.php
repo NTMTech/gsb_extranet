@@ -3,7 +3,7 @@ if (!$_SESSION['id'])
     header('Location: ../index.php');
 else {
 ?>
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
   <head>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -38,17 +38,21 @@ else {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Galaxy Swiss Bourdin</a>
+      <a class="navbar-brand" href="index.php">Galaxy Swiss Bourdin</a>
     </div>
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="index.php?uc=maintenance">Mettre site en maintenance</a></li> <!--Modifier la redirection-->
-        <li class="active"><a href="index.php?uc=consulteOperation">consulter opérations</a></li> <!--Modifier la redirection-->
+        
+      <li class="active"><a href="index.php?uc=ajoutProduit">Ajouter Produits</a></li>
+      <li class="active"><a href="index.php?uc=consulterProduitCP">Consulter Produits</a></li>
+      <li class="active"><a href="index.php?uc=ajoutVisios">Ajouter des visioconférences</a></li> 
+      <li class="active"><a href="index.php?uc=consulterVisiosCP">Consulter les visoconférences</a></li>
+
       </ul>
       <ul class="nav navbar-nav navbar-right">
 		  <li><a><?php echo $_SESSION['prenom']."  ".$_SESSION['nom']?></a></li>
-		  <li><a>Administrateur</a></li>
+		  <li><a>Chef Produit</a></li>
        
      </ul>
     </div><!-- /.navbar-collapse -->
@@ -60,5 +64,5 @@ else {
 	
 	<div class="page-content">
     	<div class="row">
-
+      
 <?php };?>

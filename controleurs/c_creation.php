@@ -127,6 +127,7 @@ switch($action){
         }
         }
         if($rempli && $loginOk && $passwordOk && $rppsOk == true && $tailleMaxRppsOk==true){
+            var_dump($leRpps);
             $token = substr(md5(uniqid()),0 ,8);
 				$mail = new PHPMailer(true);
 
@@ -144,7 +145,7 @@ try {
     $mail->addAddress($leLogin);
 	$mail->isHTML(true);                                  //Set email format to HTML
     $mail->Subject = 'Code de verification';
-    $mail->Body    = '<span style="text-align:center; font-weight: bold;">'."<a href=\"https://s5-4300.nuage-peda.fr/projet/bsgextranetB3/index.php?uc=creation&action=tokenpage&id=$leLogin&token=$token\">Activation du compte </a> </span>";;
+    $mail->Body    = '<span style="text-align:center; font-weight: bold;">'."<a href=\"https://s5-4300.nuage-peda.fr/projet/gsb_extranet/index.php?uc=creation&action=tokenpage&id=$leLogin&token=$token\">Activation du compte </a> </span>";;
     $mail->send();
     echo 'Vous avez reçu un lien de verification de compte sur votre adresse mail.<br/>';
 } catch (Exception $e) {

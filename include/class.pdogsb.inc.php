@@ -23,7 +23,7 @@ class PdoGsb{
       	private static $serveur='mysql:host=localhost';
       	private static $bdd='dbname=gsbextranet';   		
       	private static $user='gsbextranet' ;    		
-      	private static $mdp='password' ;	
+      	private static $mdp='ThoughtPolice2019' ;	
 	private static $monPdo;
 	private static $monPdoGsb=null;
 		
@@ -263,7 +263,7 @@ function updateConnexion($id){
 function donneinfosmedecin($id){
   
        $pdo = PdoGsb::$monPdo;
-           $monObjPdoStatement=$pdo->prepare("SELECT id,nom,prenom FROM medecin WHERE id= :lId");
+           $monObjPdoStatement=$pdo->prepare("SELECT id,nom, FprenomROM medecin WHERE id= :lId");
     $bvc1=$monObjPdoStatement->bindValue(':lId',$id,PDO::PARAM_INT);
     if ($monObjPdoStatement->execute()) {
         $unUser=$monObjPdoStatement->fetch();
@@ -597,5 +597,59 @@ function sendInfoCreationCompteToValidateur()
         return false;
       }
 }
+
+function creerProduit($nom,$objectif,$information,$effeIndesirable,$images){
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("INSERT INTO produit VALUES (NULL,:nom,:objectif,:information,:effetIndesirable,$images)");
+    $bvc1=$monObjPdoStatement->bindValue(':nom',$nom,PDO::PARAM_STR);
+    $bvc2=$monObjPdoStatement->bindValue(':objectif',$objectif,PDO::PARAM_STR);
+    $bvc3=$monObjPdoStatement->bindValue(':information',$information,PDO::PARAM_STR);
+    $bvc4=$monObjPdoStatement->bindValue(':effetIndesirable',$effeIndesirable,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
+function supprimerProduit($id){
+    $pdo = PdoGsb::$monPdo;
+    $requete=$pdo ->prepare ("DELETE FROM produit WHERE id = $id");
+    if ($requete->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
+function supprimerVisio($id){
+    $pdo = PdoGsb::$monPdo;
+    $requete=$pdo ->prepare ("DELETE FROM visioconference WHERE id = $id");
+    if ($requete->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
+
+function creerVisio($nom,$objectif,$url,$date){
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("INSERT INTO visioconference VALUES (NULL,:nom,:objectif,:url,:date,NULL)");
+    $bvc1=$monObjPdoStatement->bindValue(':nom',$nom,PDO::PARAM_STR);
+    $bvc2=$monObjPdoStatement->bindValue(':objectif',$objectif,PDO::PARAM_STR);
+    $bvc3=$monObjPdoStatement->bindValue(':url',$url,PDO::PARAM_STR);
+    $bvc4=$monObjPdoStatement->bindValue(':date',$date,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
 }
 ?>

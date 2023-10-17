@@ -3,7 +3,7 @@ if (!$_SESSION['id'])
     header('Location: ../index.php');
 else {
 ?>
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
   <head>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -43,22 +43,46 @@ else {
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="index.php?uc=maintenance">Mettre site en maintenance</a></li> <!--Modifier la redirection-->
-        <li class="active"><a href="index.php?uc=consulteOperation">consulter opérations</a></li> <!--Modifier la redirection-->
+        
+      <li class="active"><a href="index.php?uc=ajoutProduit">Ajouter Produits</a></li> 
+      <li class="active"><a href="index.php?uc=consulterProduitCP">Consulter Produits</a></li>
+      <li class="active"><a href="index.php?uc=ajoutVisios">Ajouter des visioconférences</a></li> 
+      <li class="active"><a href="index.php?uc=consulterVisiosCP">Consulter les visoconférences</a></li>
+
       </ul>
       <ul class="nav navbar-nav navbar-right">
 		  <li><a><?php echo $_SESSION['prenom']."  ".$_SESSION['nom']?></a></li>
-		  <li><a>Administrateur</a></li>
+		  <li><a>Chef Produit</a></li>
        
      </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
 
+<div class="page-content container">
+	<div class="row">
+		<div class="col-md-4 col-md-offset-4">
+			<div class="login-wrapper">
+				<div class="box">
+        <form method="POST" action="index.php?uc=creerVisio">
+<label >Nouvelle visioconférence</label>
+<width=50%><input name="NomVisio" class="form-control" type="text" placeholder="Nom de la visioconférence"/>
+<label>Objectif visioconférence</label>
+<width=50%><input name="ObjectifVisio" class="form-control" type="text" placeholder="Objectif de la visioconférence"/>
+<label>URL visioconférence</label>
+<width=50%><input name="UrlVisio" class="form-control" type="text" placeholder="URL de la visioconférence"/>
+<label for="DateVisio">Date de la visioconférence :</label>
 
+<input type="date" id="start" name="DateVisio" value="2023-01-01" min="2023-01-01" max="2030-01-01" />
+<br>
+<input type="submit" class="btn btn-primary signup" value="Ajouter la visioconference"/></form>
+          </div>	
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<?php
+  }
+?>
 
-	
-	<div class="page-content">
-    	<div class="row">
-
-<?php };?>

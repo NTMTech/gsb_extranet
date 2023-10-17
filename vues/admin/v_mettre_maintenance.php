@@ -40,7 +40,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
 		  <li><a><?php echo $_SESSION['prenom']."  ".$_SESSION['nom']?></a></li>
-		  <li><a>Médecin</a></li>
+		  <li><a>Administrateur</a></li>
        
      </ul>
     </div><!-- /.navbar-collapse -->
