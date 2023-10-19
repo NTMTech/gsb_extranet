@@ -386,7 +386,7 @@ function inscriptionVisio($idmedecin,$idvisio)
 function getNomVisioInscrit($id)
 {
     $pdo = PdoGsb::$monPdo;
-$monObjPdoStatement=$pdo->prepare("SELECT nomVisio FROM visioconference INNER JOIN medecinvisio ON visioconference.id = medecinvisio.idVisio WHERE idMedecin = $id;");
+$monObjPdoStatement=$pdo->prepare("SELECT id,nomVisio FROM visioconference INNER JOIN medecinvisio ON visioconference.id = medecinvisio.idVisio WHERE idMedecin = $id;");
 if ($monObjPdoStatement->execute()) {
   $donnees = $monObjPdoStatement->fetchAll();
     
@@ -539,10 +539,19 @@ function envoiMail($code,$login){
     }
 }
 
-//function donnerAvis($idmedecin,$avis)
-//{
-    
-//}
+function getAvisFromOneVisio($visioId)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT textAvis FROM avis WHERE visioId = :visioId AND verifAvis = '1' ");
+    $bvc1=$monObjPdoStatement->bindValue(':visioId',$visioId,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        $avisOfVisio = $monObjPdoStatement->fetchAll();
+        return $avisOfVisio;
+      }else
+      {
+        return false;
+      }
+}
 
 function voirMedecinNonValide()
 {
@@ -584,14 +593,74 @@ function giveValidationToMedecin($id)
       }
 }
 
-function sendInfoCreationCompteToValidateur()
+function sendMailInfoCreationCompteToValidateur()
 {
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT verifValidateur FROM medecin WHERE mail = :login");
-    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+    $monObjPdoStatement=$pdo->prepare("SELECT mail FROM medecin WHERE role = '4'");
     if ($monObjPdoStatement->execute()) {
-        $validation = $monObjPdoStatement->fetch();
-        return $validation['verifValidateur'];
+        $validateurMail = $monObjPdoStatement->fetchAll();
+        foreach ($validateurMail as $unMail)
+        {
+            try {
+
+                //Server settings    
+                $mail = new PHPMailer(true);                  //Enable verbose debug output
+                $mail->isSMTP();                                            //Send using SMTP
+                $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+                $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+                $mail->Username   = 'noahthomasmathis@gmail.com';                     //SMTP username
+                $mail->Password   = 'tosa vxay dgbt ghkz';                               //SMTP password
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+                $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+                $mail->setFrom('noahthomasmathis@gmail.com');
+                $mail->addAddress($unMail['mail']);
+                $mail->isHTML(true);                                  //Set email format to HTML
+                $mail->Subject = 'Nouveau medecin';
+                $mail->Body    = "Un nouveau medecin vient de creer un compte, allez sur le site afin de le valider ou le refuser.";
+            
+                $mail->send();
+                echo 'Message has been sent';
+            } catch (Exception $e) {
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            }
+        }
+    }
+}
+
+function creerAvis($textAvis,$unAvis)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("INSERT INTO avis VALUES (NULL,:textAvis,:unAvis,'0');");
+    $bvc1 = $monObjPdoStatement->bindValue(':textAvis',$textAvis,PDO::PARAM_STR);
+    $bvc2 = $monObjPdoStatement->bindValue(':unAvis',$unAvis,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
+function getAvisNonVerif()
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT idAvis,textAvis,nomVisio FROM avis INNER JOIN visioconference ON avis.visioId = visioconference.id WHERE verifAvis = '0' ");
+    if ($monObjPdoStatement->execute()) {
+        $avisOfVisioNonVerif = $monObjPdoStatement->fetchAll();
+        return $avisOfVisioNonVerif;
+      }else
+      {
+        return false;
+      }
+}
+
+function validationAvis($avisId)
+{
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("UPDATE avis SET verifAvis = '1' WHERE idAvis = :avisId");
+    $bvc1=$monObjPdoStatement->bindValue(':avisId',$avisId,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        return true;
       }else
       {
         return false;

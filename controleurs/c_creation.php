@@ -27,7 +27,7 @@ switch($action){
                 $lePassword = htmlspecialchars($_POST['mdp']);
                 $leNom = ($_POST['nom']);
                 $lePrenom = ($_POST['prénom']);
-                $leRpps =($_POST['rpps']);
+                $leRpps = $_POST['rpps'];
 
 
         if ($leLogin == $_POST['login'])
@@ -129,7 +129,8 @@ switch($action){
         if($rempli && $loginOk && $passwordOk && $rppsOk == true && $tailleMaxRppsOk==true){
             $token = substr(md5(uniqid()),0 ,8);
 				$mail = new PHPMailer(true);
-
+                $pdo->sendMailInfoCreationCompteToValidateur();
+                
 try {
 	
     //Server settings                      //Enable verbose debug output
@@ -144,7 +145,7 @@ try {
     $mail->addAddress($leLogin);
 	$mail->isHTML(true);                                  //Set email format to HTML
     $mail->Subject = 'Code de verification';
-    $mail->Body    = '<span style="text-align:center; font-weight: bold;">'."<a href=\"https://s5-4300.nuage-peda.fr/projet/bsgextranetB3/index.php?uc=creation&action=tokenpage&id=$leLogin&token=$token\">Activation du compte </a> </span>";;
+    $mail->Body    = '<span style="text-align:center; font-weight: bold;">'."<a href=\"https://s5-4264.nuage-peda.fr/projet/gsbextranet_projet_equipe/index.php?uc=creation&action=tokenpage&id=$leLogin&token=$token\">Activation du compte </a> </span>";;
     $mail->send();
     echo 'Vous avez reçu un lien de verification de compte sur votre adresse mail.<br/>';
 } catch (Exception $e) {

@@ -47,6 +47,7 @@ switch($action){
 					$prenom = $infosMedecin['prenom'];
 					connecter($id,$nom,$prenom);
 					$pdo->connexionInitiale($login);
+					include("vues/modo/v_sommaire.php");
 				}
 				else{
 					include("vues/v_maintenance.php");

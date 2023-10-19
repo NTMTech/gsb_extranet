@@ -8,6 +8,5 @@ else {
 $id=($_SESSION['id']);
 
 $pdo->updateConnexion($id);
-unlink("portabilite/".$id.".json");
 session_destroy();
 }
