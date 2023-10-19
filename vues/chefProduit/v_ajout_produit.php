@@ -64,7 +64,7 @@ else {
 		<div class="col-md-4 col-md-offset-4">
 			<div class="login-wrapper">
 				<div class="box">
-        <form method="POST" action="index.php?uc=creerProduit">
+        <form enctype="multipart/form-data" method="POST" action="index.php?uc=creerProduit">
 <label >Nouveau Produit</label>
 <width=50%><input name="NomProduit" class="form-control" type="text" placeholder="Nom du produit"/>
 <label>Objectif</label>
@@ -74,7 +74,8 @@ else {
 <label>Effets Indésirables</label>
 <width=50%><input name="EffetsProduit" class="form-control" type="text" placeholder="Effets indésirables"/>
 <label for="images">Image du Produit</label>
-<input type="file" name="images">
+<!--<input type="hidden" name="MAX_FILE_SIZE" value="100000000"> -->
+<input type="file" name="images" class="form-control mb-4 p-3" id="customFile" />
 <br>
 <input type="submit" class="btn btn-primary signup" value="Ajouter ce produit"/></form>
           </div>	

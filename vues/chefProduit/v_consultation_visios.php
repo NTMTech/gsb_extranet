@@ -88,6 +88,9 @@ else {
      echo '<form method="post" action ="index.php?uc=supprimerVisio&visioId='.$visioId.'">';
      echo '<th width=10%><input type="submit" style="background-color:red; color:white;" class="btn btn-signup" value="Supprimer"/></th>';
      echo '</form>';
+     echo '<form method="post" action ="index.php?uc=modifierVisio&visioId='.$visioId.'">';
+     echo '<th width=5%><input type="submit" style="background-color:blue; color:white;" class="btn btn-signup" value="Modifier"/></th>';
+     echo '</form>';
      echo '</tr>';
    
    }

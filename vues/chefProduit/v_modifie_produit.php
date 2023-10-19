@@ -1,6 +1,6 @@
 <?php
 if (!$_SESSION['id'])
-header('Location: ../index.php');
+    header('Location: ../index.php');
 else {
 ?>
 <!DOCTYPE html>
@@ -26,8 +26,8 @@ else {
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body>
-
+  <body background="assets/img/laboratoire.jpg">
+  <button name="deconnexion" class="btn btn-default" style="margin-left:94%;" type="submit"><a href="index.php?uc=deconnexion">Déconnexion</a></button>
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -40,14 +40,13 @@ else {
       </button>
       <a class="navbar-brand" href="#">Galaxy Swiss Bourdin</a>
     </div>
-
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-       
-      <li class="active"><a href="index.php?uc=ajoutProduit">Ajouter Produits</a></li>
+        
+      <li class="active"><a href="index.php?uc=ajoutProduit">Ajouter Produits</a></li> 
       <li class="active"><a href="index.php?uc=consulterProduitCP">Consulter Produits</a></li>
-      <li class="active"><a href="index.php?uc=ajoutVisios">Ajouter des visioconférences</a></li> 
+      <li class="active"><a href="index.php?uc=ajoutVisios">Ajouter des visioconférences</a></li>
       <li class="active"><a href="index.php?uc=consulterVisiosCP">Consulter les visoconférences</a></li>
 
       </ul>
@@ -60,41 +59,42 @@ else {
   </div><!-- /.container-fluid -->
 </nav>
 
+<div class="page-content container">
+	<div class="row">
+		<div class="col-md-4 col-md-offset-4">
+			<div class="login-wrapper">
+				<div class="box">
+                <?php $idProduit = $TableauProduitModif['0'];
+                echo '<form method="POST" action="index.php?uc=updateProduit&idProduit='.$idProduit.'">';?>
+          
+          <label >Nouveau nom produit</label>
+          <br>
+          <textarea id="NomVisio" name="NomVisio" rows="2" cols="35" ><?php echo $TableauProduitModif['1']?></textarea>
+          <br>
+          <label>Nouvel objectif produit</label>
+          <br>
+          <textarea name="ObjectifVisio" id="ObjectifVisio" rows="2" cols="35"><?php echo $TableauProduitModif['2']?></textarea>
+          <br>
+          <label>Nouvelle information</label>
+          <br>
+          <textarea name="information" id="information" rows="2" cols="35"><?php echo $TableauProduitModif['3']?></textarea>
+          <br>
+          <label>Nouveaux effets Indesirable</label>
+          <br>
+          <textarea name="effetIndesirable" id="effetIndesirable" rows="2" cols="35"><?php echo $TableauProduitModif['3']?></textarea>
+          <br>
+          <label for="DateVisio">Nouvelle image:</label>
 
+<input type="file" name="image" class="form-control mb-4 p-3" id="image" />
+<br>
+<input type="submit" class="btn btn-primary signup" value="Modifier ce produit"/></form>
+          </div>	
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<?php
+  }
+?>
 
-	
-	<div class="page-content">
-    	<div class="row">
-      <?php $lesProduits = $pdo->AfficherProduit();
-     
-     echo '<div>';
-     echo '<table>';
-     echo '<tr>';
-     echo '<th>Nom</th>';
-     echo '<th>Objectif</th>';
-     echo '<th>Information</th>';
-     echo '<th>Effet indesirable</th>';
-     echo '<th>Image</th>';
-     echo '</tr>';
-   foreach($lesProduits as $unProduit){
-    $idProduit = $unProduit['id'];
-     echo '<tr>';
-     echo '<th>'.$unProduit['nom'].'</th>';
-     echo '<th>'.$unProduit['objectif'].'</th>';
-     echo '<th width=30%>'.$unProduit['information'].'</th>';
-     echo '<th width=30%>'.$unProduit['effetIndesirable'].'</th>';
-     echo '<th>'.$unProduit['image'].'</th>';
-     echo '<form method="post" action ="index.php?uc=supprimerProduit&idProduit='.$idProduit.'">';
-     echo '<th width=5%><input type="submit" style="background-color:red; color:white;" class="btn btn-signup" value="Supprimer"/></th>';
-     echo '</form>';
-     echo '<form method="post" action ="index.php?uc=modifierProduit&idProduit='.$idProduit.'">';
-     echo '<th width=5%><input type="submit" style="background-color:blue; color:white;" class="btn btn-signup" value="Modifier"/></th>';
-     echo'</form>';
-     echo '</tr>';
-   
-   }
-   echo '</table>';
-   echo '</div>';
-   ?>
-
-<?php };?>

@@ -93,6 +93,18 @@ switch($uc){
 	case 'creerVisio':{
 		include("controleurs/chefProduit/c_creer_visio.php");break;
 	}
+	case 'modifierVisio':{
+		include("controleurs/chefProduit/c_modifier_visio.php");break;
+	}
+	case 'updateVisio':{
+		include("controleurs/chefProduit/c_update_visio.php");break;
+	}
+	case 'modifierProduit':{
+		include("controleurs/chefProduit/c_modifier_produit.php");break;
+	}
+	case 'updateProduit':{
+		include("controleurs/chefProduit/c_upload_produit.php");break;
+	}
 }
 include_once("vues/v_footer.php")
 ?>

@@ -23,11 +23,11 @@ switch($action){
         }
         $_SESSION['login'] = $_POST['login'];
 
-		$leLogin = htmlspecialchars($_POST['login']);
-                $lePassword = htmlspecialchars($_POST['mdp']);
-                $leNom = ($_POST['nom']);
-                $lePrenom = ($_POST['prénom']);
-                $leRpps =($_POST['rpps']);
+		$leLogin = strip_tags($_POST['login']);
+                $lePassword = strip_tags($_POST['mdp']);
+                $leNom = strip_tags($_POST['nom']);
+                $lePrenom = strip_tags($_POST['prénom']);
+                $leRpps =strip_tags($_POST['rpps']);
 
 
         if ($leLogin == $_POST['login'])
@@ -111,7 +111,7 @@ switch($action){
             $rppsOk = false;
             $patternRpps='#(\d{11})#';
             $tailleMaxRppsOk=false;
-            if(max($leRpps,99999999999)==99999999999 && ($leRpps > 0)){
+            if(max($leRpps,99999999999)<=99999999999 && ($leRpps > 0)){
                 $tailleMaxRppsOk=true;
             }
             else{
@@ -127,7 +127,6 @@ switch($action){
         }
         }
         if($rempli && $loginOk && $passwordOk && $rppsOk == true && $tailleMaxRppsOk==true){
-            var_dump($leRpps);
             $token = substr(md5(uniqid()),0 ,8);
 				$mail = new PHPMailer(true);
 
