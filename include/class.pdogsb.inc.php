@@ -344,7 +344,7 @@ if ($monObjPdoStatement->execute()) {
 function addToken($login,$jeton)
 {
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET token = '$jeton', limiteDateToken = DATE_ADD(NOW(), INTERVAL 5 MINUTE) WHERE mail= :login");
+    $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET token = '$jeton' WHERE mail= :login");
     $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
         return true;
