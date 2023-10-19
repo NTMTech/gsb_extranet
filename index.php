@@ -5,7 +5,6 @@ require_once ("include/class.pdogsb.inc.php");
 session_start();
 
 
-
 date_default_timezone_set('Europe/Paris');
 
 
@@ -105,5 +104,21 @@ switch($uc){
 	case 'updateProduit':{
 		include("controleurs/chefProduit/c_upload_produit.php");break;
 	}
+	case 'donnerAvis' :{
+		include("controleurs/c_donner_avis.php");break;
+	}
+	case 'inscritVisio' :{
+		include("controleurs/c_inscritVisio.php");break;
+	}
+	case 'voirAvis' :{
+		include("controleurs/c_afficheAvis.php");break;
+	}
+	case 'voirAvisNonValide' :{
+		include("controleurs/modo/c_valide_avis.php");break;
+	}
+	case 'valideAvis' :{
+		include("controleurs/modo/c_fonction_valide_avis.php");break;
+	}
 }
+	include_once('vues/v_footer.php');
 ?>

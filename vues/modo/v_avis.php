@@ -25,9 +25,9 @@ else {
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
   </head>
   <body>
+  <form action="../controleurs/c_consultation_produit.php" method="post">
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -44,16 +44,13 @@ else {
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-       
-      <li class="active"><a href="index.php?uc=consulteProduit">Consultation produits</a></li> <!--Modifier la redirection-->
-        <li class="active"><a href="index.php?uc=consulteVisio">consultations visioconférences et avis</a></li> <!--Modifier la redirection-->
-        <li class="active"><a href="index.php?uc=inscrireVisio">Inscription visioconférences</a></li> 
-        <li class="active"><a href="index.php?uc=avisVisio">avis visioconférences</a></li> <!--Modifier la redirection-->
+
+      <li class="active"><a href="index.php?uc=voirAvisNonValide">Avis des médecins sur les visios</a></li>
 
       </ul>
       <ul class="nav navbar-nav navbar-right">
 		  <li><a><?php echo $_SESSION['prenom']."  ".$_SESSION['nom']?></a></li>
-		  <li><a>Médecin</a></li>
+		  <li><a>Modérateur</a></li>
        
      </ul>
     </div><!-- /.navbar-collapse -->
@@ -62,39 +59,31 @@ else {
 
 
 
+	
 	<div class="page-content">
     	<div class="row">
-      <?php $lesVisios = $pdo->getVisioProposee();
-     
-     echo '<div width=100%>';
-     echo '<table>';
-     echo '<tr>';
-     echo '<th>Id</th>';
-     echo '<th>Nom</th>';
-     echo '<th>Objectif</th>';
-     echo '<th>URL</th>';
-     echo '<th>Date de la visio</th>';
-     echo '<th></th>';
-     echo '</tr>';
-     $test = 0;
-   foreach($lesVisios as $uneVisio){
-     echo '<tr>';
-     echo '<th>'.$uneVisio['id'].'</th>';
-     echo '<th>'.$uneVisio['nomVisio'].'</th>';
-     echo '<th>'.$uneVisio['objectif'].'</th>';
-     echo '<th>'.$uneVisio['url'].'</th>';
-     echo '<th>'.$uneVisio['dateVisio'].'</th>';
-     $visioId = $uneVisio['id'];
-     //$avisFromOneVisio = $pdo->getAvisFromOneVisio($visioId);
-     echo '<form method="post" action="index.php?uc=voirAvis&uneVisio='.$visioId.'">';
-     echo '<th><input type="submit" class="btn btn-primary signup" value="voir les avis"/></th>';
+      <?php $avisNonVerif = $pdo->getAvisNonVerif();
+      echo '<div>';
+      echo '<table>';
+      echo '<tr>';
+      echo '<th>Nom de la visio</th>';
+      echo '<th>Avis sur la visio</th>';
+      echo '<th>';
+      echo '</th>';
+      echo '</tr>';
+    foreach($avisNonVerif as $unAvis){
+      echo '<tr>
+       <th>'.$unAvis['nomVisio'].'</th>
+      <th>'.$unAvis['textAvis'].'</th>';
+      $avisId = $unAvis['idAvis'];
+     echo '<form method="post" action="index.php?uc=valideAvis&unAvis='.$avisId.'">';
+     echo '<th width=10%><input type="submit" class="btn btn-primary signup" value="Valider avis"/></th>';
      echo '</form>';
-     echo '</tr>';
+      echo '</tr>';
     }
-   echo '</table>';
-   echo '</div>';
-  ?>
-  </body>
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
-<?php };?>
+    echo '</table>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+ };
+    ?>

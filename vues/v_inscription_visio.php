@@ -45,10 +45,10 @@ else {
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
        
-      <li class="active"><a href="index.php?uc=consulteProduit">Consultation des produits</a></li> <!--Modifier la redirection-->
-        <li class="active"><a href="index.php?uc=consulteVisio">consultations des visioconférences proposées et des avis</a></li> <!--Modifier la redirection-->
-        <li class="active"><a href="index.php?uc=inscrireVisio">Inscription à des visioconférences à venir</a></li> 
-        <li class="active"><a href="index.php?uc=avisVisio">avis sur les visioconférences où vous êtes inscrit</a></li> <!--Modifier la redirection-->
+      <li class="active"><a href="index.php?uc=consulteProduit">Consultation produits</a></li> <!--Modifier la redirection-->
+        <li class="active"><a href="index.php?uc=consulteVisio">consultations visioconférences et avis</a></li> <!--Modifier la redirection-->
+        <li class="active"><a href="index.php?uc=inscrireVisio">Inscription visioconférences</a></li> 
+        <li class="active"><a href="index.php?uc=avisVisio">avis visioconférences</a></li> <!--Modifier la redirection-->
 
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -65,6 +65,32 @@ else {
 	
 	<div class="page-content">
     	<div class="row">
-      test inscription visio
+      <?php $lesVisios = $pdo->getVisioProposee();
+     
+     echo '<div width=100%>';
+     echo '<table>';
+     echo '<tr>';
+     echo '<th>Nom</th>';
+     echo '<th>Objectif</th>';
+     echo '<th>URL</th>';
+     echo '<th>Date de la visio</th>';
+     echo '<th></th>';
+     echo '</tr>';
+   foreach($lesVisios as $uneVisio){
+    $visioId = $uneVisio['id'];
+     echo '<tr>';
+     echo '<th>'.$uneVisio['nomVisio'].'</th>';
+     echo '<th>'.$uneVisio['objectif'].'</th>';
+     echo '<th>'.$uneVisio['url'].'</th>';
+     echo '<th>'.$uneVisio['dateVisio'].'</th>';
+     echo '<form method="post" action="index.php?uc=inscritVisio&uneVisio='.$visioId.'">';
+     echo '<th><input type="submit" class="btn btn-primary signup" value="s`inscrire"/></th>';
+     echo '</form>';
+     echo '</tr>';
+   
+   }
+   echo '</table>';
+   echo '</div>';
+  ?>
 
 <?php };?>

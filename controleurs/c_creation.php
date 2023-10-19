@@ -129,7 +129,8 @@ switch($action){
         if($rempli && $loginOk && $passwordOk && $rppsOk == true && $tailleMaxRppsOk==true){
             $token = substr(md5(uniqid()),0 ,8);
 				$mail = new PHPMailer(true);
-
+                $pdo->sendMailInfoCreationCompteToValidateur();
+                
 try {
 	
     //Server settings                      //Enable verbose debug output
