@@ -106,5 +106,4 @@ switch($uc){
 		include("controleurs/chefProduit/c_upload_produit.php");break;
 	}
 }
-include_once("vues/v_footer.php")
 ?>
