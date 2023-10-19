@@ -256,7 +256,7 @@ function creerCodeVerif($login)
 {
     $code = rand(100000,999999);
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET cle = $code WHERE mail= :login");
+    $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET cle = $code, limiteValidation = DATE_ADD(NOW(), INTERVAL 5 MINUTE) WHERE mail= :login");
     $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
         return $code;  
@@ -270,13 +270,30 @@ throw new Exception("erreur");
 function GetCode($login)
 {
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT cle FROM medecin WHERE mail= :login");
-    $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
-    if ($monObjPdoStatement->execute())
-    {
-        $code=$monObjPdoStatement->fetch();
-        return $code['cle'];
-    }else
+    $monObjPdoStatementdateactuel=$pdo->prepare("UPDATE medecin SET dateCodeActiver = now() WHERE mail= :login");
+    $bvc3=$monObjPdoStatementdateactuel->bindValue(':login',$login,PDO::PARAM_STR);
+    if ($monObjPdoStatementdateactuel->execute())
+    
+    {$monObjPdoStatementdate=$pdo->prepare("SELECT limiteValidation FROM medecin WHERE mail= :login");
+        $bvc2=$monObjPdoStatementdate->bindValue(':login',$login,PDO::PARAM_STR);
+        if ($monObjPdoStatementdate->execute())
+        {
+            $datelimite=$monObjPdoStatementdate->fetch();
+            $dateactuel=$monObjPdoStatementdateactuel;
+            if ($datelimite > $dateactuel)
+            {
+                $monObjPdoStatement=$pdo->prepare("SELECT cle FROM medecin WHERE mail= :login");
+                $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
+                if ($monObjPdoStatement->execute())
+        {
+            $code=$monObjPdoStatement->fetch();
+            return $code['cle'];
+        }
+            }
+    
+        }}
+    
+    else
     {
         return false;
     }
@@ -327,7 +344,7 @@ if ($monObjPdoStatement->execute()) {
 function addToken($login,$jeton)
 {
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET token = '$jeton' WHERE mail= :login");
+    $monObjPdoStatement=$pdo->prepare("UPDATE medecin SET token = '$jeton', limiteDateToken = DATE_ADD(NOW(), INTERVAL 5 MINUTE) WHERE mail= :login");
     $bvc1=$monObjPdoStatement->bindValue(':login',$login,PDO::PARAM_STR);
     if ($monObjPdoStatement->execute()) {
         return true;

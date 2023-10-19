@@ -9,7 +9,7 @@ footer
    bottom: ;
    left: 0;
    right: 0;
-   background-color: #5c9dde;
+   background-color: #284E75;
    text-align: center;
 }
 </style>
