@@ -16,7 +16,7 @@
     <![endif]-->
   </head>
 
-  <body background="../assets/img/laboratoire.jpg">
+  <body background="assets/img/laboratoire.jpg">
 
       <!-- **********************************************************************************************************************************************************
       MAIN CONTENT

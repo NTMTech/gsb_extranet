@@ -96,7 +96,7 @@ switch($action){
                 echo 'le mail n\'a pas un format correct<br/>';
                 $loginOk=false;
             }
-
+            
             if ($pdo->testMail($leLogin)==true){
                 echo'vous ne pouvez pas utiliser un mail déjà existant !<br/>';
                 $loginOk=false;

@@ -27,7 +27,7 @@ else {
     <![endif]-->
   </head>
   <body>
-  <form action="../controleurs/c_consultation_produit.php" method="post">
+
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -44,13 +44,16 @@ else {
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-
-      <li class="active"><a href="index.php?uc=voirAvisNonValide">Avis des médecins sur les visios</a></li>
+       
+      <li class="active"><a href="index.php?uc=ajoutProduit">Ajouter Produits</a></li>
+      <li class="active"><a href="index.php?uc=consulterProduitCP">Consulter Produits</a></li>
+      <li class="active"><a href="index.php?uc=ajoutVisios">Ajouter des visioconférences</a></li> 
+      <li class="active"><a href="index.php?uc=consulterVisiosCP">Consulter les visoconférences</a></li>
 
       </ul>
       <ul class="nav navbar-nav navbar-right">
 		  <li><a><?php echo $_SESSION['prenom']."  ".$_SESSION['nom']?></a></li>
-		  <li><a>Modérateur</a></li>
+		  <li><a>Chef Produit</a></li>
        
      </ul>
     </div><!-- /.navbar-collapse -->
@@ -62,27 +65,36 @@ else {
 	
 	<div class="page-content">
     	<div class="row">
-      <?php $avisNonVerif = $pdo->getAvisNonVerif();
-      echo '<div>';
-      echo '<table>';
-      echo '<tr>';
-      echo '<th>Nom de la visio</th>';
-      echo '<th>Avis sur la visio</th>';
-      echo '<th>';
-      echo '</th>';
-      echo '</tr>';
-    foreach($avisNonVerif as $unAvis){
-      echo '<tr>
-       <th>'.$unAvis['nomVisio'].'</th>
-      <th>'.$unAvis['textAvis'].'</th>';
-      $avisId = $unAvis['idAvis'];
-     echo '<form method="post" action="index.php?uc=valideAvis&unAvis='.$avisId.'">';
-     echo '<th width=10%><a href="index.php?uc=valideAvis&unAvis='.$avisId.'">valider avis</a></th>';
-      echo '</tr>';
-    }
-    echo '</table>';
-    echo '</div>';
-    echo '</div>';
-    echo '</div>';
- };
-    ?>
+      <?php $lesProduits = $pdo->AfficherProduit();
+     
+     echo '<div>';
+     echo '<table>';
+     echo '<tr>';
+     echo '<th>Nom</th>';
+     echo '<th>Objectif</th>';
+     echo '<th>Information</th>';
+     echo '<th>Effet indesirable</th>';
+     echo '<th>Image</th>';
+     echo '</tr>';
+   foreach($lesProduits as $unProduit){
+    $idProduit = $unProduit['id'];
+     echo '<tr>';
+     echo '<th>'.$unProduit['nom'].'</th>';
+     echo '<th>'.$unProduit['objectif'].'</th>';
+     echo '<th width=30%>'.$unProduit['information'].'</th>';
+     echo '<th width=30%>'.$unProduit['effetIndesirable'].'</th>';
+     echo '<th>'.$unProduit['image'].'</th>';
+     echo '<form method="post" action ="index.php?uc=supprimerProduit&idProduit='.$idProduit.'">';
+     echo '<th width=5%><input type="submit" style="background-color:red; color:white;" class="btn btn-signup" value="Supprimer"/></th>';
+     echo '</form>';
+     echo '<form method="post" action ="index.php?uc=modifierProduit&idProduit='.$idProduit.'">';
+     echo '<th width=5%><input type="submit" style="background-color:blue; color:white;" class="btn btn-signup" value="Modifier"/></th>';
+     echo'</form>';
+     echo '</tr>';
+   
+   }
+   echo '</table>';
+   echo '</div>';
+   ?>
+
+<?php };?>

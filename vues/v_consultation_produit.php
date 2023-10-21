@@ -70,7 +70,6 @@ else {
      echo '<div>';
      echo '<table>';
      echo '<tr>';
-     echo '<th>Id</th>';
      echo '<th>Nom</th>';
      echo '<th>Objectif</th>';
      echo '<th>Information</th>';
@@ -78,7 +77,6 @@ else {
      echo '</tr>';
    foreach($lesProduits as $unProduit){
      echo '<tr>';
-     echo '<th>'.$unProduit['id'].'</th>';
      echo '<th>'.$unProduit['nom'].'</th>';
      echo '<th>'.$unProduit['objectif'].'</th>';
      echo '<th width=30%>'.$unProduit['information'].'</th>';

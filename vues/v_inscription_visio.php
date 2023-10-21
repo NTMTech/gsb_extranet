@@ -60,37 +60,48 @@ else {
   </div><!-- /.container-fluid -->
 </nav>
 
-
-
-	
-	<div class="page-content">
-    	<div class="row">
+<div>
+<table>
+        <tr>
+            <th>Nom de la Visio</th>
+            <th>Objectif</th>
+            <th>URL</th>
+            <th>Date de la Visio</th>
+            <th></th>
+        </tr>
       <?php $lesVisios = $pdo->getVisioProposee();
-     
-     echo '<div width=100%>';
-     echo '<table>';
-     echo '<tr>';
-     echo '<th>Nom</th>';
-     echo '<th>Objectif</th>';
-     echo '<th>URL</th>';
-     echo '<th>Date de la visio</th>';
-     echo '<th></th>';
-     echo '</tr>';
-   foreach($lesVisios as $uneVisio){
-    $visioId = $uneVisio['id'];
-     echo '<tr>';
-     echo '<th>'.$uneVisio['nomVisio'].'</th>';
-     echo '<th>'.$uneVisio['objectif'].'</th>';
-     echo '<th>'.$uneVisio['url'].'</th>';
-     echo '<th>'.$uneVisio['dateVisio'].'</th>';
-     echo '<form method="post" action="index.php?uc=inscritVisio&uneVisio='.$visioId.'">';
-     echo '<th><input type="submit" class="btn btn-primary signup" value="s`inscrire"/></th>';
-     echo '</form>';
-     echo '</tr>';
-   
-   }
-   echo '</table>';
-   echo '</div>';
-  ?>
-
-<?php };?>
+      foreach ($lesVisios as $uneVisio) {
+        echo "<tr>";
+        echo "<td>" . $uneVisio["nomVisio"] . "</td>";
+        echo "<td>" . $uneVisio["objectif"] . "</td>";
+        echo "<td>" . $uneVisio["url"] . "</td>";
+        echo "<td>" . $uneVisio["dateVisio"] . "</td>";
+        echo "<td><a href='index.php?uc=inscritVisio&uneVisio=" . $uneVisio["id"] . "'>S'inscrire</a></td>";
+        echo "</tr>";
+    }
+      /*<div width=100%>
+    <form action="index.php?uc=inscritVisio" method="post">
+        <table>
+            <tr>
+                <th>Nom</th>
+                <th>Objectif</th>
+                <th>URL</th>
+                <th>Date de la visio</th>
+                <th></th>
+            </tr>
+            <?php foreach ($lesVisios as $uneVisio) : ?>
+                <tr>
+                    <td><?= $uneVisio['nomVisio'] ?></td>
+                    <td><?= $uneVisio['objectif'] ?></td>
+                    <td><?= $uneVisio['url'] ?></td>
+                    <td><?= $uneVisio['dateVisio'] ?></td>
+                    <td>
+                        <input type="hidden" name="uneVisio" value="<?= $uneVisio['id'] ?>">
+                        <button type="submit" name="inscrire" value="true" class="btn btn-primary signup">S'inscrire</button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </form>
+</div>*/?>
+<?php } ?>

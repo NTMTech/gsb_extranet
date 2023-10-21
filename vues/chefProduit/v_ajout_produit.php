@@ -1,6 +1,6 @@
 <?php
 if (!$_SESSION['id'])
-header('Location: ../index.php');
+    header('Location: ../index.php');
 else {
 ?>
 <!DOCTYPE html>
@@ -26,8 +26,8 @@ else {
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body>
-  <form action="../controleurs/c_consultation_produit.php" method="post">
+  <body background="assets/img/laboratoire.jpg">
+  <button name="deconnexion" class="btn btn-default" style="margin-left:94%;" type="submit"><a href="index.php?uc=deconnexion">Déconnexion</a></button>
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -40,49 +40,51 @@ else {
       </button>
       <a class="navbar-brand" href="#">Galaxy Swiss Bourdin</a>
     </div>
-
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-
-      <li class="active"><a href="index.php?uc=voirAvisNonValide">Avis des médecins sur les visios</a></li>
+        
+      <li class="active"><a href="index.php?uc=ajoutProduit">Ajouter Produits</a></li> 
+      <li class="active"><a href="index.php?uc=consulterProduitCP">Consulter Produits</a></li>
+      <li class="active"><a href="index.php?uc=ajoutVisios">Ajouter des visioconférences</a></li>
+      <li class="active"><a href="index.php?uc=consulterVisiosCP">Consulter les visoconférences</a></li>
 
       </ul>
       <ul class="nav navbar-nav navbar-right">
 		  <li><a><?php echo $_SESSION['prenom']."  ".$_SESSION['nom']?></a></li>
-		  <li><a>Modérateur</a></li>
+		  <li><a>Chef Produit</a></li>
        
      </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
 
+<div class="page-content container">
+	<div class="row">
+		<div class="col-md-4 col-md-offset-4">
+			<div class="login-wrapper">
+				<div class="box">
+        <form enctype="multipart/form-data" method="POST" action="index.php?uc=creerProduit">
+<label >Nouveau Produit</label>
+<width=50%><input name="NomProduit" class="form-control" type="text" placeholder="Nom du produit"/>
+<label>Objectif</label>
+<width=50%><input name="ObjectifProduit" class="form-control" type="text" placeholder="Objectif du produit"/>
+<label>Informations</label>
+<width=50%><input name="InfosProduit" class="form-control" type="text" placeholder="Informations sur le produit"/>
+<label>Effets Indésirables</label>
+<width=50%><input name="EffetsProduit" class="form-control" type="text" placeholder="Effets indésirables"/>
+<label for="images">Image du Produit</label>
+<!--<input type="hidden" name="MAX_FILE_SIZE" value="100000000"> -->
+<input type="file" name="images" class="form-control mb-4 p-3" id="customFile" />
+<br>
+<input type="submit" class="btn btn-primary signup" value="Ajouter ce produit"/></form>
+          </div>	
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<?php
+  }
+?>
 
-
-	
-	<div class="page-content">
-    	<div class="row">
-      <?php $avisNonVerif = $pdo->getAvisNonVerif();
-      echo '<div>';
-      echo '<table>';
-      echo '<tr>';
-      echo '<th>Nom de la visio</th>';
-      echo '<th>Avis sur la visio</th>';
-      echo '<th>';
-      echo '</th>';
-      echo '</tr>';
-    foreach($avisNonVerif as $unAvis){
-      echo '<tr>
-       <th>'.$unAvis['nomVisio'].'</th>
-      <th>'.$unAvis['textAvis'].'</th>';
-      $avisId = $unAvis['idAvis'];
-     echo '<form method="post" action="index.php?uc=valideAvis&unAvis='.$avisId.'">';
-     echo '<th width=10%><a href="index.php?uc=valideAvis&unAvis='.$avisId.'">valider avis</a></th>';
-      echo '</tr>';
-    }
-    echo '</table>';
-    echo '</div>';
-    echo '</div>';
-    echo '</div>';
- };
-    ?>

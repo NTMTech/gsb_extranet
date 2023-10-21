@@ -83,6 +83,12 @@ switch($uc){
 	case 'valideAvis' :{
 		include("controleurs/modo/c_fonction_valide_avis.php");break;
 	}
+	case 'droitOubli' :{
+		include("controleurs/c_droit_oubli.php");
+	}
+	case 'supprimerMedecin' :{
+		include("controleurs/c_supprimerMedecin.php");
+	}
 	}
 	include_once('vues/v_footer.php');
 ?>

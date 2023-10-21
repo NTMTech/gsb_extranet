@@ -44,26 +44,57 @@ else {
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         
-      <li class="active"><a href="index.php?uc=consulteProduit">Consultation des produits</a></li> <!--Modifier la redirection-->
-        <li class="active"><a href="index.php?uc=consulteVisio">Consultations des visioconférences et avis</a></li> <!--Modifier la redirection-->
-        <li class="active"><a href="index.php?uc=inscrireVisio">Inscription à des visioconférences</a></li> 
-        <li class="active"><a href="index.php?uc=avisVisio">Avis sur les visioconférences</a></li> <!--Modifier la redirection-->
+      <li class="active"><a href="index.php?uc=ajoutProduit">Ajouter Produits</a></li> 
+      <li class="active"><a href="index.php?uc=consulterProduitCP">Consulter Produits</a></li>
+      <li class="active"><a href="index.php?uc=ajoutVisios">Ajouter des visioconférences</a></li>
+      <li class="active"><a href="index.php?uc=consulterVisiosCP">Consulter les visoconférences</a></li>
 
       </ul>
       <ul class="nav navbar-nav navbar-right">
 		  <li><a><?php echo $_SESSION['prenom']."  ".$_SESSION['nom']?></a></li>
-		  <li><a>Médecin</a></li>
+		  <li><a>Chef Produit</a></li>
        
      </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
 
+<div class="page-content container">
+	<div class="row">
+		<div class="col-md-4 col-md-offset-4">
+			<div class="login-wrapper">
+				<div class="box">
+                <?php $idProduit = $TableauProduitModif['0'];
+                echo '<form method="POST" action="index.php?uc=updateProduit&idProduit='.$idProduit.'">';?>
+          
+          <label >Nouveau nom produit</label>
+          <br>
+          <textarea id="NomVisio" name="NomVisio" rows="2" cols="35" ><?php echo $TableauProduitModif['1']?></textarea>
+          <br>
+          <label>Nouvel objectif produit</label>
+          <br>
+          <textarea name="ObjectifVisio" id="ObjectifVisio" rows="2" cols="35"><?php echo $TableauProduitModif['2']?></textarea>
+          <br>
+          <label>Nouvelle information</label>
+          <br>
+          <textarea name="information" id="information" rows="2" cols="35"><?php echo $TableauProduitModif['3']?></textarea>
+          <br>
+          <label>Nouveaux effets Indesirable</label>
+          <br>
+          <textarea name="effetIndesirable" id="effetIndesirable" rows="2" cols="35"><?php echo $TableauProduitModif['3']?></textarea>
+          <br>
+          <label for="DateVisio">Nouvelle image:</label>
 
+<input type="file" name="image" class="form-control mb-4 p-3" id="image" />
+<br>
+<input type="submit" class="btn btn-primary signup" value="Modifier ce produit"/></form>
+          </div>	
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<?php
+  }
+?>
 
-	
-	<div class="page-content">
-    	<div class="row">
-      <a href="index.php?uc=personnalData">Récupérer mes données</a>
-      <a href="index.php?uc=droitOubli">Droit à l'oubli</a>
-<?php };?>
