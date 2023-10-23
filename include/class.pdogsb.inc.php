@@ -579,7 +579,7 @@ function sendInfoCreationCompteToValidateur()
                 $mail->Body    = "Un nouveau medecin vient de creer un compte, allez sur le site afin de le valider ou le refuser.";
             
                 $mail->send();
-                echo 'Message has been sent';
+                //echo 'Message has been sent';
             } catch (Exception $e) {
                 echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             }

@@ -1,9 +1,9 @@
 <?php
 
-$nom=$_POST['NomProduit'];
-$objectif=$_POST['ObjectifProduit'];
-$informations=$_POST['InfosProduit'];
-$effetIndesirable=$_POST['EffetsProduit'];
+$nom=htmlspecialchars($_POST['NomProduit']);
+$objectif=htmlspecialchars($_POST['ObjectifProduit']);
+$informations=htmlspecialchars($_POST['InfosProduit']);
+$effetIndesirable=htmlspecialchars($_POST['EffetsProduit']);
 var_dump($_FILES);
 if(isset($_FILES['images'])){ 
     $nomImageTemp=$_FILES['images']['tmp_name'];
