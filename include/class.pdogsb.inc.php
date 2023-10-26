@@ -643,7 +643,7 @@ function deleteHistoriqueConnexionFromOneMedecin($id)
 function deleteProduitFromOneProduit($id)
 {
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("DELETE FROM produit WHERE idMedecin = :id");
+    $monObjPdoStatement=$pdo->prepare("DELETE FROM medecinproduit WHERE idMedecin = :id");
     $bvc1 = $monObjPdoStatement->bindValue(':id',$id);
     if ($monObjPdoStatement->execute()) {
         return true;
@@ -669,12 +669,7 @@ function deleteMedecinVisioFromOneMedecin($id)
 function deleteMedecin($id)
 {
     $pdo = PdoGsb::$monPdo;
-    $deleteHistory = deleteHistoriqueConnexionFromOneMedecin($id);
-    $deleteProduit = deleteProduitFromOneProduit($id);
-    $deleteMedecinVisio = deleteMedecinVisioFromOneMedecin($id);
-    if ($deleteHistory == true && $deleteProduit == true && $deleteMedecinVisio == true)
-    {
-        $monObjPdoStatement=$pdo->prepare("DELETE FROM medecin WHERE idMedecin = :id");
+        $monObjPdoStatement=$pdo->prepare("DELETE FROM medecin WHERE id = :id");
     $bvc1 = $monObjPdoStatement->bindValue(':id',$id);
     if ($monObjPdoStatement->execute()) {
         return true;
@@ -682,10 +677,11 @@ function deleteMedecin($id)
       {
         return false;
       }
-    }else
-    {
-        return false;
-    }
+}
+
+function deleteJSON($id)
+{
+  unlink("portabilite/".$id.".json");
 }
 }
 ?>

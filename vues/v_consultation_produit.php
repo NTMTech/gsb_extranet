@@ -18,7 +18,7 @@ else {
 	<link href="assets/profilcss/profil.css" rel="stylesheet">
     <!-- styles -->
     <link href="css/styles.css" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -71,6 +71,7 @@ else {
      echo '<table>';
      echo '<tr>';
      echo '<th>Nom</th>';
+     //ECHO '<th>Image</th>';
      echo '<th>Objectif</th>';
      echo '<th>Information</th>';
      echo '<th>Effet indesirable</th>';
@@ -78,7 +79,26 @@ else {
    foreach($lesProduits as $unProduit){
      echo '<tr>';
      echo '<th>'.$unProduit['nom'].'</th>';
-     echo '<th>'.$unProduit['objectif'].'</th>';
+     //echo '<th>'.$unProduit['image'].'</th>';
+     /*echo '<!-- Pop-up -->
+<div id="popup" class="modal">
+       <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                 <div class="modal-header">
+                      <p> Entête du pop-up </p>
+                       </div>
+                    <div class="modal-body">
+                      <p> Je suis un magnifique pop-up</p>
+                       </div>
+                    <div class="modal-footer">
+                      <p> Footer du pop-up</p>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer le popup
+                               </button>
+                       </div>
+                </div>
+       </div>
+</div>';*/
+      echo '<th>'.$unProduit['objectif'].'</th>';
      echo '<th width=30%>'.$unProduit['information'].'</th>';
      echo '<th width=30%>'.$unProduit['effetIndesirable'].'</th>';
      echo '</tr>';
@@ -87,5 +107,7 @@ else {
    echo '</table>';
    echo '</div>';
    ?>
-
+</body>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
 <?php };?>
