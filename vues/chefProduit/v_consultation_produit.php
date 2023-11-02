@@ -81,9 +81,9 @@ else {
      echo '<tr>';
      echo '<th>'.$unProduit['nom'].'</th>';
      echo '<th>'.$unProduit['objectif'].'</th>';
-     echo '<th width=30%>'.$unProduit['information'].'</th>';
-     echo '<th width=30%>'.$unProduit['effetIndesirable'].'</th>';
-     echo '<th>'.$unProduit['image'].'</th>';
+     echo '<th width=30%>'.$unProduit['information'].'</th>'; 
+     echo '<th width=30%>'.$unProduit['effetIndesirable'].'</th>'; 
+     echo '<th><img class="imageProduit" src="images/'.$unProduit['image'].'"alt="'.$unProduit['nom'].'width="10"></th>';
      echo '<form method="post" action ="index.php?uc=supprimerProduit&idProduit='.$idProduit.'">';
      echo '<th width=5%><input type="submit" style="background-color:red; color:white;" class="btn btn-signup" value="Supprimer"/></th>';
      echo '</form>';

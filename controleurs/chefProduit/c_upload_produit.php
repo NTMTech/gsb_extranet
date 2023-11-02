@@ -7,5 +7,5 @@ $information=$_POST['information'];
 $effetIndesirable= $_POST['effetIndesirable'];
 $image=$_POST['image'];
 $pdo->modifierProduit($id,$nom,$objectif,$information,$effetIndesirable,$image);
-include_once("vues/chefProduit/v_consultation_visios.php");
+include_once("vues/chefProduit/v_consultation_produit.php");
 ?>

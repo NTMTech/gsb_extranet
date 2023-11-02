@@ -279,7 +279,7 @@ function GetCode($login)
         if ($monObjPdoStatementdate->execute())
         {
             $datelimite=$monObjPdoStatementdate->fetch();
-            $dateactuel=$monObjPdoStatementdateactuel;
+            $dateactuel=$monObjPdoStatementdateactuel->fetch();
             if ($datelimite > $dateactuel)
             {
                 $monObjPdoStatement=$pdo->prepare("SELECT cle FROM medecin WHERE mail= :login");
