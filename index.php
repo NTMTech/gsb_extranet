@@ -89,6 +89,42 @@ switch($uc){
 	case 'supprimerMedecin' :{
 		include("controleurs/c_supprimerMedecin.php");break;
 	}
+	case 'ajoutProduit':{
+        include("controleurs/chefProduit/c_ajouter_produit.php");break;
+    }
+    case 'creerProduit':{
+        include("controleurs/chefProduit/c_creer_produit.php");break;
+    }
+    case 'consulterProduitCP':{
+        include("controleurs/chefProduit/c_consultation_produit.php");break;
+    }
+    case 'supprimerProduit':{
+        include("controleurs/chefProduit/c_supprimer_produit.php");break;
+    }
+    case 'consulterVisiosCP':{
+        include("controleurs/chefProduit/c_consulter_visios.php");break;
+    }
+    case 'supprimerVisio':{
+        include("controleurs/chefProduit/c_supprimer_visio.php");break;
+    }
+    case 'ajoutVisios':{
+        include("controleurs/chefProduit/c_ajouter_visio.php");break;
+    }
+    case 'creerVisio':{
+        include("controleurs/chefProduit/c_creer_visio.php");break;
+    }
+    case 'modifierVisio':{
+        include("controleurs/chefProduit/c_modifier_visio.php");break;
+    }
+    case 'updateVisio':{
+        include("controleurs/chefProduit/c_update_visio.php");break;
+    }
+    case 'modifierProduit':{
+        include("controleurs/chefProduit/c_modifier_produit.php");break;
+    }
+    case 'updateProduit':{
+        include("controleurs/chefProduit/c_upload_produit.php");break;
+    }
 	}
 	include_once('vues/v_footer.php');
 ?>

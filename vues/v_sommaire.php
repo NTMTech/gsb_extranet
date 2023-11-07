@@ -64,6 +64,7 @@ else {
 	
 	<div class="page-content">
     	<div class="row">
-      <a href="index.php?uc=personnalData">Récupérer mes données</a>
-      <a href="index.php?uc=droitOubli">Droit à l'oubli</a>
+      <a href="index.php?uc=personnalData" style="color:white;">Récupérer mes données</a>
+    </br>
+      <a href="index.php?uc=droitOubli" style="color:white;">Droit à l'oubli</a>
 <?php };?>

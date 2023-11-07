@@ -48,7 +48,7 @@ else {
       <li class="active"><a href="index.php?uc=ajoutProduit">Ajouter Produits</a></li>
       <li class="active"><a href="index.php?uc=consulterProduitCP">Consulter Produits</a></li>
       <li class="active"><a href="index.php?uc=ajoutVisios">Ajouter des visioconférences</a></li> 
-      <li class="active"><a href="index.php?uc=consulterVisiosCP">Consulter les visoconférences</a></li>
+      <li class="active"><a href="index.php?uc=consulterVisiosCP">Consulter les visioconférences</a></li>
 
       </ul>
       <ul class="nav navbar-nav navbar-right">

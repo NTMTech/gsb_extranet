@@ -14,7 +14,7 @@ use PHPMailer\PHPMailer\Exception;
  * $monPdoGsb qui contiendra l'unique instance de la classe
  
  * @package default
- * @author Forestier Thomas, Bellart Mathis, Faidherbe Noah
+ * @author Forestier Thomas, Belart Mathis, Faidherbe Noah
  * @version    1.5
  * @link       http://www.php.net/manual/fr/book.pdo.php
  */
@@ -127,13 +127,15 @@ $leResultat = $pdoStatement->fetch();
 
 /**
  * fonction public qui crée un médecin à partir du formulaire rempli par l'utilisateur
- * @param email
+ * @param $email
  * @param $mdp
+ * @param $nom
+ * @param $prenom
+ * @param $rpps
  * @return $execution
  * 
  * la fonction va insérer un nouvel utilisateur avec un id, un mail, un mot de passe, la date de création du compte et la date à laquelle le consentement à la politique de pro<tection des données
  */
-
 public function creeMedecin($email, $mdp, $nom, $prenom,$rpps)
 {
    
@@ -151,7 +153,11 @@ public function creeMedecin($email, $mdp, $nom, $prenom,$rpps)
     
 }
 
-/*Permet d'eviter qu'il y'ai deux fois la même adresse mail*/
+/**
+ * @param $email
+ * @return $mailTrouve
+ * Permet d'eviter qu'il y'ai deux fois la même adresse mail*/
+
 function testMail($email){
     $pdo = PdoGsb::$monPdo;
     $pdoStatement = $pdo->prepare("SELECT count(*) as nbMail FROM medecin WHERE mail = :leMail");
@@ -168,7 +174,9 @@ function testMail($email){
 
 
 
-/*Ajoute la conextion dans l'historique lors de la connexion*/
+/**
+ * @param $mail
+ * Ajoute la connexion dans l'historique lors de la connexion*/
 function connexionInitiale($mail){
      $pdo = PdoGsb::$monPdo;
     $medecin= $this->donneLeMedecinByMail($mail);
@@ -177,7 +185,11 @@ function connexionInitiale($mail){
     
 }
 
-
+/**
+ * @param $id
+ * @return $execution
+ * Ajoute une connexion initiale dans l'historique de connexion
+ */
 function ajouteConnexionInitiale($id){
     $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO historiqueconnexion "
             . "VALUES (:leUser, now(), NULL)");
@@ -187,7 +199,9 @@ function ajouteConnexionInitiale($id){
     
 }
 
-/*Ajoute la conextion dans l'historique sans date de fin*/
+/**
+ * @param $mail
+ * Ajoute la conextion dans l'historique sans date de fin*/
 function connexion($mail){
     $pdo = PdoGsb::$monPdo;
    $medecin= $this->donneLeMedecinByMail($mail);
@@ -196,6 +210,11 @@ function connexion($mail){
    
 }
 
+/**
+ * @param $id
+ * @return $execution
+ * Ajoute une connexion dans l'historique de connexion
+ */
 function ajouteConnexion($id){
     $pdoStatement = PdoGsb::$monPdo->prepare("INSERT INTO historiqueconnexion "
             . "VALUES (:leMedecin, now(),NULL)");
@@ -204,7 +223,10 @@ function ajouteConnexion($id){
     return $execution;
     
 }
-/*Met à jour la conextion dans l'historique*/
+/**
+ * @param $id
+ * @return $execution
+ * Met à jour la conextion dans l'historique*/
 function updateConnexion($id){
     $pdoStatement = PdoGsb::$monPdo->prepare("UPDATE historiqueconnexion "
             . "SET dateFinLog = now()"
@@ -215,30 +237,16 @@ function updateConnexion($id){
     
 }
 
-/*Donne les infos d'un medecin*/
-function donneinfosmedecin($id){
-  
-       $pdo = PdoGsb::$monPdo;
-           $monObjPdoStatement=$pdo->prepare("SELECT id,nom,prenom FROM medecin WHERE id= :lId");
-    $bvc1=$monObjPdoStatement->bindValue(':lId',$id,PDO::PARAM_INT);
-    if ($monObjPdoStatement->execute()) {
-        $unUser=$monObjPdoStatement->fetch();
-   
-    }
-    else
-        throw new Exception("erreur");
-           
-    
-}
 
 /**
+ * @return $donnees
  * fonction qui permet d'obtenir tout les produits issue de la table produit 
  * dans la base de donnée gsbextranet
  */
 function AfficherProduit()
 {
     $pdo = PdoGsb::$monPdo;
-$monObjPdoStatement=$pdo->prepare("SELECT id,nom,objectif,information,effetIndesirable FROM produit ;");
+$monObjPdoStatement=$pdo->prepare("SELECT id,nom,objectif,information,effetIndesirable,image FROM produit ;");
 if ($monObjPdoStatement->execute()) {
   $donnees = $monObjPdoStatement->fetchAll();
     
@@ -265,6 +273,8 @@ throw new Exception("erreur");
 }
 
 /**
+ * @param $login
+ * @return $code
  * fonction qui permet d'obtenir le code de vérification d'un compte dans la base de donnée
  */
 function GetCode($login)
@@ -300,6 +310,7 @@ function GetCode($login)
 }
 
 /**
+ * @return $donnees
  * fonction qui permet d'obtenir les différentes visios conférences proposée
  */
 function getVisioProposee()
@@ -314,21 +325,25 @@ function getVisioProposee()
 
 }
 
-/*Permet de s'inscrire a une visio*/
+/**
+ * @param $idmedecin
+ * @param $idvisio
+ * Permet de s'inscrire a une visio*/
 function inscriptionVisio($idmedecin,$idvisio)
 {
     $pdo = PdoGsb::$monPdo;
     $monObjPdoStatement=$pdo->prepare("INSERT INTO medecinvisio VALUES ($idmedecin,$idvisio,now());");
-    if ($monObjPdoStatement->execute()) {
+    if ( $monObjPdoStatement->execute()) {
         return true;
-      }else
-      {
-        return false;
       }
+  
 
 }
 
-/*Recupére le nom dans la visio lors de l'inscription*/
+/**
+ * @param $id
+ * @return $donnees
+ * Recupére le nom dans la visio lors de l'inscription*/
 function getNomVisioInscrit($id)
 {
     $pdo = PdoGsb::$monPdo;
@@ -340,7 +355,10 @@ if ($monObjPdoStatement->execute()) {
     }
 }
 
-/*Ajoute un token*/
+/**
+ * @param $login
+ * @param $jeton
+ * Ajoute un token*/
 function addToken($login,$jeton)
 {
     $pdo = PdoGsb::$monPdo;
@@ -354,7 +372,10 @@ function addToken($login,$jeton)
       }
 }
 
-/*Récupére un token*/
+/**
+ * @param $login
+ * @return $tokenrecup
+ * Récupére un token*/
 function getToken($login)
 {
     $pdo = PdoGsb::$monPdo;
@@ -369,7 +390,10 @@ function getToken($login)
       }
 }
 
-/*Verifie un token*/
+/**
+ * @param $login
+ * @return $tokenrecup
+ * Verifie un token*/
 function getVerifToken($login)
 {
     $pdo = PdoGsb::$monPdo;
@@ -384,7 +408,9 @@ function getVerifToken($login)
       }
 }
 
-/*met a jour un token*/
+/**
+ * @param $login
+ * met a jour un token*/
 function updateToken($login)
 {
     $pdo = PdoGsb::$monPdo;
@@ -398,7 +424,9 @@ function updateToken($login)
       }
 }
 
-/*Verifie si le site est en maintenance*/
+/**
+ * @return $maintenance
+ * Verifie si le site est en maintenance*/
 function getMaintenance()
 {
     $pdo = PdoGsb::$monPdo;
@@ -412,7 +440,10 @@ function getMaintenance()
       }
 }
 
-/*Donne les infos de l'utilisateur*/
+/**
+ * @param $id
+ * @throws Exception
+ * Donne les infos de l'utilisateur*/
 function infoPersoJSON($id)
 {
     $pdo = PdoGsb::$monPdo;
@@ -428,7 +459,8 @@ function infoPersoJSON($id)
            
 }
 
-/*Met le site en maintenance*/
+/**
+ * Met le site en maintenance*/
 function maintenanceON()
 {
     $pdo = PdoGsb::$monPdo;
@@ -441,7 +473,8 @@ function maintenanceON()
       }
 }
 
-/*Desactive la maintenance*/
+/**
+ * Desactive la maintenance*/
 function maintenanceOFF()
 {
     $pdo = PdoGsb::$monPdo;
@@ -454,7 +487,10 @@ function maintenanceOFF()
       }
 }
 
-/*Verifie le role de l'utilisateur*/
+/**
+ * @param $login
+ * @return $role
+ * Verifie le role de l'utilisateur*/
 function checkRoleAccount($login)
 {
     $pdo = PdoGsb::$monPdo;
@@ -469,7 +505,10 @@ function checkRoleAccount($login)
       }
 }
 
-/*Envoie un mail à l'utilisateur pour qu'il puisse se connecter*/
+/**
+ * @param $code
+ * @param $login
+ * Envoie un mail à l'utilisateur pour qu'il puisse se connecter*/
 function envoiMail($code,$login){
     try {
 
@@ -495,6 +534,11 @@ function envoiMail($code,$login){
     }
 }
 
+/**
+ * @param $visioId
+ * @return $avisOfVisio
+ * Fonction qui retourne les avis d'une visioconference
+ */
 function getAvisFromOneVisio($visioId)
 {
     $pdo = PdoGsb::$monPdo;
@@ -509,7 +553,9 @@ function getAvisFromOneVisio($visioId)
       }
 }
 
-/*affiche les medecins non validé*/
+/**
+ * @return $nonValide
+ * affiche les medecins non validé*/
 function voirMedecinNonValide()
 {
     $pdo = PdoGsb::$monPdo;
@@ -523,7 +569,10 @@ function voirMedecinNonValide()
       }
 }
 
-/*Verifie la validation du medecin*/
+/**
+ * @param $login
+ * @return $validation
+ * Verifie la validation du medecin*/
 function getValidationCompte($login)
 {
     $pdo = PdoGsb::$monPdo;
@@ -538,7 +587,9 @@ function getValidationCompte($login)
       }
 }
 
-/*Valide un medecin*/
+/**
+ * @param $id
+ * Valide un medecin*/
 function giveValidationToMedecin($id)
 {
     $pdo = PdoGsb::$monPdo;
@@ -552,7 +603,8 @@ function giveValidationToMedecin($id)
       }
 }
 
-/*Envoie les infos pour valider le compte au verificateur*/
+/**
+ * Envoie les infos pour valider le compte au verificateur*/
 function sendInfoCreationCompteToValidateur()
 {
     $pdo = PdoGsb::$monPdo;
@@ -587,6 +639,11 @@ function sendInfoCreationCompteToValidateur()
     }
 }
 
+/**
+ * @param $textAvis
+ * @param $unAvis
+ * fonction qui permet de créer un avis écrit par un Medecin
+ */
 function creerAvis($textAvis,$unAvis)
 {
     $pdo = PdoGsb::$monPdo;
@@ -601,6 +658,10 @@ function creerAvis($textAvis,$unAvis)
       }
 }
 
+/**
+ * @return $avisOfVisioNonVerif
+ * fonction qui retourne tout les avis qui ne sont pas vérifiés
+ */
 function getAvisNonVerif()
 {
     $pdo = PdoGsb::$monPdo;
@@ -614,6 +675,10 @@ function getAvisNonVerif()
       }
 }
 
+/**
+ * @param $avisId
+ * Fonction qui permet de valider un avis
+ */
 function validationAvis($avisId)
 {
     $pdo = PdoGsb::$monPdo;
@@ -627,6 +692,10 @@ function validationAvis($avisId)
       }
 }
 
+/**
+ * @param $id
+ * supprime l'historique de connexion d'un medecin
+ */
 function deleteHistoriqueConnexionFromOneMedecin($id)
 {
     $pdo = PdoGsb::$monPdo;
@@ -640,6 +709,10 @@ function deleteHistoriqueConnexionFromOneMedecin($id)
       }
 }
 
+/**
+ * @param $id
+ * fonction qui supprime tout les produits d'un medécin
+ */
 function deleteProduitFromOneProduit($id)
 {
     $pdo = PdoGsb::$monPdo;
@@ -653,6 +726,10 @@ function deleteProduitFromOneProduit($id)
       }
 }
 
+/**
+ * @param $id
+ * fonction qui supprime toute les visiosconference d'un medécin
+ */
 function deleteMedecinVisioFromOneMedecin($id)
 {
     $pdo = PdoGsb::$monPdo;
@@ -666,6 +743,10 @@ function deleteMedecinVisioFromOneMedecin($id)
       }
 }
 
+/**
+ * @param $id
+ * fonction qui supprime un Medecin de la base de données
+ */
 function deleteMedecin($id)
 {
     $pdo = PdoGsb::$monPdo;
@@ -679,9 +760,189 @@ function deleteMedecin($id)
       }
 }
 
+/**
+ * @param $id
+ * fonction qui supprime le fichier JSON qui répertorie les donnees personnel d'un medecin
+ */
 function deleteJSON($id)
 {
   unlink("portabilite/".$id.".json");
+}
+function creerProduit($nom,$objectif,$information,$effeIndesirable,$images){
+    $pdo = PdoGsb::$monPdo;
+    
+    $monObjPdoStatement=$pdo->prepare("INSERT INTO produit (nom,objectif,information,effetIndesirable,image) VALUES (:nom,:objectif,:information,:effetIndesirable,:images)");
+    $bvc1=$monObjPdoStatement->bindValue(':nom',$nom,PDO::PARAM_STR);
+    $bvc2=$monObjPdoStatement->bindValue(':objectif',$objectif,PDO::PARAM_STR);
+    $bvc3=$monObjPdoStatement->bindValue(':information',$information,PDO::PARAM_STR);
+    $bvc4=$monObjPdoStatement->bindValue(':effetIndesirable',$effeIndesirable,PDO::PARAM_STR);
+    $bvc5=$monObjPdoStatement->bindValue(':images',$images,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
+/**
+ * @param $id
+ * fonction qui supprime un produit
+ */
+function supprimerProduit($id){
+    $pdo = PdoGsb::$monPdo;
+    $requete=$pdo ->prepare ("DELETE FROM produit WHERE id = $id");
+    if ($requete->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
+/**
+ * @param $id
+ * fonction qui supprime une visio
+ */
+function supprimerVisio($id){
+    $pdo = PdoGsb::$monPdo;
+    $requete=$pdo->prepare ("DELETE FROM visioconference WHERE id = :id");
+    $bvc1=$requete->bindValue(':id',$id,PDO::PARAM_STR);
+    if ($requete->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
+/**
+ * @param $id
+ * @param $nom
+ * @param $objectif
+ * @param $url
+ * @param $date
+ * fonction qui permet de modifier une visio
+ */
+function modifierVisio($id,$nom,$objectif,$url,$date){
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("UPDATE visioconference SET nomVisio = :nom,objectif = :objectif,url = :url,dateVisio = :date WHERE id = $id");
+    $bvc1=$monObjPdoStatement->bindValue(':nom',$nom,PDO::PARAM_STR);
+    $bvc2=$monObjPdoStatement->bindValue(':objectif',$objectif,PDO::PARAM_STR);
+    $bvc3=$monObjPdoStatement->bindValue(':url',$url,PDO::PARAM_STR);
+    $bvc4=$monObjPdoStatement->bindValue(':date',$date,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
+/**
+ * @param $id
+ * @return $donnees
+ * fonction qui permet d'afficher une visio modifié
+ */
+function afficheVisioModifie($id){
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT id,nomVisio,objectif,url,dateVisio FROM visioconference WHERE id = :id");
+    $bvc1=$monObjPdoStatement->bindValue(':id',$id,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+    $donnees = $monObjPdoStatement->fetch();
+    
+          return $donnees;
+      }
+
+}
+
+/**
+ * @param $id
+ * @param $nom
+ * @param $objectif
+ * @param $information
+ * @param $effetIndesirable
+ * @param $image
+ * fonction qui permet de mettre à jour un produit
+ */
+function modifierProduit($id,$nom,$objectif,$information,$effetIndesirable,$image){
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("UPDATE produit SET nom = :nom,objectif = :objectif,information = :information,effetIndesirable = :effetIndesirable,image = :image WHERE id = $id");
+    $bvc1=$monObjPdoStatement->bindValue(':nom',$nom,PDO::PARAM_STR);
+    $bvc2=$monObjPdoStatement->bindValue(':objectif',$objectif,PDO::PARAM_STR);
+    $bvc3=$monObjPdoStatement->bindValue(':information',$information,PDO::PARAM_STR);
+    $bvc4=$monObjPdoStatement->bindValue(':effetIndesirable',$effetIndesirable,PDO::PARAM_STR);
+    $bvc5=$monObjPdoStatement->bindValue(':image',$image,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
+/**
+ * @param $id
+ * @return $donnees
+ * fonction qui permet d'afficher un produit modifié
+ */
+function afficheProduitModifie($id){
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("SELECT id,nom,objectif,information,effetIndesirable,image FROM produit WHERE id = $id");
+    if ($monObjPdoStatement->execute()) {
+    $donnees = $monObjPdoStatement->fetch();
+          
+        return $donnees;
+    }
+
+    /**
+     * @param $nom
+     * @param $objectif
+     * @param $information
+     * @param $effetIndesirable
+     * @param $images
+     * fonction qui permet un produit
+     */
+function creerProduit($nom,$objectif,$information,$effeIndesirable,$images){
+    $pdo = PdoGsb::$monPdo;
+    
+    $monObjPdoStatement=$pdo->prepare("INSERT INTO produit VALUES (NULL,:nom,:objectif,:information,:effetIndesirable,:images)");
+    $bvc1=$monObjPdoStatement->bindValue(':nom',$nom,PDO::PARAM_STR);
+    $bvc2=$monObjPdoStatement->bindValue(':objectif',$objectif,PDO::PARAM_STR);
+    $bvc3=$monObjPdoStatement->bindValue(':information',$information,PDO::PARAM_STR);
+    $bvc4=$monObjPdoStatement->bindValue(':effetIndesirable',$effeIndesirable,PDO::PARAM_STR);
+    $bvc5=$monObjPdoStatement->bindValue(':images',$images,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
+
+/**
+ * @param $nom
+ * @param $objectif
+ * @param $url
+ * @param $date
+ * fonction qui permet de créer une visio
+ */
+function creerVisio($nom,$objectif,$url,$date){
+    $pdo = PdoGsb::$monPdo;
+    $monObjPdoStatement=$pdo->prepare("INSERT INTO visioconference VALUES (NULL,:nom,:objectif,:url,:date,NULL)");
+    $bvc1=$monObjPdoStatement->bindValue(':nom',$nom,PDO::PARAM_STR);
+    $bvc2=$monObjPdoStatement->bindValue(':objectif',$objectif,PDO::PARAM_STR);
+    $bvc3=$monObjPdoStatement->bindValue(':url',$url,PDO::PARAM_STR);
+    $bvc4=$monObjPdoStatement->bindValue(':date',$date,PDO::PARAM_STR);
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
 }
 }
 ?>

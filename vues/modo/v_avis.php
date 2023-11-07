@@ -63,6 +63,7 @@ else {
 	<div class="page-content">
     	<div class="row">
       <?php $avisNonVerif = $pdo->getAvisNonVerif();
+      echo '<center>';
       echo '<div>';
       echo '<table>';
       echo '<tr>';
@@ -82,6 +83,7 @@ else {
     }
     echo '</table>';
     echo '</div>';
+    echo '</center>';
     echo '</div>';
     echo '</div>';
  };
