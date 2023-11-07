@@ -18,8 +18,8 @@ switch($action){
 		break;
 	}
 	case 'valideConnexion':{ 
-		$login = $_POST['login'];
-		$mdp = $_POST['mdp'];
+		$login = htmlspecialchars($_POST['login']);
+		$mdp = htmlspecialchars($_POST['mdp']);
 		$checkAccount = $pdo->checkRoleAccount($login);
 		//var_dump($checkAccount);
 		switch ($checkAccount)
@@ -110,8 +110,8 @@ switch($action){
 		}break;}
 
 		case 'recupCode':{
-			$login = $_POST['login'];
-			$codeFromForm = intval($_POST['code']);
+			$login = htmlspecialchars($_POST['login']);
+			$codeFromForm = htmlspecialchars(intval($_POST['code']));
 			$codeReal = $pdo->GetCode($login);
 			$verifToken = $pdo->getVerifToken($login);
 			$validation = $pdo->getValidationCompte($login);

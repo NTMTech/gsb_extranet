@@ -305,7 +305,7 @@ function GetCode($login)
 function getVisioProposee()
 {
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT * FROM visioconference ;");
+    $monObjPdoStatement=$pdo->prepare("SELECT id,nomVisio,objectif,'url',dateVisio,avisVisio FROM visioconference ;");
     if ($monObjPdoStatement->execute()) {
     $donnees = $monObjPdoStatement->fetchAll();
     
@@ -489,7 +489,7 @@ function envoiMail($code,$login){
         $mail->Body    = "Veuillez saisir le code suivant afin de vous connecter : $code";
     
         $mail->send();
-        echo 'Message has been sent';
+        //echo 'Message has been sent';
     } catch (Exception $e) {
         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }
@@ -552,7 +552,8 @@ function giveValidationToMedecin($id)
       }
 }
 
-function sendMailInfoCreationCompteToValidateur()
+/*Envoie les infos pour valider le compte au verificateur*/
+function sendInfoCreationCompteToValidateur()
 {
     $pdo = PdoGsb::$monPdo;
     $monObjPdoStatement=$pdo->prepare("SELECT mail FROM medecin WHERE role = '4'");
@@ -578,7 +579,7 @@ function sendMailInfoCreationCompteToValidateur()
                 $mail->Body    = "Un nouveau medecin vient de creer un compte, allez sur le site afin de le valider ou le refuser.";
             
                 $mail->send();
-                echo 'Message has been sent';
+                //echo 'Message has been sent';
             } catch (Exception $e) {
                 echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             }
@@ -626,15 +627,11 @@ function validationAvis($avisId)
       }
 }
 
-function creerProduit($nom,$objectif,$information,$effeIndesirable,$images){
+function deleteHistoriqueConnexionFromOneMedecin($id)
+{
     $pdo = PdoGsb::$monPdo;
-    
-    $monObjPdoStatement=$pdo->prepare("INSERT INTO produit VALUES (NULL,:nom,:objectif,:information,:effetIndesirable,:images)");
-    $bvc1=$monObjPdoStatement->bindValue(':nom',$nom,PDO::PARAM_STR);
-    $bvc2=$monObjPdoStatement->bindValue(':objectif',$objectif,PDO::PARAM_STR);
-    $bvc3=$monObjPdoStatement->bindValue(':information',$information,PDO::PARAM_STR);
-    $bvc4=$monObjPdoStatement->bindValue(':effetIndesirable',$effeIndesirable,PDO::PARAM_STR);
-    $bvc5=$monObjPdoStatement->bindValue(':images',$images,PDO::PARAM_STR);
+    $monObjPdoStatement=$pdo->prepare("DELETE FROM historiqueconnexion WHERE idMedecin = :id");
+    $bvc1 = $monObjPdoStatement->bindValue(':id',$id);
     if ($monObjPdoStatement->execute()) {
         return true;
       }else
@@ -643,10 +640,12 @@ function creerProduit($nom,$objectif,$information,$effeIndesirable,$images){
       }
 }
 
-function supprimerProduit($id){
+function deleteProduitFromOneProduit($id)
+{
     $pdo = PdoGsb::$monPdo;
-    $requete=$pdo ->prepare ("DELETE FROM produit WHERE id = $id");
-    if ($requete->execute()) {
+    $monObjPdoStatement=$pdo->prepare("DELETE FROM medecinproduit WHERE idMedecin = :id");
+    $bvc1 = $monObjPdoStatement->bindValue(':id',$id);
+    if ($monObjPdoStatement->execute()) {
         return true;
       }else
       {
@@ -654,79 +653,138 @@ function supprimerProduit($id){
       }
 }
 
-function supprimerVisio($id){
+function deleteMedecinVisioFromOneMedecin($id)
+{
     $pdo = PdoGsb::$monPdo;
-    $requete=$pdo ->prepare ("DELETE FROM visioconference WHERE id = $id");
-    if ($requete->execute()) {
+    $monObjPdoStatement=$pdo->prepare("DELETE FROM medecinvisio WHERE idMedecin = :id");
+    $bvc1 = $monObjPdoStatement->bindValue(':id',$id);
+    if ($monObjPdoStatement->execute()) {
         return true;
       }else
       {
         return false;
       }
+}
+
+function deleteMedecin($id)
+{
+    $pdo = PdoGsb::$monPdo;
+        $monObjPdoStatement=$pdo->prepare("DELETE FROM medecin WHERE id = :id");
+    $bvc1 = $monObjPdoStatement->bindValue(':id',$id);
+    if ($monObjPdoStatement->execute()) {
+        return true;
+      }else
+      {
+        return false;
+      }
+}
+
+function deleteJSON($id)
+{
+  unlink("portabilite/".$id.".json");
+}
+
+function creerProduit($nom,$objectif,$information,$effeIndesirable,$images){
+  $pdo = PdoGsb::$monPdo;
+  
+  $monObjPdoStatement=$pdo->prepare("INSERT INTO produit VALUES (NULL,:nom,:objectif,:information,:effetIndesirable,:images)");
+  $bvc1=$monObjPdoStatement->bindValue(':nom',$nom,PDO::PARAM_STR);
+  $bvc2=$monObjPdoStatement->bindValue(':objectif',$objectif,PDO::PARAM_STR);
+  $bvc3=$monObjPdoStatement->bindValue(':information',$information,PDO::PARAM_STR);
+  $bvc4=$monObjPdoStatement->bindValue(':effetIndesirable',$effeIndesirable,PDO::PARAM_STR);
+  $bvc5=$monObjPdoStatement->bindValue(':images',$images,PDO::PARAM_STR);
+  if ($monObjPdoStatement->execute()) {
+      return true;
+    }else
+    {
+      return false;
+    }
+}
+
+function supprimerProduit($id){
+  $pdo = PdoGsb::$monPdo;
+  $requete=$pdo ->prepare ("DELETE FROM produit WHERE id = $id");
+  if ($requete->execute()) {
+      return true;
+    }else
+    {
+      return false;
+    }
+}
+
+function supprimerVisio($id){
+  $pdo = PdoGsb::$monPdo;
+  $requete=$pdo ->prepare ("DELETE FROM visioconference WHERE id = $id");
+  if ($requete->execute()) {
+      return true;
+    }else
+    {
+      return false;
+    }
 }
 
 
 function creerVisio($nom,$objectif,$url,$date){
-    $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("INSERT INTO visioconference VALUES (NULL,:nom,:objectif,:url,:date,NULL)");
-    $bvc1=$monObjPdoStatement->bindValue(':nom',$nom,PDO::PARAM_STR);
-    $bvc2=$monObjPdoStatement->bindValue(':objectif',$objectif,PDO::PARAM_STR);
-    $bvc3=$monObjPdoStatement->bindValue(':url',$url,PDO::PARAM_STR);
-    $bvc4=$monObjPdoStatement->bindValue(':date',$date,PDO::PARAM_STR);
-    if ($monObjPdoStatement->execute()) {
-        return true;
-      }else
-      {
-        return false;
-      }
+  $pdo = PdoGsb::$monPdo;
+  $monObjPdoStatement=$pdo->prepare("INSERT INTO visioconference VALUES (NULL,:nom,:objectif,:url,:date,NULL)");
+  $bvc1=$monObjPdoStatement->bindValue(':nom',$nom,PDO::PARAM_STR);
+  $bvc2=$monObjPdoStatement->bindValue(':objectif',$objectif,PDO::PARAM_STR);
+  $bvc3=$monObjPdoStatement->bindValue(':url',$url,PDO::PARAM_STR);
+  $bvc4=$monObjPdoStatement->bindValue(':date',$date,PDO::PARAM_STR);
+  if ($monObjPdoStatement->execute()) {
+      return true;
+    }else
+    {
+      return false;
+    }
 }
 function modifierVisio($id,$nom,$objectif,$url,$date){
-    $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("UPDATE visioconference SET nomVisio = :nom,objectif = :objectif,url = :url,dateVisio = :date WHERE id = $id");
-    $bvc1=$monObjPdoStatement->bindValue(':nom',$nom,PDO::PARAM_STR);
-    $bvc2=$monObjPdoStatement->bindValue(':objectif',$objectif,PDO::PARAM_STR);
-    $bvc3=$monObjPdoStatement->bindValue(':url',$url,PDO::PARAM_STR);
-    $bvc4=$monObjPdoStatement->bindValue(':date',$date,PDO::PARAM_STR);
-    if ($monObjPdoStatement->execute()) {
-        return true;
-      }else
-      {
-        return false;
-      }
+  $pdo = PdoGsb::$monPdo;
+  $monObjPdoStatement=$pdo->prepare("UPDATE visioconference SET nomVisio = :nom,objectif = :objectif,url = :url,dateVisio = :date WHERE id = $id");
+  $bvc1=$monObjPdoStatement->bindValue(':nom',$nom,PDO::PARAM_STR);
+  $bvc2=$monObjPdoStatement->bindValue(':objectif',$objectif,PDO::PARAM_STR);
+  $bvc3=$monObjPdoStatement->bindValue(':url',$url,PDO::PARAM_STR);
+  $bvc4=$monObjPdoStatement->bindValue(':date',$date,PDO::PARAM_STR);
+  if ($monObjPdoStatement->execute()) {
+      return true;
+    }else
+    {
+      return false;
+    }
 }
 function afficheVisioModifie($id){
-    $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT id,nomVisio,objectif,url,dateVisio FROM visioconference WHERE id = $id");
-    if ($monObjPdoStatement->execute()) {
-    $donnees = $monObjPdoStatement->fetch();
-    
-          return $donnees;
-      }
+  $pdo = PdoGsb::$monPdo;
+  $monObjPdoStatement=$pdo->prepare("SELECT id,nomVisio,objectif,url,dateVisio FROM visioconference WHERE id = $id");
+  if ($monObjPdoStatement->execute()) {
+  $donnees = $monObjPdoStatement->fetch();
+  
+        return $donnees;
+    }
 
 }
 function modifierProduit($id,$nom,$objectif,$information,$effetIndesirable,$image){
-    $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("UPDATE produit SET nom = :nom,objectif = :objectif,information = :information,effetIndesirable = :effetIndesirable,image = :image WHERE id = $id");
-    $bvc1=$monObjPdoStatement->bindValue(':nom',$nom,PDO::PARAM_STR);
-    $bvc2=$monObjPdoStatement->bindValue(':objectif',$objectif,PDO::PARAM_STR);
-    $bvc3=$monObjPdoStatement->bindValue(':information',$information,PDO::PARAM_STR);
-    $bvc4=$monObjPdoStatement->bindValue(':effetIndesirable',$effetIndesirable,PDO::PARAM_STR);
-    $bvc5=$monObjPdoStatement->bindValue(':image',$image,PDO::PARAM_STR);
-    if ($monObjPdoStatement->execute()) {
-        return true;
-      }else
-      {
-        return false;
-      }
+  $pdo = PdoGsb::$monPdo;
+  $monObjPdoStatement=$pdo->prepare("UPDATE produit SET nom = :nom,objectif = :objectif,information = :information,effetIndesirable = :effetIndesirable,image = :image WHERE id = $id");
+  $bvc1=$monObjPdoStatement->bindValue(':nom',$nom,PDO::PARAM_STR);
+  $bvc2=$monObjPdoStatement->bindValue(':objectif',$objectif,PDO::PARAM_STR);
+  $bvc3=$monObjPdoStatement->bindValue(':information',$information,PDO::PARAM_STR);
+  $bvc4=$monObjPdoStatement->bindValue(':effetIndesirable',$effetIndesirable,PDO::PARAM_STR);
+  $bvc5=$monObjPdoStatement->bindValue(':image',$image,PDO::PARAM_STR);
+  if ($monObjPdoStatement->execute()) {
+      return true;
+    }else
+    {
+      return false;
+    }
 }
 function afficheProduitModifie($id){
-    $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT id,nom,objectif,information,effetIndesirable,image FROM produit WHERE id = $id");
-    if ($monObjPdoStatement->execute()) {
-    $donnees = $monObjPdoStatement->fetch();
-          
-        return $donnees;
-    }
+  $pdo = PdoGsb::$monPdo;
+  $monObjPdoStatement=$pdo->prepare("SELECT id,nom,objectif,information,effetIndesirable,image FROM produit WHERE id = $id");
+  if ($monObjPdoStatement->execute()) {
+  $donnees = $monObjPdoStatement->fetch();
+        
+      return $donnees;
+  }
 }
 }
 ?>

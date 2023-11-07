@@ -8,5 +8,6 @@ else {
 $id=($_SESSION['id']);
 
 $pdo->updateConnexion($id);
+$pdo->deleteJSON($id);
 session_destroy();
 }

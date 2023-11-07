@@ -21,13 +21,12 @@ switch($action){
             $e = "impossible de créer le compte sans avoir coché la case de consentement !<br/>";
             echo $e;
         }
-        $_SESSION['login'] = $_POST['login'];
-
-		$leLogin = strip_tags($_POST['login']);
-                $lePassword = strip_tags($_POST['mdp']);
-                $leNom = strip_tags($_POST['nom']);
-                $lePrenom = strip_tags($_POST['prénom']);
-                $leRpps =strip_tags($_POST['rpps']);
+        $_SESSION['login'] = htmlspecialchars($_POST['login']);
+		$leLogin = htmlspecialchars($_POST['login']);
+                $lePassword = htmlspecialchars($_POST['mdp']);
+                $leNom = htmlspecialchars($_POST['nom']);
+                $lePrenom = htmlspecialchars($_POST['prénom']);
+                $leRpps = htmlspecialchars($_POST['rpps']);
 
 
         if ($leLogin == $_POST['login'])
@@ -129,7 +128,7 @@ switch($action){
         if($rempli && $loginOk && $passwordOk && $rppsOk == true && $tailleMaxRppsOk==true){
             $token = substr(md5(uniqid()),0 ,8);
 				$mail = new PHPMailer(true);
-                $pdo->sendMailInfoCreationCompteToValidateur();
+                $pdo->sendInfoCreationCompteToValidateur();
                 
 try {
 	

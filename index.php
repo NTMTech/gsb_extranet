@@ -119,6 +119,27 @@ switch($uc){
 	case 'valideAvis' :{
 		include("controleurs/modo/c_fonction_valide_avis.php");break;
 	}
+	case 'droitOubli' :{
+		include("controleurs/c_droit_oubli.php");break;
+	}
+	case 'supprimerMedecin' :{
+		include("controleurs/c_supprimerMedecin.php");break;
+	}
+	case 'retourAccueil':{
+		include("controleurs/c_retourAccueil.php");break;
+	}
+	case 'retourAccueilModo':{
+		include("controleurs/modo/c_retourAccueilModo.php");break;
+	}
+	case 'retourAccueilAdmin':{
+		include("controleurs/admin/c_retourAccueilAdmin.php");break;
+	}
+	case 'retourAccueilValidateur':{
+		include("controleurs/validateur/c_retourAccueilValidateur.php");break;
+	}
+	case 'retourAccueilCP':{
+		include("controleurs/chefProduit/c_retourAccueilCP.php");break;
+	}
 }
 	include_once('vues/v_footer.php');
 ?>

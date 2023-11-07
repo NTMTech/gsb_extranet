@@ -14,7 +14,7 @@ else {
     <title>GSB -extranet</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://bootswatch.com/5/darkly/bootstrap.min.css" rel="stylesheet">
 	<link href="assets/profilcss/profil.css" rel="stylesheet">
     <!-- styles -->
     <link href="css/styles.css" rel="stylesheet">
@@ -27,35 +27,30 @@ else {
     <![endif]-->
   </head>
   <body background="assets/img/laboratoire.jpg">
-<nav class="navbar navbar-default">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">Galaxy Swiss Bourdin</a>
-    </div>
+    <a class="navbar-brand" href="#">Galaxy Swiss Bourdin</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        
-        <li class="active"><a href="index.php?uc=voirAvisNonValide">Avis des médecins sur les visios</a></li> 
-       
-         
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-		  <li><a><?php echo $_SESSION['prenom']."  ".$_SESSION['nom']?></a></li>
-		  <li><a>Modérateur</a></li>
-       
-     </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link active" href="index.php?uc=retourAccueilModo">Accueil</a>
+          </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="index.php?uc=voirAvisNonValide">Avis des médecins sur les visios</a>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+		    <li><a><?php echo $_SESSION['prenom']." ".$_SESSION['nom']. " ". "Modérateur"?></a></li>
+
+        </ul>
+
+    </div>
+  </div>
 </nav>
+<button type="button" class="btn btn-primary mt-2" style="margin-left:93%;" ><a href="index.php?uc=deconnexion">Déconnexion</a></button>
 
 
 
