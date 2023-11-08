@@ -66,6 +66,7 @@ else {
 	<div class="page-content">
     	<div class="row">
       <?php $avis = $pdo->getNomVisioInscrit($_SESSION['id']);
+      echo '<center>';
       echo '<div>';
       echo '<table>';
       echo '<tr>';
@@ -74,17 +75,18 @@ else {
       echo '</tr>';
     foreach($avis as $unAvis){
       echo '<tr>';
-      echo '<th>'.$unAvis['nomVisio'].'</th>';
+      echo '<th width = 10%>'.$unAvis['nomVisio'].'</th>';
       $avisId = $unAvis['id'];
      echo '<form method="post" action="index.php?uc=donnerAvis&unAvis='.$avisId.'">';
-     echo '<th width=75%><input name="avis" class="form-control" type="text" placeholder="Donnez votre avis"/></th>';
+     echo '<th><input name="avis" class="form-control" type="text" placeholder="Donnez votre avis"/></th>';
      echo '<th><input type="submit" class="btn btn-primary signup" value="Envoyer votre avis"/></th>';
      echo '</form>';
       echo '</tr>';
     
     }
-    //echo '</table>';
-    //echo '</div>';
+    echo '</table>';
+    echo '</div>';
+    echo '</center>';
     ?>
 
 

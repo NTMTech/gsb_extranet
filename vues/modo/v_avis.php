@@ -38,7 +38,7 @@ else {
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
-        <a class="nav-link active" href="index.php?uc=retourAccueilAdmin">Accueil</a>
+        <a class="nav-link active" href="index.php?uc=retourAccueilModo">Accueil</a>
           </li>
         <li class="nav-item">
           <a class="nav-link active" href="index.php?uc=voirAvisNonValide">Avis des médecins sur les visios</a>
@@ -59,6 +59,7 @@ else {
 	<div class="page-content">
     	<div class="row">
       <?php $avisNonVerif = $pdo->getAvisNonVerif();
+      echo '<center>';
       echo '<div>';
       echo '<table>';
       echo '<tr>';
@@ -78,6 +79,7 @@ else {
     }
     echo '</table>';
     echo '</div>';
+    echo '</center>';
     echo '</div>';
     echo '</div>';
  };

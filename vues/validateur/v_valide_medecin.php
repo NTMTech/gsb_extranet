@@ -64,13 +64,12 @@ else {
 	<div class="page-content">
     	<div class="row">
       <?php $medecinNonValide = $pdo->voirMedecinNonValide();
-
+echo '<center>';
 echo '<div>';
 echo '<table>';
 echo '<tr>';
 echo '<th>Nom du medecin</th>';
 echo '<th>Prenom du medecin</th>';
-echo '<th>Telephone du medecin du medecin</th>';
 echo '<th>Mail du medecin</th>';
 echo '<th>Rpps</th>';
 echo '<th></th>';
@@ -81,17 +80,17 @@ $mailDuMedecin = $unMedecin['id'];
 echo '<tr>';
 echo '<th>'.$unMedecin['nom'].'</th>';
 echo '<th>'.$unMedecin['prenom'].'</th>';
-echo '<th>'.$unMedecin['telephone'].'</th>';
 echo '<th>'.$unMedecin['mail'].'</th>';
-echo '<th>'.$unMedecin['rpps'].'</th>';
+echo '<th width = 30%>'.$unMedecin['rpps'].'</th>';
 $valideId = $valideId + 1;
 echo '<form method="post" action="index.php?uc=valideMedecin&unMedecin='.$mailDuMedecin.'">';
-echo '<th><input type="submit" class="btn btn-primary signup" value="Valider le medecin"/></th>';
+echo '<th width = 10%><input type="submit" class="btn btn-primary signup" value="Valider le medecin"/></th>';
 echo '</form>';
 echo '</tr>';
 
 }
 echo '</table>';
 echo '</div>';
+echo '</center>';
 ?>
 <?php };?>

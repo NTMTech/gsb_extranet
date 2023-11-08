@@ -52,6 +52,11 @@ else {
           <a class="nav-link active" href="index.php?uc=avisVisio">Avis visioconférences</a>
         </li>
       </ul>
+      </ul>
+        <ul class="nav navbar-nav navbar-right">
+		    <li><a><?php echo $_SESSION['prenom']." ".$_SESSION['nom']. " ". "Médecin"?></a></li>
+
+        </ul>
 
     </div>
   </div>
@@ -65,46 +70,53 @@ else {
 	<div class="page-content">
     	<div class="row">
       <?php $lesProduits = $pdo->AfficherProduit();
-     
+     echo '<center>';
+     echo '</br>';
      echo '<div>';
      echo '<table>';
      echo '<tr>';
      echo '<th>Nom</th>';
-     //ECHO '<th>Image</th>';
-     echo '<th>Objectif</th>';
-     echo '<th>Information</th>';
-     echo '<th>Effet indesirable</th>';
+     //echo '<th>Objectif</th>';
+     //echo '<th>Information</th>';
+     //echo '<th>Effet indesirable</th>';
      echo '</tr>';
+     $test = 0;
    foreach($lesProduits as $unProduit){
+    $test = $test + 1;
      echo '<tr>';
      echo '<th>'.$unProduit['nom'].'</th>';
-     //echo '<th>'.$unProduit['image'].'</th>';
-     /*echo '<!-- Pop-up -->
-<div id="popup" class="modal">
+     echo '<th><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#'.$test.'">
+     '.$unProduit['nom'].'
+ </button></th>';
+     echo '<!-- Pop-up -->
+<div id="'.$test.'" class="modal">
        <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                  <div class="modal-header">
-                      <p> Entête du pop-up </p>
+                      <strong style = font-size:30px;><p> '.$unProduit['nom'].' </p></strong>
                        </div>
                     <div class="modal-body">
-                      <p> Je suis un magnifique pop-up</p>
+                      <p> <strong>Objectif du médicament:</strong> '.$unProduit['objectif'].'</p>
+                      <p> <strong>Information sur le médicament:</strong> '.$unProduit['information'].'</p>
+                      <p> <strong>Effet indésirable du médicament:</strong> '.$unProduit['effetIndesirable'].'</p>
+                      <img class="imageProduit" src="images/'.$unProduit['image'].'"alt="'.$unProduit['nom'].'width="10">
                        </div>
                     <div class="modal-footer">
-                      <p> Footer du pop-up</p>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer le popup
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer
                                </button>
                        </div>
                 </div>
        </div>
-</div>';*/
-      echo '<th>'.$unProduit['objectif'].'</th>';
-     echo '<th width=30%>'.$unProduit['information'].'</th>';
-     echo '<th width=30%>'.$unProduit['effetIndesirable'].'</th>';
+</div>';
+      //echo '<th>'.$unProduit['objectif'].'</th>';
+     //echo '<th width=30%>'.$unProduit['information'].'</th>';
+     //echo '<th width=30%>'.$unProduit['effetIndesirable'].'</th>';
      echo '</tr>';
    
    }
    echo '</table>';
    echo '</div>';
+   echo '</center>';
    ?>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

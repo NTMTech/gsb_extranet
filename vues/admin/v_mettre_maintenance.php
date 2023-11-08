@@ -52,12 +52,17 @@
     </div>
   </div>
 </nav>
-<button type="button" class="btn btn-primary mt-2" style="margin-left:93%;" ><a href="index.php?uc=deconnexion">Déconnexion</a></button>
+
 
 	
-	<div class="page-content">
-    	<div class="row">
+<div class="btn-group-vertical">
 
-        <button name="maintenance ON" class="btn btn-default" style="margin-left:94%;" type="submit"><a href="index.php?uc=maintenanceON">Maintenance ON</a></button>
-        <button name="maintenance OFF" class="btn btn-default" style="margin-left:94%;" type="submit"><a href="index.php?uc=maintenanceOFF">Maintenance OFF</a></button>
+      <button type="button" class="btn btn-primary mt-2" ><a href="index.php?uc=deconnexion">Déconnexion</a></button>
+      <button type="button" class="btn btn-primary mt-2" ><a href="index.php?uc=maintenanceON">Maintenance ON</a></button>
+      <button type="button" class="btn btn-primary mt-2"  ><a href="index.php?uc=maintenanceOFF">Maintenance OFF</a></button>
+
+        <!--<button name="maintenance ON" class="btn btn-default"  type="submit"><a href="index.php?uc=maintenanceON">Maintenance ON</a></button>
+        <button name="maintenance OFF" class="btn btn-default"  type="submit"><a href="index.php?uc=maintenanceOFF">Maintenance OFF</a></button>
+    -->
+    </div>
  

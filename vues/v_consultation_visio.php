@@ -51,6 +51,11 @@ else {
           <a class="nav-link active" href="index.php?uc=avisVisio">Avis visioconférences</a>
         </li>
       </ul>
+      </ul>
+        <ul class="nav navbar-nav navbar-right">
+		    <li><a><?php echo $_SESSION['prenom']." ".$_SESSION['nom']. " ". "Médecin"?></a></li>
+
+        </ul>
 
     </div>
   </div>
@@ -62,11 +67,10 @@ else {
 	<div class="page-content">
     	<div class="row">
       <?php $lesVisios = $pdo->getVisioProposee();
-     
+     echo '<center>';
      echo '<div width=100%>';
      echo '<table>';
      echo '<tr>';
-     echo '<th>Id</th>';
      echo '<th>Nom</th>';
      echo '<th>Objectif</th>';
      echo '<th>URL</th>';
@@ -76,22 +80,21 @@ else {
      $test = 0;
    foreach($lesVisios as $uneVisio){
      echo '<tr>';
-     echo '<th>'.$uneVisio['id'].'</th>';
+     echo '</br>';
      echo '<th>'.$uneVisio['nomVisio'].'</th>';
      echo '<th>'.$uneVisio['objectif'].'</th>';
      echo '<th>'.$uneVisio['url'].'</th>';
-     echo '<th>'.$uneVisio['dateVisio'].'</th>';
+     echo '<th width=30%>'.$uneVisio['dateVisio'].'</th>';
      $visioId = $uneVisio['id'];
      //$avisFromOneVisio = $pdo->getAvisFromOneVisio($visioId);
      echo '<form method="post" action="index.php?uc=voirAvis&uneVisio='.$visioId.'">';
-     echo '<th><input type="submit" class="btn btn-primary signup" value="voir les avis"/></th>';
+     echo '<th width=10%><input type="submit" class="btn btn-primary signup" value="voir les avis"/></th>';
      echo '</form>';
      echo '</tr>';
     }
    echo '</table>';
    echo '</div>';
+   echo '</center>';
   ?>
   </body>
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
 <?php };?>

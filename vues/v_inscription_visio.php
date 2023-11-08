@@ -75,8 +75,8 @@ else {
         echo "<td>" . $uneVisio["nomVisio"] . "</td>";
         echo "<td>" . $uneVisio["objectif"] . "</td>";
         echo "<td>" . $uneVisio["url"] . "</td>";
-        echo "<td>" . $uneVisio["dateVisio"] . "</td>";
-        echo "<td><a href='index.php?uc=inscritVisio&uneVisio=" . $uneVisio["id"] . "'>S'inscrire</a></td>";
+        echo "<td width=30%>" . $uneVisio["dateVisio"] . "</td>";
+        echo "<td width=10%><a href='index.php?uc=inscritVisio&uneVisio=" . $uneVisio["id"] . "'>S'inscrire</a></td>";
         echo "</tr>";
     }
       /*<div width=100%>
@@ -102,6 +102,6 @@ else {
                 </tr>
             <?php endforeach; ?>
         </table>
-    </form>
-</div>*/?>
+    </form>*/
+    ?></div></center>
 <?php } ?>
