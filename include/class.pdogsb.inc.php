@@ -15,7 +15,7 @@ use PHPMailer\PHPMailer\Exception;
  
  * @package default
  * @author Forestier Thomas, Belart Mathis, Faidherbe Noah
- * @version    1.5
+ * @version    2.0
  * @link       http://www.php.net/manual/fr/book.pdo.php
  */
 
@@ -331,7 +331,7 @@ function GetCode($login)
 function getVisioProposee()
 {
     $pdo = PdoGsb::$monPdo;
-    $monObjPdoStatement=$pdo->prepare("SELECT id,nomVisio,objectif,'url',dateVisio,avisVisio FROM visioconference ;");
+    $monObjPdoStatement=$pdo->prepare("SELECT id,nomVisio,objectif,'url',dateVisio FROM visioconference ;");
     if ($monObjPdoStatement->execute()) {
     $donnees = $monObjPdoStatement->fetchAll();
     

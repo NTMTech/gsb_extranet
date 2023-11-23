@@ -37,7 +37,7 @@ else {
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
-          <a class="nav-link active" href="index.php?uc=retourAccueilCP">Accueil</a>
+          <a class="nav-link active" href="index.php?uc=retourAccueil">Accueil</a>
           </li>
         <li class="nav-item">
           <a class="nav-link active" href="index.php?uc=consulteProduit">Consultation produits</a>

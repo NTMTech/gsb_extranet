@@ -77,7 +77,6 @@ else {
      echo '<th>Objectif</th>';
      echo '<th>URL</th>';
      echo '<th>Date de la visio</th>';
-     echo '<th>Avis de la visio</th>';
      echo '<th></th>';
      echo '</tr>';
    foreach($lesVisios as $uneVisio){
@@ -87,7 +86,6 @@ else {
      echo '<th>'.$uneVisio['objectif'].'</th>';
      echo '<th>'.$uneVisio['url'].'</th>';
      echo '<th>'.$uneVisio['dateVisio'].'</th>';
-     echo '<th width=30%>'.$uneVisio['avisVisio'].'</th>';
      echo '<form method="post" action ="index.php?uc=supprimerVisio&visioId='.$visioId.'">';
      echo '<th width=10%><input type="submit" style="background-color:red; color:white;" class="btn btn-signup" value="Supprimer"/></th>';
      echo '</form>';

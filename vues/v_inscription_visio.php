@@ -53,6 +53,11 @@ else {
           <a class="nav-link active" href="index.php?uc=avisVisio">Avis visioconférences</a>
         </li>
       </ul>
+      <ul class="nav navbar-nav navbar-right">
+		    <li><a><?php echo $_SESSION['prenom']." ".$_SESSION['nom']. " ". "Médecin"?></a></li>
+
+        </ul>
+
 
     </div>
   </div>
